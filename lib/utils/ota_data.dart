@@ -1,0 +1,145 @@
+import 'dart:typed_data';
+import 'ota_service_data.dart';
+
+int crc16Update(List<int> src) {
+  int crc = 0;
+  for (int byte in src) {
+    crc ^= byte << 8;
+    for (int i = 0; i < 8; i++) {
+      int temp = crc << 1;
+      if ((crc & 0x8000) != 0) {
+        temp ^= 0x1021;
+      }
+      crc = temp;
+    }
+  }
+  return crc & 0xFFFF; // 确保结果为 16 位
+}
+
+/*
+* Ping 握手数据
+* */
+List<int> pingData() {
+  List<int> values = [kBLEDataFrameHeader, 0xa6];
+  print('Ping 握手数据');
+  return values;
+}
+
+/*
+* 通用的ACK回复
+* */
+List<int> generalACKData() {
+  List<int> values = [kBLEDataFrameHeader, 0xa1];
+  return values;
+}
+
+/*
+* 擦除所有的指令
+* */
+List<int> eraseAllData() {
+  List<int> values = [
+    kBLEDataFrameHeader,
+    0xa4,
+    0x08,
+    0x00,
+    0x0c,
+    0x22,
+    0x01,
+    0x00,
+    0x00,
+    0x01,
+    0x00,
+    0x00,
+    0x00,
+    0x00
+  ];
+  print('发送擦除all---');
+  return values;
+}
+
+/*
+* 擦除所有的ACK确认指令
+* */
+List<int> eraseAllACKData() {
+  List<int> values = [kBLEDataFrameHeader, 0xa1];
+  return values;
+}
+
+void main() {
+  bagainWriteData(4);
+}
+
+/*
+* 开始写的指令 带上数据总长度的参数
+* */
+List<int> bagainWriteData(int length) {
+  final byteData = ByteData(4);
+  byteData.setUint32(0, length, Endian.little); // 小端格式写入
+  List<int> lengthDatas = [
+    byteData.getUint8(0),
+    byteData.getUint8(1),
+    byteData.getUint8(2),
+    byteData.getUint8(3),
+  ];
+
+  List<int> _tempValue = [
+    0x5a,
+    0xa4,
+    0x0c,
+    0x00,
+    0x04,
+    0x00,
+    0x00,
+    0x02,
+    0x00,
+    0x80,
+    0x00,
+    0x08,
+    lengthDatas[0],
+    lengthDatas[1],
+    lengthDatas[2],
+    lengthDatas[3]
+  ];
+  int _value = crc16Update(_tempValue);
+  List<int> finalValue = [
+    _value & 0xFF, // 低位字节
+    (_value >> 8) & 0xFF // 高位字节
+  ];
+  _tempValue.insert(4, finalValue.first);
+  _tempValue.insert(5, finalValue.last);
+  print('开始写的指令');
+  return _tempValue;
+}
+
+/*
+* 发送真实的数据过去
+* */
+List<int> realBuildWirterCommand(List<int> data) {
+  int _dataLength = data.length;
+  final byteData = ByteData(2);
+  byteData.setUint16(0, data.length, Endian.little); // 小端格式写入
+  List<int> lengthDatas = [
+    byteData.getUint8(0),
+    byteData.getUint8(1),
+  ];
+
+  // 集合除了crc的所有值
+  List<int> _tempValue = [0x5a, 0xa5, lengthDatas[0], lengthDatas[1]];
+  _tempValue.addAll(data);
+
+  int _value = crc16Update(_tempValue);
+  List<int> finalValue = [
+    _value & 0xFF, // 低位字节
+    (_value >> 8) & 0xFF // 高位字节
+  ];
+  _tempValue.insert(4, finalValue.first);
+  _tempValue.insert(5, finalValue.last);
+  print(
+      "realBuildWirterCommand --- data = ${_tempValue.map((toElement) => toElement.toRadixString(16)).toList()}");
+  return _tempValue;
+}
+
+List<int> resetData() {
+  print('进入到reset阶段');
+  return [0x5a, 0xa4, 0x04, 0x00, 0x6f, 0x46, 0x0b, 0x00, 0x00, 0x00];
+}
