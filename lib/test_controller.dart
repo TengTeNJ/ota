@@ -1,17 +1,20 @@
-
+import 'dart:async';
 import 'dart:typed_data';
-import 'dart:io';
+import 'package:event_bus/event_bus.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_reactive_ble/flutter_reactive_ble.dart';
+import 'package:ota/utils/event_manager.dart';
 import 'package:permission_handler/permission_handler.dart';
 import 'package:flutter/services.dart' show rootBundle;
 import 'utils/comm_statu_manager.dart';
 import 'utils/ota_data.dart';
 import 'utils/ota_service_data.dart';
+
 const kBLE_SERVICE_NOTIFY_UUID = "ffe0";
 const kBLE_SERVICE_WRITER_UUID = "ffe5";
 const kBLE_CHARACTERISTIC_NOTIFY_UUID = "ffe4";
 const kBLE_CHARACTERISTIC_WRITER_UUID = "ffe9";
+
 class BluetoothDebugPage extends StatefulWidget {
   @override
   State<BluetoothDebugPage> createState() => _BluetoothDebugPageState();
@@ -19,8 +22,14 @@ class BluetoothDebugPage extends StatefulWidget {
 
 class _BluetoothDebugPageState extends State<BluetoothDebugPage> {
   //final _ble = FlutterReactiveBle();
+  late StreamSubscription<DataUpdatedEvent> _subscription;
   final _targetName = "Stickhandling"; // 只显示设备名包含该字符串的设备
 
+  List<String> keys = <String>[
+    '模式1',
+    '模式2',
+    '模式3',
+  ];
   List<DiscoveredDevice> _devices = [];
   DiscoveredDevice? _connectedDevice;
   QualifiedCharacteristic? _notifyChar;
@@ -33,15 +42,16 @@ class _BluetoothDebugPageState extends State<BluetoothDebugPage> {
   bool _connected = false;
   int _currentStep = 0;
   final int _totalSteps = 7;
+  String selectedKey = '切换模式';
+
   Future<ByteData> loadBinFile() async {
     // 从 lib 目录中读取文件
-   // Uint8List bytes = await File('assets/severingcan.bin').readAsBytes();
-    final ByteData videoData =
-    await rootBundle.load('assets/severingcan.bin');
-   // Uint8List bytes = videoData.buffer as  Uint8List();
+    // Uint8List bytes = await File('assets/severingcan.bin').readAsBytes();
+    final ByteData videoData = await rootBundle.load('assets/severingcan.bin');
+    // Uint8List bytes = videoData.buffer as  Uint8List();
     Uint8List bytes = videoData.buffer.asUint8List();
     // Uint8List 本质上是一个 List<int>
-  //  List<int> intList = uint8List.toList();
+    //  List<int> intList = uint8List.toList();
     return videoData;
   }
 
@@ -49,11 +59,12 @@ class _BluetoothDebugPageState extends State<BluetoothDebugPage> {
     super.initState();
     CommStatusManager().loadBinFile();
     //loadBinFile();
-      //_ble = CommStatusManager().ble;
+    //_ble = CommStatusManager().ble;
     print('object');
+    EventBus eventBus = EventBusManager().eventBus;
+    _subscription = eventBus.on<DataUpdatedEvent>().listen((event) {
+    });
   }
-
-
 
   @override
   void dispose() {
@@ -62,18 +73,18 @@ class _BluetoothDebugPageState extends State<BluetoothDebugPage> {
   }
 
   Future<void> _startScan() async {
-    PermissionStatus locationPermission = await Permission.location.request();
-    PermissionStatus bleScan = await Permission.bluetoothScan.request();
-    PermissionStatus bleConnect = await Permission.bluetoothConnect.request();
     setState(() {
       _devices.clear();
       _scanning = true;
     });
 
-    _scanStream = CommStatusManager().ble.scanForDevices(withServices: [], scanMode: ScanMode.lowLatency);
+    _scanStream = CommStatusManager()
+        .ble
+        .scanForDevices(withServices: [], scanMode: ScanMode.lowLatency);
 
     _scanStream.listen((device) {
-      if (!_devices.any((d) => d.id == device.id) && device.name.contains(_targetName)) {
+      if (!_devices.any((d) => d.id == device.id) &&
+          device.name.contains(_targetName)) {
         setState(() {
           _devices.add(device);
         });
@@ -88,6 +99,7 @@ class _BluetoothDebugPageState extends State<BluetoothDebugPage> {
   void _clearAndRescan() {
     CommStatusManager().ble.deinitialize(); // 停止旧的 BLE 流
     _startScan();
+    CommStatusManager().progress = CommProgress.ping;
   }
 
   Future<void> _connectToDevice(DiscoveredDevice device) async {
@@ -98,7 +110,8 @@ class _BluetoothDebugPageState extends State<BluetoothDebugPage> {
       _writeChar = null;
     });
 
-    _connectionStream = CommStatusManager().ble.connectToDevice(id: device.id, connectionTimeout: const Duration(seconds: 10));
+    _connectionStream = CommStatusManager().ble.connectToDevice(
+        id: device.id, connectionTimeout: const Duration(seconds: 10));
     _connectionStream.listen((event) async {
       if (event.connectionState == DeviceConnectionState.connected) {
         setState(() => _connected = true);
@@ -112,15 +125,16 @@ class _BluetoothDebugPageState extends State<BluetoothDebugPage> {
             deviceId: device.id);
         CommStatusManager().writeChar = _writeChar;
         print("连接成功，并获取到特征");
-        CommStatusManager().ble
+        CommStatusManager()
+            .ble
             .subscribeToCharacteristic(_notifyChar!)
             .listen((List<int> data) {
-            print(
-                "上报来的数据data = ${data.map((toElement) => toElement.toRadixString(16)).toList()}");
-            // 解析数据
-            OTAServiceDataParse.parseData(data);
+          print(
+              "上报来的数据data = ${data.map((toElement) => toElement.toRadixString(16)).toList()}");
+          // 解析数据
+          OTAServiceDataParse.parseData(data);
           // 解析270
-          });
+        });
       } else if (event.connectionState == DeviceConnectionState.disconnected) {
         setState(() {
           _connected = false;
@@ -147,64 +161,63 @@ class _BluetoothDebugPageState extends State<BluetoothDebugPage> {
     return crc & 0xFFFF; // 确保结果为 16 位
   }
 
-  List<int> realBuildWirterCommand(){
-    List<int> _tempValue =  [0x5a,0xa5,0x04,0x00,0x01,0x02,0x03,0x04];
-    int  _value = crc16Update(_tempValue);
+  List<int> realBuildWirterCommand() {
+    List<int> _tempValue = [0x5a, 0xa5, 0x04, 0x00, 0x01, 0x02, 0x03, 0x04];
+    int _value = crc16Update(_tempValue);
     List<int> finalValue = [
-      _value & 0xFF,       // 低位字节
+      _value & 0xFF, // 低位字节
       (_value >> 8) & 0xFF // 高位字节
     ];
     _tempValue.insert(4, finalValue.first);
     _tempValue.insert(5, finalValue.last);
     return _tempValue;
   }
-  List<int> buildWirterCommand(){
-    List<int> _tempValue =  [0x5a,0xa4,0x0c,0x00,0x04,0x00,0x00,0x02,0x00,0x80,0x00,0x08,0x04,0x00,0x00,0x00];
-    int  _value = crc16Update(_tempValue);
+
+  List<int> buildWirterCommand() {
+    List<int> _tempValue = [
+      0x5a,
+      0xa4,
+      0x0c,
+      0x00,
+      0x04,
+      0x00,
+      0x00,
+      0x02,
+      0x00,
+      0x80,
+      0x00,
+      0x08,
+      0x04,
+      0x00,
+      0x00,
+      0x00
+    ];
+    int _value = crc16Update(_tempValue);
     List<int> finalValue = [
-      _value & 0xFF,       // 低位字节
+      _value & 0xFF, // 低位字节
       (_value >> 8) & 0xFF // 高位字节
     ];
     _tempValue.insert(4, finalValue.first);
     _tempValue.insert(5, finalValue.last);
     return _tempValue;
   }
+
+  void onlyHightSelected(){
+
+  }
+
+  _changeMode(int mode){
+    CommStatusManager().writerData( changeModeData(mode));
+  }
+
   Future<void> _sendCommand() async {
-
     // 开始发送ping数据
+    // CommStatusManager().progress = CommProgress.idle;
+    // CommStatusManager().writerData(systemResetData());
+
     CommStatusManager().progress = CommProgress.ping;
-    CommStatusManager()
-        .writerData(pingData());
+    CommStatusManager().writerData(pingData());
     return;
-
-    // Read
-    List<int> _tempValue =  [0x5a,0xa4,0x0c,0x00,0x03,0x00,0x00,0x02,0x00,0x80,0x00,0x08,0x04,0x00,0x00,0x00];
-    int  _value = crc16Update(_tempValue);
-    List<int> finalValue = [
-      _value & 0xFF,       // 低位字节
-      (_value >> 8) & 0xFF // 高位字节
-    ];
-    _tempValue.insert(4, finalValue.first);
-    _tempValue.insert(5, finalValue.last);
-    // 示例指令（可替换）
-    // 握手 心跳 Ping
-    final command = Uint8List.fromList([0x5a, 0xa6]);
-    if (_writeChar == null) {
-      print("写特征未准备好");
-      return;
-    }
-
-    // 擦除所有的指令
-    [0x5a ,0xa4 ,0x08 ,0x00 ,0x0c ,0x22 ,0x01,0x00,0x00,0x01,0x00 ,0x00 ,0x00,0x00];
-    [0x5a,0xa1];
-    // reset指令
-     [
-      0x5a, 0xa4, 0x04, 0x00, 0x6f, 0x46, 0x0b, 0x00, 0x00, 0x00
-    ];
-    [0x5a,0xa1];
-     // [0x5a, 0xa6]
-    await CommStatusManager().ble.writeCharacteristicWithoutResponse(_writeChar!, value:  [0x5a ,0xa4 ,0x08 ,0x00 ,0x0c ,0x22 ,0x01,0x00,0x00,0x01,0x00 ,0x00 ,0x00,0x00]);
-    print("指令已发送");
 
     setState(() {
       _currentStep = (_currentStep + 1).clamp(0, _totalSteps);
@@ -228,21 +241,81 @@ class _BluetoothDebugPageState extends State<BluetoothDebugPage> {
       appBar: AppBar(title: Text("蓝牙调试工具")),
       body: Column(
         children: [
-          Row(
-            mainAxisAlignment: MainAxisAlignment.spaceAround,
+          Column(
             children: [
-              ElevatedButton(
-                onPressed: _startScan,
-                child: Text(_scanning ? "扫描中..." : "开始扫描"),
+              Row(
+                mainAxisAlignment: MainAxisAlignment.spaceAround,
+                children: [
+                  ElevatedButton(
+                    onPressed: _startScan,
+                    child: Text(_scanning ? "扫描中..." : "开始扫描"),
+                  ),
+                  ElevatedButton(
+                    onPressed: _clearAndRescan,
+                    child: Text("清除并重新扫描"),
+                  ),
+                ],
               ),
-              ElevatedButton(
-                onPressed: _clearAndRescan,
-                child: Text("清除并重新扫描"),
+              Row(
+                mainAxisAlignment: MainAxisAlignment.spaceAround,
+                children: [
+                  ElevatedButton(
+                    onPressed: _connected ? _sendCommand : null,
+                    child: Text("发送指令"),
+                  ),
+                  // MenuButton<String>(
+                  //     child: GestureDetector(onTap: _connected ? null : _sendCommand,
+                  //       child: Container(
+                  //         padding: EdgeInsets.all(12),
+                  //         child: Center(child: Text(selectedKey),),
+                  //       ),
+                  //     ),
+                  //     items: keys,
+                  //     itemBuilder: (String value) => Container(
+                  //           height: 40,
+                  //           alignment: Alignment.centerLeft,
+                  //           padding: const EdgeInsets.symmetric(
+                  //               vertical: 0.0, horizontal: 16),
+                  //           child: Text(value),
+                  //         ),
+                  //   onItemSelected: (String value) {
+                  //       print('value=${value}');
+                  //       if(value.length <3){
+                  //         return;
+                  //       }
+                  //       String _index = value.substring(2,3);
+                  //     setState(() {
+                  //       selectedKey = value;
+                  //     });
+                  //     CommStatusManager().writerData(changeModeData(int.parse(_index)));
+                  //   },
+                  // )
+                ],
               ),
-              ElevatedButton(
-                onPressed: _connected ? _sendCommand : null,
-                child: Text("发送指令"),
-              ),
+        Row(
+          mainAxisAlignment: MainAxisAlignment.center,
+          children: [
+            ElevatedButton(onPressed: (){
+              _changeMode(1);
+            }, child: Text('模式1')),
+            const SizedBox(width: 12,),
+            ElevatedButton(onPressed:(){
+              _changeMode(2);
+            }, child: Text('模式2')),
+            const SizedBox(width: 12,),
+            ElevatedButton(onPressed: (){
+              _changeMode(3);
+            }, child: Text('模式3')),
+          ],
+        ),
+              Row(
+                mainAxisAlignment: MainAxisAlignment.center,
+                children: [
+                  Text('版本号:'),
+                  const SizedBox(width: 32,),
+                  Text(CommStatusManager().versionName)
+                ],
+              )
             ],
           ),
           Padding(
@@ -263,7 +336,8 @@ class _BluetoothDebugPageState extends State<BluetoothDebugPage> {
           if (_connectedDevice != null)
             Padding(
               padding: const EdgeInsets.all(8.0),
-              child: Text("当前连接设备：${_connectedDevice!.name}", style: TextStyle(fontWeight: FontWeight.bold)),
+              child: Text("当前连接设备：${_connectedDevice!.name}",
+                  style: TextStyle(fontWeight: FontWeight.bold)),
             ),
         ],
       ),

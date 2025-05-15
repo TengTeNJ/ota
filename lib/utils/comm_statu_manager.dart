@@ -1,10 +1,13 @@
+import 'dart:async';
+
 import 'package:flutter_reactive_ble/flutter_reactive_ble.dart';
 import 'dart:typed_data';
 import 'package:flutter/services.dart' show rootBundle;
 
 // 1️⃣ 定义ota进度枚举
 enum CommProgress {
-  idle, // 初始化状态 未发送任何升级的指令
+  ready, // ready状态 未进行ota的阶段
+  idle, // 初始化状态 未发送任何升级的指令 此时先发送一个系统复位的指令 然后继续你选哪个下面的操作
   ping, // 握手
   eraseAll, // 擦除所有
   begainWrite, // 开始写
@@ -20,6 +23,7 @@ bool _loadBin = false;
 class CommStatusManager {
   // 私有构造
   CommStatusManager._internal();
+  Timer? timer;
 
   // 单例实例
   static final CommStatusManager _instance = CommStatusManager._internal();
@@ -31,16 +35,22 @@ class CommStatusManager {
     // }
     return _instance;
   }
+  bool isOta = true;
+  List<String> otaStrings = ['','','','','','',''];
+  List<String> factoryStrings = ['','','','','','',];
 
   FlutterReactiveBle ble = FlutterReactiveBle();
   // 当前状态
-  CommProgress _progress = CommProgress.idle;
+  CommProgress _progress = CommProgress.ready;
 
   CommProgress get progress => _progress;
   QualifiedCharacteristic? writeChar;
 
   List<int> binData = []; //  bin文件的数据
   List<List<int>> packetBinDatas = []; // 分包过的bin文件数据
+
+  String versionName = '1.0.0.0';
+  int statu = 0;
 
   set progress(CommProgress progress) {
     _progress = progress;

@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:ota/root_page_controller.dart';
 import 'package:ota/test_controller.dart';
 
 void main() {
@@ -33,7 +34,8 @@ class MyApp extends StatelessWidget {
         useMaterial3: true,
       ),
       // home: const MyHomePage(title: 'Flutter Demo Home Page'),
-      home: BluetoothDebugPage(),
+      home: RootPageController(),
+      // home: BluetoothDebugPage(),
     );
   }
 }

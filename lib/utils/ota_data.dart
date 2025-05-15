@@ -73,6 +73,7 @@ void main() {
 * 开始写的指令 带上数据总长度的参数
 * */
 List<int> bagainWriteData(int length) {
+  print('length = ${length}');
   final byteData = ByteData(4);
   byteData.setUint32(0, length, Endian.little); // 小端格式写入
   List<int> lengthDatas = [
@@ -140,6 +141,18 @@ List<int> realBuildWirterCommand(List<int> data) {
 }
 
 List<int> resetData() {
-  print('进入到reset阶段');
+  print('reset');
   return [0x5a, 0xa4, 0x04, 0x00, 0x6f, 0x46, 0x0b, 0x00, 0x00, 0x00];
+}
+
+List<int>systemResetData(){
+  print('系统复位');
+  List<int> data = [kBLEDataFrameHeader,6,0x05,0x01,0xff,0xaa];
+  return data;
+}
+
+List<int>changeModeData(int mode){
+  print('切换模式--${mode}');
+  List<int> data = [kBLEDataFrameHeader,6,0x06,mode,0xff,0xaa];
+  return data;
 }
