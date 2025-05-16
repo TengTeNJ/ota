@@ -232,7 +232,7 @@ class _OtaPageState extends State<OtaPage> {
             if (_connectedDevice != null)
               Padding(
                 padding: const EdgeInsets.all(8.0),
-                child: Text("当前连接设备：${_connectedDevice!.name}",
+                child: Text("当前连接设备：${_connectedDevice!.id}",
                     style: TextStyle(fontWeight: FontWeight.bold)),
               ),
           ],

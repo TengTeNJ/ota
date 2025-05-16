@@ -29,8 +29,8 @@ class _RootPageControllerState extends State<RootPageController> {
         },
         items: const [
           BottomNavigationBarItem(
-            icon: Icon(Icons.settings_backup_restore),
-            label: '出厂设置',
+            icon: Icon(Icons.copy),
+            label: '出厂烧录',
           ),
           BottomNavigationBarItem(
             icon: Icon(Icons.system_update),

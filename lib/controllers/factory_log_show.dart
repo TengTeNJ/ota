@@ -6,6 +6,7 @@ import 'package:flutter/material.dart';
 import '../constants.dart';
 import '../utils/comm_statu_manager.dart';
 import '../utils/event_manager.dart';
+
 class FactoryLogShow extends StatefulWidget {
   const FactoryLogShow({super.key});
 
@@ -23,8 +24,9 @@ class _FactoryLogShowState extends State<FactoryLogShow> {
     EventBus eventBus = EventBusManager().eventBus;
     _subscription = eventBus.on<DataUpdatedEvent>().listen((event) {
       setState(() {
-        if(event.data == kOTATextProgress){
-          print('CommStatusManager().otaStrings=${CommStatusManager().otaStrings}');
+        if (event.data == kOTATextProgress) {
+          print(
+              'CommStatusManager().otaStrings=${CommStatusManager().otaStrings}');
           // setState(() {
           //
           // });
@@ -42,17 +44,39 @@ class _FactoryLogShowState extends State<FactoryLogShow> {
             '日志输出',
             style: TextStyle(fontSize: 18, fontWeight: FontWeight.bold),
           )),
-      body: Padding(padding: EdgeInsets.all(16),child: ListView.separated(itemBuilder: (context,index){
-        return ListTile(
-          leading: Text(CommStatusManager().factoryStrings[index],style: TextStyle(fontSize: 14,fontWeight: FontWeight.bold),),
-        );
-      }, separatorBuilder: (context,index){
-        return Container(
-          height: 1,
-          color: Color.fromRGBO(207, 207, 207, 1.0),
-          margin: const EdgeInsets.symmetric(horizontal: 16),
-        );
-      }, itemCount: CommStatusManager().factoryStrings.length),),
+      body: Padding(
+        padding: EdgeInsets.all(16),
+        child: Column(
+          mainAxisAlignment: MainAxisAlignment.spaceBetween,
+          children: [
+            ListView.separated(
+              shrinkWrap: true,
+                itemBuilder: (context, index) {
+                  return ListTile(
+                    leading: Text(
+                      CommStatusManager().factoryStrings[index],
+                      style: TextStyle(fontSize: 14, fontWeight: FontWeight.bold),
+                    ),
+                  );
+                },
+                separatorBuilder: (context, index) {
+                  return Container(
+                    height: 1,
+                    color: Color.fromRGBO(207, 207, 207, 1.0),
+                    margin: const EdgeInsets.symmetric(horizontal: 16),
+                  );
+                },
+                itemCount: CommStatusManager().factoryStrings.length),
+            ElevatedButton(onPressed: (){
+              if(mounted){
+                setState(() {
+                  
+                });
+              }
+            }, child: Text('刷新'))
+          ],
+        ),
+      ),
     );
   }
 }

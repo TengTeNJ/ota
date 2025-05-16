@@ -161,7 +161,7 @@ class _FactoryResetPageState extends State<FactoryResetPage> {
       appBar: AppBar(
           centerTitle: true,
           title: Text(
-            'OTA',
+            '烧录',
             style: TextStyle(fontSize: 18, fontWeight: FontWeight.bold),
           )),
       body: Padding(
@@ -211,13 +211,13 @@ class _FactoryResetPageState extends State<FactoryResetPage> {
             if (_connected)
               ElevatedButton(
                 onPressed: _connected ? _sendCommand : null,
-                child: Text("开始升级"),
+                child: Text("开始烧录"),
               ),
             const SizedBox(height: 32,),
             if (_connectedDevice != null)
               Padding(
                 padding: const EdgeInsets.all(8.0),
-                child: Text("当前连接设备：${_connectedDevice!.name}",
+                child: Text("当前连接设备：${_connectedDevice!.id}",
                     style: TextStyle(fontWeight: FontWeight.bold)),
               ),
           ],
