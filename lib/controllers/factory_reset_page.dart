@@ -10,6 +10,7 @@ import '../utils/comm_statu_manager.dart';
 import '../utils/event_manager.dart';
 import '../utils/ota_data.dart';
 import '../utils/ota_service_data.dart';
+import '../views/empty_view.dart';
 
 class FactoryResetPage extends StatefulWidget {
   const FactoryResetPage({super.key});
@@ -29,24 +30,22 @@ class _FactoryResetPageState extends State<FactoryResetPage> {
   ];
   late StreamSubscription<DataUpdatedEvent> _subscription;
 
-  List<String> keys = <String>[
-    '模式1',
-    '模式2',
-    '模式3',
-  ];
-  List<DiscoveredDevice> _devices = [];
   DiscoveredDevice? _connectedDevice;
-  QualifiedCharacteristic? _notifyChar;
-  QualifiedCharacteristic? _writeChar;
 
-  late Stream<DiscoveredDevice> _scanStream;
-  late Stream<ConnectionStateUpdate> _connectionStream;
-
-  bool _scanning = false;
   bool _connected = false;
-  int _currentStep = 0;
-  final int _totalSteps = 7;
-  String selectedKey = '切换模式';
+
+  initData(){
+    if(CommStatusManager().currentConnectedDevice != null){
+      print('++++');
+      setState(() {
+        _connectedDevice = CommStatusManager().currentConnectedDevice!.device;
+        _connected = true;
+      });
+    }else{
+      _connectedDevice = null;
+      _connected = false;
+    }
+  }
 
   @override
   void initState() {
@@ -54,44 +53,20 @@ class _FactoryResetPageState extends State<FactoryResetPage> {
     super.initState();
     // 加载bin文件
     CommStatusManager().loadBinFile();
-  }
-
-  Future<void> _startScan() async {
-    setState(() {
-      _devices.clear();
-      _scanning = true;
-    });
-
-    _scanStream = CommStatusManager()
-        .ble
-        .scanForDevices(withServices: [], scanMode: ScanMode.lowLatency);
-
-    _scanStream.listen((device) {
-      if (!_devices.any((d) => d.id == device.id) &&
-          device.name.contains(kBLEDeviceName)) {
-        setState(() {
-          _devices.add(device);
-        });
-      }
-    }, onDone: () {
+    EventBus eventBus = EventBusManager().eventBus;
+    _subscription = eventBus.on<DataUpdatedEvent>().listen((event) {
       setState(() {
-        _scanning = false;
+      if(event.data == kBLEConneted){
+          initData();
+        }else if(event.data == kBLEDisconneted){
+          initData();
+        }
       });
     });
+
+    initData();
   }
 
-  void _clearAndRescan() {
-    CommStatusManager().ble.deinitialize(); // 停止旧的 BLE 流
-    _startScan();
-    _devices.clear();
-    CommStatusManager().progress = CommProgress.idle;
-    CommStatusManager().otaStrings = ['', '', '', '', '', '', ''];
-    _connected = false;
-    _connectedDevice = null;
-    setState(() {
-
-    });
-  }
 
   Future<void> _sendCommand() async {
     CommStatusManager().isOta = false;
@@ -101,99 +76,31 @@ class _FactoryResetPageState extends State<FactoryResetPage> {
     );
   }
 
-  Future<void> _connectToDevice(DiscoveredDevice device) async {
-    setState(() {
-      _connectedDevice = device;
-      _connected = false;
-      _notifyChar = null;
-      _writeChar = null;
-    });
-
+  Future<void> _connectToDevice(BLEModel model) async {
     // 断开连接
-    if(CommStatusManager().currentConnectedDevice != null && CommStatusManager().currentConnectedDevice!.device!.id == device.id){
+    if(CommStatusManager().currentConnectedDevice != null && CommStatusManager().currentConnectedDevice!.device!.id == model.device!.id){
       // 断开连接
       CommStatusManager().currentConnectedDevice!.bleStream?.cancel();
-      DiscoveredDevice _device = _devices.firstWhere((_element) => _element.id == device.id);
+      BLEModel _device = CommStatusManager().deviceList.firstWhere((_element) => _element.device!.id == model.device!.id);
       if(_device != null){
         setState(() {
           CommStatusManager().currentConnectedDevice = null;
           _connectedDevice = null;
-          _devices.remove(_device);
           _connected = false;
         });
       }
       return;
     }
-
-
-    _connectionStream = CommStatusManager().ble.connectToDevice(
-        id: device.id, connectionTimeout: const Duration(seconds: 10));
-    late  StreamSubscription<ConnectionStateUpdate> stream;
-    stream = _connectionStream.listen((event) async {
-      if (event.connectionState == DeviceConnectionState.connected) {
-        setState(() => _connected = true);
-        _notifyChar = QualifiedCharacteristic(
-            serviceId: Uuid.parse(kBLE_SERVICE_NOTIFY_UUID),
-            characteristicId: Uuid.parse(kBLE_CHARACTERISTIC_NOTIFY_UUID),
-            deviceId: device.id);
-        _writeChar = QualifiedCharacteristic(
-            serviceId: Uuid.parse(kBLE_SERVICE_WRITER_UUID),
-            characteristicId: Uuid.parse(kBLE_CHARACTERISTIC_WRITER_UUID),
-            deviceId: device.id);
-        CommStatusManager().writeChar = _writeChar;
-
-        BLEModel currentModel = BLEModel();
-        currentModel.device = device;
-        currentModel.writerCharacteristic = _writeChar;
-        currentModel.bleStream = stream;
-        currentModel.hasConected = true;
-        CommStatusManager().currentConnectedDevice = currentModel;
-        setState(() {
-
-        });
-
-        print("连接成功，并获取到特征");
-        CommStatusManager()
-            .ble
-            .subscribeToCharacteristic(_notifyChar!)
-            .listen((List<int> data) {
-          print(
-              "上报来的数据data = ${data.map((toElement) => toElement.toRadixString(16)).toList()}");
-          // 解析数据
-          OTAServiceDataParse.parseData(data);
-          // 解析270
-        });
-      } else if (event.connectionState == DeviceConnectionState.disconnected) {
-        setState(() {
-          _connected = false;
-          _notifyChar = null;
-          _writeChar = null;
-        });
-
-        // 移除元素
-        try {
-          DiscoveredDevice firstEven = _devices.firstWhere((element) => element.id == device.id);
-          _devices.remove(firstEven);
-          CommStatusManager().currentConnectedDevice = null;
-          setState(() {
-
-          });
-        } catch (e) {
-          print('没有找到满足条件的元素');
-        }
-
-        print("设备已断开连接");
-      }
-    });
+    CommStatusManager().connectToDevice(model);
   }
 
-  Widget _buildDeviceItem(DiscoveredDevice device) {
+  Widget _buildDeviceItem(BLEModel model) {
     return ListTile(
-      title: Text(device.name),
-      subtitle: Text('${device.id}    RSSI:${device.rssi}'),
+      title: Text(model.device!.name),
+      subtitle: Text('${model.device!.id}    RSSI:${model.device!.rssi}'),
       trailing: ElevatedButton(
-        onPressed: () => _connectToDevice(device),
-        child:  Text( CommStatusManager().currentConnectedDevice != null && CommStatusManager().currentConnectedDevice!.device!.id == device.id ? "断开连接" : '连接'),
+        onPressed: () => _connectToDevice(model),
+        child:  Text( CommStatusManager().currentConnectedDevice != null && CommStatusManager().currentConnectedDevice!.device!.id == model.device!.id ? "断开连接" : '连接'),
       ),
     );
   }
@@ -207,35 +114,14 @@ class _FactoryResetPageState extends State<FactoryResetPage> {
             '烧录',
             style: TextStyle(fontSize: 18, fontWeight: FontWeight.bold),
           )),
-      body: Padding(
+      body:  CommStatusManager().deviceList.length == 0 ? EmptyView(): Padding(
         padding: EdgeInsets.all(16),
         child: Column(
           children: [
-            Container(
-              height: 1,
-              color: Color.fromRGBO(235, 235, 235, 1.0),
-            ),
-            Row(
-              mainAxisAlignment: MainAxisAlignment.spaceBetween,
-              children: [
-                ElevatedButton(
-                  onPressed: _startScan,
-                  child: Text(_scanning ? "扫描中..." : "搜索"),
-                ),
-                ElevatedButton(
-                  onPressed: _devices.length > 0 ? _clearAndRescan : null,
-                  child: Text("刷新"),
-                ),
-              ],
-            ),
-            Container(
-              height: 1,
-              color: Color.fromRGBO(235, 235, 235, 1.0),
-            ),
             const SizedBox(
               height: 16,
             ),
-            if (_devices.length != 0)
+            if (CommStatusManager().deviceList.length != 0)
               Padding(padding: EdgeInsets.only(left: 16,right: 16),child: Row(
                 children: [
                   Text(
@@ -247,8 +133,8 @@ class _FactoryResetPageState extends State<FactoryResetPage> {
               ),),
             ListView.builder(
               shrinkWrap: true,
-              itemCount: _devices.length,
-              itemBuilder: (_, index) => _buildDeviceItem(_devices[index]),
+              itemCount: CommStatusManager().deviceList.length,
+              itemBuilder: (_, index) => _buildDeviceItem(CommStatusManager().deviceList[index]),
             ),
             const Spacer(),
             if (_connected)
@@ -272,7 +158,7 @@ class _FactoryResetPageState extends State<FactoryResetPage> {
   @override
   void dispose() {
     // TODO: implement dispose
+    _subscription.cancel();
     super.dispose();
-    CommStatusManager().ble.deinitialize(); // 停止旧的 BLE 流
   }
 }

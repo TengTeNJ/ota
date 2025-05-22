@@ -5,6 +5,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter_reactive_ble/flutter_reactive_ble.dart';
 import 'package:ota/controllers/update_progress.dart';
 import 'package:ota/model/ble_model.dart';
+import 'package:ota/views/empty_view.dart';
 
 import '../constants.dart';
 import '../utils/comm_statu_manager.dart';
@@ -138,7 +139,7 @@ class _OtaPageState extends State<OtaPage> {
             'OTA',
             style: TextStyle(fontSize: 18, fontWeight: FontWeight.bold),
           )),
-      body: Padding(
+      body:  CommStatusManager().deviceList.length == 0 ? EmptyView(): Padding(
         padding: EdgeInsets.all(16),
         child: Column(
           children: [

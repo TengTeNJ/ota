@@ -84,6 +84,12 @@ class CommStatusManager {
     // }
     return value;
   }
+
+  refresh(){
+    CommStatusManager().ble.deinitialize(); // 停止旧的 BLE 流
+    _scanStream = null;
+    startScan();
+  }
   /*开始扫描*/
   Future<void> startScan() async {
     // 不能重复扫描

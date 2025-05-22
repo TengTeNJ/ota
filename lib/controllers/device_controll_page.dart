@@ -11,6 +11,7 @@ import '../utils/comm_statu_manager.dart';
 import '../utils/event_manager.dart';
 import '../utils/ota_data.dart';
 import '../utils/ota_service_data.dart';
+import '../views/empty_view.dart';
 
 class DeviceControlPage extends StatefulWidget {
   const DeviceControlPage({super.key});
@@ -131,7 +132,7 @@ class _DeviceControlPageState extends State<DeviceControlPage> {
             'OTA',
             style: TextStyle(fontSize: 18, fontWeight: FontWeight.bold),
           )),
-      body: Padding(
+      body:  CommStatusManager().deviceList.length == 0 ? EmptyView(): Padding(
         padding: EdgeInsets.all(16),
         child: Column(
           children: [
