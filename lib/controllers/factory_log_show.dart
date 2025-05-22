@@ -79,4 +79,11 @@ class _FactoryLogShowState extends State<FactoryLogShow> {
       ),
     );
   }
+
+  @override
+  void dispose() {
+    // TODO: implement dispose
+    _subscription.cancel();
+    super.dispose();
+  }
 }

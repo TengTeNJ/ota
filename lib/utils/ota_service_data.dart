@@ -264,6 +264,7 @@ class OTAServiceDataParse {
       return;
     }
     if (CommStatusManager().progress == CommProgress.ready) {
+      return;
 /*
 * Byte0	Byte1	Byte2	Byte3	..........	Byte3+n	Byte4+n	Byte5+n	Byte6+n	Byte7+n
 0x5a	Len					id_h	id_l	Sum	0xaa
@@ -290,12 +291,6 @@ class OTAServiceDataParse {
           }
       }
     }else if (CommStatusManager().progress == CommProgress.idle) {
-      // late Timer _timer;
-      // _timer = Timer(Duration(milliseconds: 10000), () {
-      //   bleNotAllData.clear();
-      //   print('系统复位接收超时');
-      //   _timer.cancel();
-      // });
 
       handleTimeOut('系统复位');
 
@@ -320,6 +315,13 @@ class OTAServiceDataParse {
             bleNotAllData.clear();
             print('再发一次ping数据');
             CommStatusManager().writerData(pingData());
+            Future.delayed(Duration(seconds: 5),(){
+              if(CommStatusManager().progress == CommProgress.ping){
+                bleNotAllData.clear();
+                print('再发一次ping数据');
+                CommStatusManager().writerData(pingData());
+              }
+            });
           }
         });
 

@@ -56,10 +56,10 @@ class _OtaPageState extends State<OtaPage> {
       setState(() {
         _connectedDevice = CommStatusManager().currentConnectedDevice!.device;
         _connected = true;
-        _devices.add(_connectedDevice!);
-        _notifyChar = CommStatusManager().currentConnectedDevice!.notifyCharacteristic;
-        _writeChar = CommStatusManager().currentConnectedDevice!.writerCharacteristic;
       });
+    }else{
+      _connectedDevice = null;
+      _connected = false;
     }
   }
 
@@ -79,49 +79,15 @@ class _OtaPageState extends State<OtaPage> {
 
         }else if(event.data == kBLEConneted){
           initData();
+        }else if(event.data == kBLEDisconneted){
+          initData();
         }
       });
     });
    initData();
   }
 
-  // Future<void> _startScan() async {
-  //   setState(() {
-  //     _devices.clear();
-  //     _scanning = true;
-  //     CommStatusManager().deviceList.clear();
-  //   });
-  //
-  //   _scanStream = CommStatusManager()
-  //       .ble
-  //       .scanForDevices(withServices: [], scanMode: ScanMode.lowLatency);
-  //
-  //   _scanStream.listen((device) {
-  //     if (!_devices.any((d) => d.id == device.id) &&
-  //         device.name.contains(kBLEDeviceName)) {
-  //       setState(() {
-  //         _devices.add(device);
-  //       });
-  //     }
-  //   }, onDone: () {
-  //     setState(() {
-  //       _scanning = false;
-  //     });
-  //   });
-  // }
-  //
-  // void _clearAndRescan() {
-  //   CommStatusManager().ble.deinitialize(); // 停止旧的 BLE 流
-  //   _startScan();
-  //   _devices.clear();
-  //   CommStatusManager().progress = CommProgress.idle;
-  //   CommStatusManager().otaStrings = ['', '', '', '', '', '', ''];
-  //   _connected = false;
-  //   _connectedDevice = null;
-  //   setState(() {
-  //
-  //   });
-  // }
+
 
   Future<void> _sendCommand() async {
     CommStatusManager().isOta = true;
@@ -139,21 +105,19 @@ class _OtaPageState extends State<OtaPage> {
     if(CommStatusManager().currentConnectedDevice != null && CommStatusManager().currentConnectedDevice!.device!.id == model.device!.id){
       // 断开连接
       CommStatusManager().currentConnectedDevice!.bleStream?.cancel();
-      DiscoveredDevice _device = _devices.firstWhere((_element) => _element.id == model.device!.id);
+      BLEModel _device = CommStatusManager().deviceList.firstWhere((_element) => _element.device!.id == model.device!.id);
       if(_device != null){
         setState(() {
           CommStatusManager().currentConnectedDevice = null;
           _connectedDevice = null;
-          _devices.remove(_device);
           _connected = false;
         });
       }
       return;
     }
-
     CommStatusManager().connectToDevice(model);
-
   }
+
   Widget _buildDeviceItem(BLEModel model) {
     return ListTile(
       title: Text(model.device!.name),
@@ -218,6 +182,7 @@ class _OtaPageState extends State<OtaPage> {
   @override
   void dispose() {
     // TODO: implement dispose
+    _subscription.cancel();
     super.dispose();
   }
 }

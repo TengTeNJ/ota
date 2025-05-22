@@ -111,9 +111,6 @@ class _UpdateProgressState extends State<UpdateProgress> {
               return Step(
                 title: Text(step),
                 content: Text(''),
-                // subtitle: Text(CommStatusManager().otaStrings.isEmpty ? '开始' : CommStatusManager().otaStrings[index]),
-                // content: Text(CommStatusManager().otaStrings.isEmpty ? '开始' : CommStatusManager().otaStrings[index]),
-                // content: Text('888'),
                 isActive: index <= _currentStep,
                 // state: _stepStates[index]
                 //     ? StepState.complete

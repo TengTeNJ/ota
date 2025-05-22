@@ -79,4 +79,11 @@ class _LogShowState extends State<LogShow> {
       ),
     );
   }
+
+  @override
+  void dispose() {
+    // TODO: implement dispose
+    _subscription.cancel();
+    super.dispose();
+  }
 }

@@ -20,35 +20,11 @@ class DeviceControlPage extends StatefulWidget {
 }
 
 class _DeviceControlPageState extends State<DeviceControlPage> {
-  final List<CommProgress> progressDatas = [
-    CommProgress.idle,
-    CommProgress.ping,
-    CommProgress.eraseAll,
-    CommProgress.begainWrite,
-    CommProgress.sendingData,
-    CommProgress.reset,
-    CommProgress.finished,
-  ];
   late StreamSubscription<DataUpdatedEvent> _subscription;
 
-  List<String> keys = <String>[
-    '模式1',
-    '模式2',
-    '模式3',
-  ];
   List<DiscoveredDevice> _devices = [];
   DiscoveredDevice? _connectedDevice;
-  QualifiedCharacteristic? _notifyChar;
-  QualifiedCharacteristic? _writeChar;
-
-  late Stream<DiscoveredDevice> _scanStream;
-  late Stream<ConnectionStateUpdate> _connectionStream;
-
-  bool _scanning = false;
   bool _connected = false;
-  int _currentStep = 0;
-  final int _totalSteps = 7;
-  String selectedKey = '切换模式';
 
   @override
   void initState() {
@@ -59,7 +35,11 @@ class _DeviceControlPageState extends State<DeviceControlPage> {
     EventBus eventBus = EventBusManager().eventBus;
     _subscription = eventBus.on<DataUpdatedEvent>().listen((event) {
       setState(() {
-
+        if(event.data == kBLEConneted){
+        initData();
+        }else if(event.data == kBLEDisconneted){
+          initData();
+        }
       });
     });
     initData();
@@ -67,61 +47,14 @@ class _DeviceControlPageState extends State<DeviceControlPage> {
 
   initData(){
     if(CommStatusManager().currentConnectedDevice != null){
-      print('++++');
       setState(() {
         _connectedDevice = CommStatusManager().currentConnectedDevice!.device;
         _connected = true;
-        _devices.add(_connectedDevice!);
-        _notifyChar = CommStatusManager().currentConnectedDevice!.notifyCharacteristic;
-        _writeChar = CommStatusManager().currentConnectedDevice!.writerCharacteristic;
       });
+    }else{
+      _connectedDevice = null;
+      _connected = false;
     }
-  }
-
-  Future<void> _startScan() async {
-    setState(() {
-      _devices.clear();
-      _scanning = true;
-      CommStatusManager().deviceList.clear();
-    });
-
-    _scanStream = CommStatusManager()
-        .ble
-        .scanForDevices(withServices: [], scanMode: ScanMode.lowLatency);
-
-    _scanStream.listen((device) {
-      if (!_devices.any((d) => d.id == device.id) &&
-          device.name.contains(kBLEDeviceName)) {
-        setState(() {
-          _devices.add(device);
-        });
-      }
-    }, onDone: () {
-      setState(() {
-        _scanning = false;
-      });
-    });
-  }
-
-  void _clearAndRescan() {
-    CommStatusManager().ble.deinitialize(); // 停止旧的 BLE 流
-    _startScan();
-    _devices.clear();
-    CommStatusManager().progress = CommProgress.idle;
-    CommStatusManager().otaStrings = ['', '', '', '', '', '', ''];
-    _connected = false;
-    _connectedDevice = null;
-    setState(() {
-
-    });
-  }
-
-  Future<void> _sendCommand() async {
-    CommStatusManager().isOta = true;
-    Navigator.push(
-      context,
-      MaterialPageRoute(builder: (context) => UpdateProgress()), // 目标页面
-    );
   }
 
   /*
@@ -132,19 +65,18 @@ class _DeviceControlPageState extends State<DeviceControlPage> {
     if(CommStatusManager().currentConnectedDevice != null && CommStatusManager().currentConnectedDevice!.device!.id == model.device!.id){
       // 断开连接
       CommStatusManager().currentConnectedDevice!.bleStream?.cancel();
-      DiscoveredDevice _device = _devices.firstWhere((_element) => _element.id == model.device!.id);
+      BLEModel _device = CommStatusManager().deviceList.firstWhere((_element) => _element.device!.id == model.device!.id);
       if(_device != null){
         setState(() {
           CommStatusManager().currentConnectedDevice = null;
           _connectedDevice = null;
-          _devices.remove(_device);
           _connected = false;
         });
       }
       return;
     }
 
-  CommStatusManager().connectToDevice(model);
+    CommStatusManager().connectToDevice(model);
 
   }
 
@@ -159,6 +91,37 @@ class _DeviceControlPageState extends State<DeviceControlPage> {
     );
   }
 
+  /*
+  * 发送数据
+  * */
+  void _sendBluetoothData(BuildContext context, String data) {
+    CommStatusManager().writerData(changeModeData(int.parse(data)));
+    ScaffoldMessenger.of(context).showSnackBar(
+      SnackBar(
+        content: Text('已发送: $data'),
+        duration: Duration(seconds: 2),
+      ),
+    );
+  }
+
+  Widget _buildModeButton(BuildContext context, String text, String data) {
+    return ElevatedButton(
+      onPressed: () {
+        // 在这里调用发送蓝牙数据的逻辑
+        _sendBluetoothData(context, data);
+      },
+      style: ElevatedButton.styleFrom(
+        shape: RoundedRectangleBorder(
+          borderRadius: BorderRadius.circular(10),
+        ),
+        padding: EdgeInsets.symmetric(horizontal: 20, vertical: 10),
+      ),
+      child: Text(
+        text,
+        style: TextStyle(fontSize: 18),
+      ),
+    );
+  }
   @override
   Widget build(BuildContext context) {
     return Scaffold(
@@ -172,11 +135,10 @@ class _DeviceControlPageState extends State<DeviceControlPage> {
         padding: EdgeInsets.all(16),
         child: Column(
           children: [
-
             const SizedBox(
               height: 16,
             ),
-            if (_devices.length != 0)
+            if (CommStatusManager().deviceList.length != 0)
               Padding(padding: EdgeInsets.only(left: 16,right: 16),child: Row(
                 children: [
                   Text(
@@ -192,12 +154,34 @@ class _DeviceControlPageState extends State<DeviceControlPage> {
               itemBuilder: (_, index) => _buildDeviceItem(CommStatusManager().deviceList[index]),
             ),
             const Spacer(),
-            if (_connected)
-              ElevatedButton(
-                onPressed: _connected ? _sendCommand : null,
-                child: Text("开始升级"),
-              ),
             const SizedBox(height: 32,),
+            if(_connected)
+              Column(
+                children: [
+                  Row(
+                    children: [
+                      Text(
+                        '选择模式',
+                        style: TextStyle(fontSize: 16, fontWeight: FontWeight.bold),
+                      ),
+                      const Spacer()
+                    ],
+                  ),
+                  const SizedBox(height: 12,),
+                  Row(
+                    mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                    children: [
+                      _buildModeButton(context, '模式 1', '0'),
+                      SizedBox(height: 20),
+                      _buildModeButton(context, '模式 2', '1'),
+                      SizedBox(height: 20),
+                      _buildModeButton(context, '模式 3', '2'),
+                    ],
+                  ),
+                ],
+              ),
+            const SizedBox(height: 36,),
+
             if (_connectedDevice != null)
               Padding(
                 padding: const EdgeInsets.all(8.0),
@@ -213,7 +197,7 @@ class _DeviceControlPageState extends State<DeviceControlPage> {
   @override
   void dispose() {
     // TODO: implement dispose
+    _subscription.cancel();
     super.dispose();
-    CommStatusManager().ble.deinitialize(); // 停止旧的 BLE 流
   }
 }

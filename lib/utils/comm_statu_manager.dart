@@ -46,6 +46,8 @@ class CommStatusManager {
   StreamSubscription? _bleListen;
   StreamSubscription? _bleStatuListen;
 
+  List<String> logDatas = ['蓝牙通讯日志：'];
+
   bool isOta = true;
   List<String> otaStrings = ['','','','','','',''];
   List<String> factoryStrings = ['','','','','','',];
@@ -100,7 +102,7 @@ class CommStatusManager {
           return;
         }
         // print('event.name=${event.name}====${event.name.length}');
-        if (event.name.contains(kBLEDeviceName)) {
+        if (event.name.contains(kBLEDeviceName) || event.name.contains(kBLENewDeviceName)) {
           // 如果设备列表数组中无，则添加
           if (!hasDevice(event.id)) {
             print('添加新设备--${event.id}----${event.name}');
@@ -172,18 +174,18 @@ class CommStatusManager {
           print(
               "上报来的数据data = ${data.map((toElement) => toElement.toRadixString(16)).toList()}");
           // 解析数据
+          this.logDatas.add('${data.map((toElement) => toElement.toRadixString(16)).toList()}');
+          EventBusManager().eventBus.fire(DataUpdatedEvent(kBLElog));
           OTAServiceDataParse.parseData(data);
           // 解析270
         });
       } else if (event.connectionState == DeviceConnectionState.disconnected) {
-
           // 移除元素
           try {
             BLEModel firstEven = this.deviceList.firstWhere((element) => element.device!.id == model.device!.id);
             this.deviceList.remove(firstEven);
             CommStatusManager().currentConnectedDevice = null;
             EventBusManager().eventBus.fire(DataUpdatedEvent(kBLEDisconneted));
-
           } catch (e) {
             print('没有找到满足条件的元素');
           }

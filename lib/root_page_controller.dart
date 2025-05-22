@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:ota/controllers/ble_log_show.dart';
 import 'package:ota/controllers/device_controll_page.dart';
 import 'package:ota/controllers/factory_reset_page.dart';
 import 'package:ota/test_controller.dart';
@@ -40,6 +41,13 @@ class _RootPageControllerState extends State<RootPageController> {
       throw();
     }
   }
+
+  checkLog(){
+    Navigator.push(
+      context,
+      MaterialPageRoute(builder: (context) => BleLogShow()), // 目标页面
+    );
+  }
   @override
   Widget build(BuildContext context) {
     return Scaffold(
@@ -66,6 +74,11 @@ class _RootPageControllerState extends State<RootPageController> {
           ),
         ],
       ),
+        floatingActionButton: FloatingActionButton(
+          onPressed: checkLog,
+          tooltip: 'Increment',
+          child: const Icon(Icons.view_list),
+        )
     );
   }
 }
