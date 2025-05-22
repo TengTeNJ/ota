@@ -56,6 +56,9 @@ class CommStatusManager {
   FlutterReactiveBle ble = FlutterReactiveBle();
   Stream<DiscoveredDevice>? _scanStream;
 
+  int totalDataLength = 0;
+  int hasSendDataLength = 0;
+
   // 当前状态
   CommProgress _progress = CommProgress.ready;
 
@@ -255,6 +258,8 @@ class CommStatusManager {
     this.packetBinDatas.clear();
     // List<int> chunks = [];
     int chunkSize = 128;
+
+    totalDataLength = this.binData.length; // 总数据长度
 
     for (int i = 0; i < this.binData.length; i += chunkSize) {
       int end = i + chunkSize;

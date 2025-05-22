@@ -486,6 +486,7 @@ class OTAServiceDataParse {
 
 
         Future.delayed(Duration(milliseconds: 100), () {
+          CommStatusManager().hasSendDataLength = 0; // 重置
           CommStatusManager().writerData(resetData());
           _dataIndex = 0;
         });

@@ -27,3 +27,5 @@ const kBLEConneted = 'connected';
 const kBLElog = 'log_show';
 
 const kFindNewDevice = 'find_new_ble_device';
+
+const kHasSendData = 'has_send_data';

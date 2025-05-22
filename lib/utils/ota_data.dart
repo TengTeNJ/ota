@@ -1,4 +1,8 @@
 import 'dart:typed_data';
+import 'package:ota/utils/comm_statu_manager.dart';
+
+import '../constants.dart';
+import 'event_manager.dart';
 import 'ota_service_data.dart';
 
 int crc16Update(List<int> src) {
@@ -137,6 +141,10 @@ List<int> realBuildWirterCommand(List<int> data) {
   _tempValue.insert(5, finalValue.last);
   print(
       "realBuildWirterCommand --- data = ${_tempValue.map((toElement) => toElement.toRadixString(16)).toList()}");
+
+  CommStatusManager().hasSendDataLength += data.length;
+  EventBusManager().eventBus.fire(DataUpdatedEvent(kHasSendData));
+
   return _tempValue;
 }
 
