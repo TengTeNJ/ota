@@ -5,6 +5,7 @@ import 'package:flutter_reactive_ble/flutter_reactive_ble.dart';
 import 'package:ota/controllers/factory_progress.dart';
 import 'package:ota/controllers/update_progress.dart';
 import '../constants.dart';
+import '../model/ble_model.dart';
 import '../utils/comm_statu_manager.dart';
 import '../utils/event_manager.dart';
 import '../utils/ota_data.dart';
@@ -108,9 +109,27 @@ class _FactoryResetPageState extends State<FactoryResetPage> {
       _writeChar = null;
     });
 
+    // 断开连接
+    if(CommStatusManager().currentConnectedDevice != null && CommStatusManager().currentConnectedDevice!.device!.id == device.id){
+      // 断开连接
+      CommStatusManager().currentConnectedDevice!.bleStream?.cancel();
+      DiscoveredDevice _device = _devices.firstWhere((_element) => _element.id == device.id);
+      if(_device != null){
+        setState(() {
+          CommStatusManager().currentConnectedDevice = null;
+          _connectedDevice = null;
+          _devices.remove(_device);
+          _connected = false;
+        });
+      }
+      return;
+    }
+
+
     _connectionStream = CommStatusManager().ble.connectToDevice(
         id: device.id, connectionTimeout: const Duration(seconds: 10));
-    _connectionStream.listen((event) async {
+    late  StreamSubscription<ConnectionStateUpdate> stream;
+    stream = _connectionStream.listen((event) async {
       if (event.connectionState == DeviceConnectionState.connected) {
         setState(() => _connected = true);
         _notifyChar = QualifiedCharacteristic(
@@ -122,6 +141,17 @@ class _FactoryResetPageState extends State<FactoryResetPage> {
             characteristicId: Uuid.parse(kBLE_CHARACTERISTIC_WRITER_UUID),
             deviceId: device.id);
         CommStatusManager().writeChar = _writeChar;
+
+        BLEModel currentModel = BLEModel();
+        currentModel.device = device;
+        currentModel.writerCharacteristic = _writeChar;
+        currentModel.bleStream = stream;
+        currentModel.hasConected = true;
+        CommStatusManager().currentConnectedDevice = currentModel;
+        setState(() {
+
+        });
+
         print("连接成功，并获取到特征");
         CommStatusManager()
             .ble
@@ -139,6 +169,19 @@ class _FactoryResetPageState extends State<FactoryResetPage> {
           _notifyChar = null;
           _writeChar = null;
         });
+
+        // 移除元素
+        try {
+          DiscoveredDevice firstEven = _devices.firstWhere((element) => element.id == device.id);
+          _devices.remove(firstEven);
+          CommStatusManager().currentConnectedDevice = null;
+          setState(() {
+
+          });
+        } catch (e) {
+          print('没有找到满足条件的元素');
+        }
+
         print("设备已断开连接");
       }
     });
@@ -150,7 +193,7 @@ class _FactoryResetPageState extends State<FactoryResetPage> {
       subtitle: Text('${device.id}    RSSI:${device.rssi}'),
       trailing: ElevatedButton(
         onPressed: () => _connectToDevice(device),
-        child: Text("连接"),
+        child:  Text( CommStatusManager().currentConnectedDevice != null && CommStatusManager().currentConnectedDevice!.device!.id == device.id ? "断开连接" : '连接'),
       ),
     );
   }

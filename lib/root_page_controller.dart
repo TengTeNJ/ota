@@ -1,6 +1,9 @@
 import 'package:flutter/material.dart';
+import 'package:ota/controllers/device_controll_page.dart';
 import 'package:ota/controllers/factory_reset_page.dart';
 import 'package:ota/test_controller.dart';
+import 'package:ota/utils/comm_statu_manager.dart';
+import 'package:permission_handler/permission_handler.dart';
 
 import 'controllers/ota_page.dart';
 class RootPageController extends StatefulWidget {
@@ -15,7 +18,28 @@ class _RootPageControllerState extends State<RootPageController> {
   final List<Widget> _pages = [
      FactoryResetPage(),
      const OtaPage(),
+    DeviceControlPage()
   ];
+
+  @override
+  void initState() {
+    // TODO: implement initState
+    super.initState();
+    // 开始蓝牙搜索
+    scanBLE();
+  }
+  scanBLE() async{
+    var permissionStatus = await Permission.location.request();
+    PermissionStatus bleScan = await Permission.bluetoothScan.request();
+    PermissionStatus bleConnect = await Permission.bluetoothConnect.request();
+    if(permissionStatus.isGranted && bleScan.isGranted && bleConnect.isGranted){
+      Future.delayed(Duration(milliseconds: 1000),(){
+        CommStatusManager().startScan();
+      });
+    }else{
+      throw();
+    }
+  }
   @override
   Widget build(BuildContext context) {
     return Scaffold(
@@ -35,6 +59,10 @@ class _RootPageControllerState extends State<RootPageController> {
           BottomNavigationBarItem(
             icon: Icon(Icons.system_update),
             label: 'OTA升级',
+          ),
+          BottomNavigationBarItem(
+            icon: Icon(Icons.devices),
+            label: '设备详情',
           ),
         ],
       ),

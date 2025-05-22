@@ -12,14 +12,14 @@ import '../utils/event_manager.dart';
 import '../utils/ota_data.dart';
 import '../utils/ota_service_data.dart';
 
-class OtaPage extends StatefulWidget {
-  const OtaPage({super.key});
+class DeviceControlPage extends StatefulWidget {
+  const DeviceControlPage({super.key});
 
   @override
-  State<OtaPage> createState() => _OtaPageState();
+  State<DeviceControlPage> createState() => _DeviceControlPageState();
 }
 
-class _OtaPageState extends State<OtaPage> {
+class _DeviceControlPageState extends State<DeviceControlPage> {
   final List<CommProgress> progressDatas = [
     CommProgress.idle,
     CommProgress.ping,
@@ -50,6 +50,21 @@ class _OtaPageState extends State<OtaPage> {
   final int _totalSteps = 7;
   String selectedKey = '切换模式';
 
+  @override
+  void initState() {
+    // TODO: implement initState
+    super.initState();
+    // 加载bin文件
+    CommStatusManager().loadBinFile();
+    EventBus eventBus = EventBusManager().eventBus;
+    _subscription = eventBus.on<DataUpdatedEvent>().listen((event) {
+      setState(() {
+
+      });
+    });
+    initData();
+  }
+
   initData(){
     if(CommStatusManager().currentConnectedDevice != null){
       print('++++');
@@ -63,65 +78,43 @@ class _OtaPageState extends State<OtaPage> {
     }
   }
 
-  @override
-  void initState() {
-    // TODO: implement initState
-    super.initState();
-    // 加载bin文件
-    CommStatusManager().loadBinFile();
-    EventBus eventBus = EventBusManager().eventBus;
-    _subscription = eventBus.on<DataUpdatedEvent>().listen((event) {
-      setState(() {
-        if (event == kOTAProgress) {
-          // 更新升级进度
-            _currentStep = progressDatas.indexOf(CommStatusManager().progress);
-        } else if (event == kOTATextProgress) {
+  Future<void> _startScan() async {
+    setState(() {
+      _devices.clear();
+      _scanning = true;
+      CommStatusManager().deviceList.clear();
+    });
 
-        }else if(event.data == kBLEConneted){
-          initData();
-        }
+    _scanStream = CommStatusManager()
+        .ble
+        .scanForDevices(withServices: [], scanMode: ScanMode.lowLatency);
+
+    _scanStream.listen((device) {
+      if (!_devices.any((d) => d.id == device.id) &&
+          device.name.contains(kBLEDeviceName)) {
+        setState(() {
+          _devices.add(device);
+        });
+      }
+    }, onDone: () {
+      setState(() {
+        _scanning = false;
       });
     });
-   initData();
   }
 
-  // Future<void> _startScan() async {
-  //   setState(() {
-  //     _devices.clear();
-  //     _scanning = true;
-  //     CommStatusManager().deviceList.clear();
-  //   });
-  //
-  //   _scanStream = CommStatusManager()
-  //       .ble
-  //       .scanForDevices(withServices: [], scanMode: ScanMode.lowLatency);
-  //
-  //   _scanStream.listen((device) {
-  //     if (!_devices.any((d) => d.id == device.id) &&
-  //         device.name.contains(kBLEDeviceName)) {
-  //       setState(() {
-  //         _devices.add(device);
-  //       });
-  //     }
-  //   }, onDone: () {
-  //     setState(() {
-  //       _scanning = false;
-  //     });
-  //   });
-  // }
-  //
-  // void _clearAndRescan() {
-  //   CommStatusManager().ble.deinitialize(); // 停止旧的 BLE 流
-  //   _startScan();
-  //   _devices.clear();
-  //   CommStatusManager().progress = CommProgress.idle;
-  //   CommStatusManager().otaStrings = ['', '', '', '', '', '', ''];
-  //   _connected = false;
-  //   _connectedDevice = null;
-  //   setState(() {
-  //
-  //   });
-  // }
+  void _clearAndRescan() {
+    CommStatusManager().ble.deinitialize(); // 停止旧的 BLE 流
+    _startScan();
+    _devices.clear();
+    CommStatusManager().progress = CommProgress.idle;
+    CommStatusManager().otaStrings = ['', '', '', '', '', '', ''];
+    _connected = false;
+    _connectedDevice = null;
+    setState(() {
+
+    });
+  }
 
   Future<void> _sendCommand() async {
     CommStatusManager().isOta = true;
@@ -151,9 +144,10 @@ class _OtaPageState extends State<OtaPage> {
       return;
     }
 
-    CommStatusManager().connectToDevice(model);
+  CommStatusManager().connectToDevice(model);
 
   }
+
   Widget _buildDeviceItem(BLEModel model) {
     return ListTile(
       title: Text(model.device!.name),
@@ -178,10 +172,11 @@ class _OtaPageState extends State<OtaPage> {
         padding: EdgeInsets.all(16),
         child: Column(
           children: [
+
             const SizedBox(
               height: 16,
             ),
-            if (CommStatusManager().deviceList.length != 0)
+            if (_devices.length != 0)
               Padding(padding: EdgeInsets.only(left: 16,right: 16),child: Row(
                 children: [
                   Text(
@@ -219,5 +214,6 @@ class _OtaPageState extends State<OtaPage> {
   void dispose() {
     // TODO: implement dispose
     super.dispose();
+    CommStatusManager().ble.deinitialize(); // 停止旧的 BLE 流
   }
 }

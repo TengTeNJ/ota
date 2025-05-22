@@ -3,6 +3,11 @@ import 'dart:async';
 import 'package:flutter_reactive_ble/flutter_reactive_ble.dart';
 import 'dart:typed_data';
 import 'package:flutter/services.dart' show rootBundle;
+import 'package:ota/constants.dart';
+import 'package:ota/model/ble_model.dart';
+
+import 'event_manager.dart';
+import 'ota_service_data.dart';
 
 // 1️⃣ 定义ota进度枚举
 enum CommProgress {
@@ -33,18 +38,28 @@ class CommStatusManager {
     // if(!_loadBin){
     //   _loadBin = true;
     // }
+    _instance.listenBLEStatu();
     return _instance;
   }
+
+  Stream<DiscoveredDevice>? scanStream;
+  StreamSubscription? _bleListen;
+  StreamSubscription? _bleStatuListen;
+
   bool isOta = true;
   List<String> otaStrings = ['','','','','','',''];
   List<String> factoryStrings = ['','','','','','',];
-
+  List<BLEModel> deviceList = [];
+  BLEModel? currentConnectedDevice;
   FlutterReactiveBle ble = FlutterReactiveBle();
+  Stream<DiscoveredDevice>? _scanStream;
+
   // 当前状态
   CommProgress _progress = CommProgress.ready;
 
   CommProgress get progress => _progress;
   QualifiedCharacteristic? writeChar;
+  QualifiedCharacteristic? notifyChar;
 
   List<int> binData = []; //  bin文件的数据
   List<List<int>> packetBinDatas = []; // 分包过的bin文件数据
@@ -55,7 +70,127 @@ class CommStatusManager {
   set progress(CommProgress progress) {
     _progress = progress;
   }
+  bool hasDevice(String id) {
+    Iterable<BLEModel> filteredDevice =
+    this.deviceList.where((element) => element.device!.id == id);
+    bool value = filteredDevice != null && filteredDevice.length > 0;
+    // print('value = ${value} --- ${id}---${ this.deviceList.length}');
+    // if(!value){
+    //   for (var value in this.deviceList) {
+    //     print('+++${value}+++');
+    //   }
+    // }
+    return value;
+  }
+  /*开始扫描*/
+  Future<void> startScan() async {
+    // 不能重复扫描
+    if (_scanStream != null) {
+      return;
+    }
 
+    if (_scanStream == null) {
+      _scanStream = ble.scanForDevices(
+        withServices: [],
+        scanMode: ScanMode.lowLatency,
+      );
+      _bleListen = _scanStream!.listen((DiscoveredDevice event) {
+        // 处理扫描到的蓝牙设备
+        if(event.name.isEmpty){
+          return;
+        }
+        // print('event.name=${event.name}====${event.name.length}');
+        if (event.name.contains(kBLEDeviceName)) {
+          // 如果设备列表数组中无，则添加
+          if (!hasDevice(event.id)) {
+            print('添加新设备--${event.id}----${event.name}');
+            this
+                .deviceList
+                .add(BLEModel(deviceName: event.name, device: event));
+            EventBusManager().eventBus.fire(DataUpdatedEvent(kFindNewDevice));
+
+          }
+        }
+      });
+    }
+  }
+
+  listenBLEStatu() {
+    if (_bleStatuListen == null) {
+      _bleStatuListen = FlutterReactiveBle().statusStream.listen((status) {
+        print('蓝牙状态status===${status}');
+        if (status == BleStatus.poweredOff) {
+          // 蓝牙开关关闭
+          _instance._bleListen?.cancel();
+          _instance._bleListen = null;
+          _instance._scanStream = null;
+        } else if (status == BleStatus.locationServicesDisabled) {
+          // 安卓位置权限不允许
+        } else if (status == BleStatus.unauthorized) {
+          // 未授权蓝牙权限
+        } else if (status == BleStatus.ready) {}
+      });
+    }
+  }
+  Future<void> connectToDevice(BLEModel model) async {
+
+    late  StreamSubscription<ConnectionStateUpdate> stream;
+    var notifyChar;
+    var writeChar;
+    stream = CommStatusManager().ble.connectToDevice(
+        id: model.device!.id, connectionTimeout: const Duration(seconds: 10))
+        .listen((event) async {
+      if (event.connectionState == DeviceConnectionState.connected) {
+        notifyChar = QualifiedCharacteristic(
+            serviceId: Uuid.parse(kBLE_SERVICE_NOTIFY_UUID),
+            characteristicId: Uuid.parse(kBLE_CHARACTERISTIC_NOTIFY_UUID),
+            deviceId: model.device!.id);
+        writeChar = QualifiedCharacteristic(
+            serviceId: Uuid.parse(kBLE_SERVICE_WRITER_UUID),
+            characteristicId: Uuid.parse(kBLE_CHARACTERISTIC_WRITER_UUID),
+            deviceId: model.device!.id);
+        CommStatusManager().writeChar = writeChar;
+        CommStatusManager().notifyChar = notifyChar;
+
+
+        BLEModel currentModel = model;
+        currentModel.device = model.device!;
+        currentModel.writerCharacteristic = writeChar;
+        currentModel.bleStream = stream;
+        currentModel.hasConected = true;
+        currentModel.notifyCharacteristic = notifyChar;
+        CommStatusManager().currentConnectedDevice = currentModel;
+
+        // kBLEConneted
+        EventBusManager().eventBus.fire(DataUpdatedEvent(kBLEConneted));
+
+        print("连接成功，并获取到特征");
+        CommStatusManager()
+            .ble
+            .subscribeToCharacteristic(notifyChar!)
+            .listen((List<int> data) {
+          print(
+              "上报来的数据data = ${data.map((toElement) => toElement.toRadixString(16)).toList()}");
+          // 解析数据
+          OTAServiceDataParse.parseData(data);
+          // 解析270
+        });
+      } else if (event.connectionState == DeviceConnectionState.disconnected) {
+
+          // 移除元素
+          try {
+            BLEModel firstEven = this.deviceList.firstWhere((element) => element.device!.id == model.device!.id);
+            this.deviceList.remove(firstEven);
+            CommStatusManager().currentConnectedDevice = null;
+            EventBusManager().eventBus.fire(DataUpdatedEvent(kBLEDisconneted));
+
+          } catch (e) {
+            print('没有找到满足条件的元素');
+          }
+        print("设备已断开连接");
+      }
+    });
+  }
   // 设置状态（你也可以加入日志打印）
   void updateProgress(CommProgress newProgress) {
     _progress = newProgress;
@@ -90,9 +225,9 @@ class CommStatusManager {
    */
   void writerData(List<int> data) {
     // 发送数据
-    if (CommStatusManager().writeChar != null) {
+    if (CommStatusManager().currentConnectedDevice != null) {
       CommStatusManager().ble.writeCharacteristicWithoutResponse(
-          CommStatusManager().writeChar!,
+          CommStatusManager().currentConnectedDevice!.writerCharacteristic!,
           value: data);
     } else {
       print('未准备好，不能发送数据');
@@ -124,4 +259,5 @@ class CommStatusManager {
 
     return videoData;
   }
+
 }
