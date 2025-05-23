@@ -130,7 +130,19 @@ class _UpdateProgressState extends State<FactoryProgress> {
                 context,
                 MaterialPageRoute(builder: (context) => FactoryLogShow()), // 目标页面
               );
-            }, child: Text('查看详细日志'))
+            }, child: Text('查看详细日志')),
+            if (_currentStep == 3)
+              Column(
+                children: [
+                  Text('${CommStatusManager().hasSendDataLength}/${CommStatusManager().totalDataLength}'),
+                  LinearProgressIndicator(
+                    value: CommStatusManager().hasSendDataLength/CommStatusManager().totalDataLength,
+                    minHeight: 10,
+                    backgroundColor: Colors.grey[300],
+                    valueColor: AlwaysStoppedAnimation<Color>(Colors.green),
+                  )
+                ],
+              )
           ],
         ),
       ),

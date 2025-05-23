@@ -194,45 +194,45 @@ insertTexts(){
    print('index-----${index}');
    switch (index){
      case 0:
-       if(CommStatusManager().otaStrings[0].length == 0){
-         CommStatusManager().otaStrings[0] ='1.2 收到Ping回复';
+       if(CommStatusManager().factoryStrings[0].length == 0){
+         CommStatusManager().factoryStrings[0] ='1.2 收到Ping回复';
        }
        EventBusManager().eventBus.fire(DataUpdatedEvent(kOTATextProgress));
        break;
      case 1:
-       if(CommStatusManager().otaStrings[1].length == 0){
-         CommStatusManager().otaStrings[1] ='2.1 收到EraseAll回复1';
+       if(CommStatusManager().factoryStrings[1].length == 0){
+         CommStatusManager().factoryStrings[1] ='2.1 收到EraseAll回复1';
        }else{
-         CommStatusManager().otaStrings[1] ='${CommStatusManager().otaStrings[2]}\n2.2 收到EraseAll回复2';
+         CommStatusManager().factoryStrings[1] ='${CommStatusManager().factoryStrings[2]}\n2.2 收到EraseAll回复2';
        }
        EventBusManager().eventBus.fire(DataUpdatedEvent(kOTATextProgress));
        break;
      case 2:
-       if(CommStatusManager().otaStrings[2].length == 0){
-         CommStatusManager().otaStrings[2] ='3.1收到开始写回复1';
+       if(CommStatusManager().factoryStrings[2].length == 0){
+         CommStatusManager().factoryStrings[2] ='3.1收到开始写回复1';
        }else{
-         CommStatusManager().otaStrings[2] ='${CommStatusManager().otaStrings[3]}\n3.2 收到开始写回复2';
+         CommStatusManager().factoryStrings[2] ='${CommStatusManager().factoryStrings[3]}\n3.2 收到开始写回复2';
        }
        EventBusManager().eventBus.fire(DataUpdatedEvent(kOTATextProgress));
        break;
      case 3:
-       if(CommStatusManager().otaStrings[3].length == 0){
-         CommStatusManager().otaStrings[3] ='4.1 发送第一包数据';
+       if(CommStatusManager().factoryStrings[3].length == 0){
+         CommStatusManager().factoryStrings[3] ='4.1 发送第一包数据';
        }else{
-         CommStatusManager().otaStrings[3] ='${CommStatusManager().otaStrings[4]}\n4.2 发送完毕';
+         CommStatusManager().factoryStrings[3] ='${CommStatusManager().factoryStrings[4]}\n4.2 发送完毕';
        }
        EventBusManager().eventBus.fire(DataUpdatedEvent(kOTATextProgress));
        break;
      case 4:
-       if(CommStatusManager().otaStrings[4].length == 0){
-         CommStatusManager().otaStrings[4] ='5.1 收到reset回复';
+       if(CommStatusManager().factoryStrings[4].length == 0){
+         CommStatusManager().factoryStrings[4] ='5.1 收到reset回复';
        }else{
-         CommStatusManager().otaStrings[4] ='${CommStatusManager().otaStrings[4]}\n5.2收到reset回复2';
+         CommStatusManager().factoryStrings[4] ='${CommStatusManager().factoryStrings[4]}\n5.2收到reset回复2';
        }
        EventBusManager().eventBus.fire(DataUpdatedEvent(kOTATextProgress));
        break;
      case 5:
-       CommStatusManager().otaStrings[5] ='.1 升级完成';
+       CommStatusManager().factoryStrings[5] ='.1 升级完成';
        EventBusManager().eventBus.fire(DataUpdatedEvent(kOTATextProgress));
    }
  }

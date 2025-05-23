@@ -26,7 +26,7 @@ class _FactoryLogShowState extends State<FactoryLogShow> {
       setState(() {
         if (event.data == kOTATextProgress) {
           print(
-              'CommStatusManager().otaStrings=${CommStatusManager().otaStrings}');
+              'CommStatusManager().otaStrings=${CommStatusManager().factoryStrings}');
           // setState(() {
           //
           // });

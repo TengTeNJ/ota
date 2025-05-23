@@ -1,5 +1,6 @@
 import 'dart:async';
 
+import 'package:flutter/cupertino.dart';
 import 'package:flutter_reactive_ble/flutter_reactive_ble.dart';
 import 'dart:typed_data';
 import 'package:flutter/services.dart' show rootBundle;
@@ -91,7 +92,11 @@ class CommStatusManager {
   refresh(){
     CommStatusManager().ble.deinitialize(); // 停止旧的 BLE 流
     _scanStream = null;
+    // CommStatusManager().deviceList.clear();
+    // CommStatusManager().currentConnectedDevice = null;
     startScan();
+    // EventBusManager().eventBus.fire(DataUpdatedEvent(kBLEDisconneted));
+
   }
   /*开始扫描*/
   Future<void> startScan() async {
@@ -246,6 +251,9 @@ class CommStatusManager {
   }
 
   Future<ByteData> loadBinFile() async {
+    this.binData.clear();
+    this.packetBinDatas.clear();
+
     // 从 lib 目录中读取文件
     // Uint8List bytes = await File('assets/severingcan.bin').readAsBytes();
     final ByteData videoData = await rootBundle.load('assets/severingcan.bin');
@@ -255,7 +263,6 @@ class CommStatusManager {
     List<int> intList = bytes.toList();
     this.binData.addAll(intList);
 
-    this.packetBinDatas.clear();
     // List<int> chunks = [];
     int chunkSize = 128;
 

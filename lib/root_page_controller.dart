@@ -1,12 +1,15 @@
 import 'package:flutter/material.dart';
+import 'package:ota/controllers/abount_page.dart';
 import 'package:ota/controllers/ble_log_show.dart';
 import 'package:ota/controllers/device_controll_page.dart';
 import 'package:ota/controllers/factory_reset_page.dart';
 import 'package:ota/test_controller.dart';
 import 'package:ota/utils/comm_statu_manager.dart';
 import 'package:permission_handler/permission_handler.dart';
+import 'dart:io';
 
 import 'controllers/ota_page.dart';
+
 class RootPageController extends StatefulWidget {
   const RootPageController({super.key});
 
@@ -17,9 +20,10 @@ class RootPageController extends StatefulWidget {
 class _RootPageControllerState extends State<RootPageController> {
   int _currentIndex = 0;
   final List<Widget> _pages = [
-     FactoryResetPage(),
-     const OtaPage(),
-    DeviceControlPage()
+    FactoryResetPage(),
+    const OtaPage(),
+    DeviceControlPage(),
+    // AboutPage()
   ];
 
   @override
@@ -29,30 +33,42 @@ class _RootPageControllerState extends State<RootPageController> {
     // 开始蓝牙搜索
     scanBLE();
   }
-  scanBLE() async{
-    var permissionStatus = await Permission.location.request();
-    PermissionStatus bleScan = await Permission.bluetoothScan.request();
-    PermissionStatus bleConnect = await Permission.bluetoothConnect.request();
-    if(permissionStatus.isGranted && bleScan.isGranted && bleConnect.isGranted){
-      Future.delayed(Duration(milliseconds: 1000),(){
+
+  scanBLE() async {
+    if (Platform.isAndroid){
+      var permissionStatus = await Permission.location.request();
+      PermissionStatus bleScan = await Permission.bluetoothScan.request();
+      PermissionStatus bleConnect = await Permission.bluetoothConnect.request();
+      if (permissionStatus.isGranted &&
+          bleScan.isGranted &&
+          bleConnect.isGranted) {
+        Future.delayed(Duration(milliseconds: 1000), () {
+          CommStatusManager().startScan();
+        });
+      } else {
+        throw ();
+      }
+    }else{
+      Future.delayed(Duration(milliseconds: 3000), () {
         CommStatusManager().startScan();
       });
-    }else{
-      throw();
     }
+
   }
 
-  checkLog(){
+  checkLog() {
     Navigator.push(
       context,
       MaterialPageRoute(builder: (context) => BleLogShow()), // 目标页面
     );
   }
+
   @override
   Widget build(BuildContext context) {
     return Scaffold(
       body: _pages[_currentIndex],
       bottomNavigationBar: BottomNavigationBar(
+        // backgroundColor: Colors.grey,
         currentIndex: _currentIndex,
         onTap: (index) {
           setState(() {
@@ -72,13 +88,17 @@ class _RootPageControllerState extends State<RootPageController> {
             icon: Icon(Icons.devices),
             label: '设备详情',
           ),
+          // BottomNavigationBarItem(
+          //   icon: Icon(Icons.settings),
+          //   label: '关于',
+          // ),
         ],
       ),
-        floatingActionButton: FloatingActionButton(
-          onPressed: checkLog,
-          tooltip: 'Increment',
-          child: const Icon(Icons.view_list),
-        )
+      floatingActionButton: FloatingActionButton(
+        onPressed: checkLog,
+        tooltip: 'Increment',
+        child: const Icon(Icons.view_list),
+      ),
     );
   }
 }
