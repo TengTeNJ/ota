@@ -242,14 +242,14 @@ insertTexts(){
 
 handleTimeOut(String msg){
   if( CommStatusManager().timer == null){
-    CommStatusManager().timer   = Timer(Duration(milliseconds: 10000), () {
+    CommStatusManager().timer   = Timer(Duration(milliseconds: 60000), () {
       bleNotAllData.clear();
       print('${msg}接收超时');
       CommStatusManager().timer?.cancel();
     });
   }else {
     CommStatusManager().timer?.cancel();
-    CommStatusManager().timer   = Timer(Duration(milliseconds: 10000), () {
+    CommStatusManager().timer   = Timer(Duration(milliseconds: 60000), () {
       bleNotAllData.clear();
       print('${msg}接收超时');
       CommStatusManager().timer?.cancel();
@@ -310,15 +310,15 @@ class OTAServiceDataParse {
 
         EventBusManager().eventBus.fire(DataUpdatedEvent(kOTAProgress));
 
-        Future.delayed(Duration(seconds: 5),(){
+        Future.delayed(Duration(milliseconds: 50),(){
           if(CommStatusManager().progress == CommProgress.ping){
             bleNotAllData.clear();
-            print('再发一次ping数据');
+            print('第二次ping数据');
             CommStatusManager().writerData(pingData());
-            Future.delayed(Duration(seconds: 5),(){
+            Future.delayed(Duration(milliseconds: 50),(){
               if(CommStatusManager().progress == CommProgress.ping){
                 bleNotAllData.clear();
-                print('再发一次ping数据');
+                print('第二次ping数据');
                 CommStatusManager().writerData(pingData());
               }
             });
@@ -339,6 +339,7 @@ class OTAServiceDataParse {
       // });
       handleTimeOut('Ping');
       bleNotAllData.addAll(data);
+      print('--${bleNotAllData.length}---');
       if (areListsEqual(bleNotAllData, _pingResponse)) {
         // 代表收到正确的回复 可以进入到下一个环节：清除all
         print('收到ping回复');
@@ -386,10 +387,7 @@ class OTAServiceDataParse {
         CommStatusManager().writerData(eraseAllACKData());
         // 发送完就入到下一步 发送写指令
         CommStatusManager().progress = CommProgress.begainWrite;
-
         EventBusManager().eventBus.fire(DataUpdatedEvent(kOTAProgress));
-
-
         Future.delayed(Duration(milliseconds: 100), () {
           // 发送写指令
           CommStatusManager()
@@ -397,11 +395,6 @@ class OTAServiceDataParse {
         });
       }
     } else if (CommStatusManager().progress == CommProgress.begainWrite) {
-      // late Timer _timer;
-      // _timer = Timer(Duration(milliseconds: 1000), () {
-      //   bleNotAllData.clear();
-      //   // 进行重发处理
-      // });
 
       handleTimeOut('开始写');
 
@@ -452,16 +445,7 @@ class OTAServiceDataParse {
       }
     } else if (CommStatusManager().progress == CommProgress.sendingData) {
       // 每发一包数据 都会受到一次ACK确认0x5a a1
-      // late Timer _timer;
-      // _timer = Timer(Duration(milliseconds: 1000), () {
-      //   bleNotAllData.clear();
-      //   print('Ping接收超时');
-      //   // 进行重发处理
-      // });
-
       handleTimeOut('发送数据');
-
-
       bleNotAllData.addAll(data);
       if (areListsEqual(bleNotAllData, _ackResponse)) {
         CommStatusManager().timer?.cancel();

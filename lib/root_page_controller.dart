@@ -1,10 +1,15 @@
+import 'dart:async';
+
+import 'package:event_bus/event_bus.dart';
 import 'package:flutter/material.dart';
+import 'package:ota/constants.dart';
 import 'package:ota/controllers/abount_page.dart';
 import 'package:ota/controllers/ble_log_show.dart';
 import 'package:ota/controllers/device_controll_page.dart';
 import 'package:ota/controllers/factory_reset_page.dart';
 import 'package:ota/test_controller.dart';
 import 'package:ota/utils/comm_statu_manager.dart';
+import 'package:ota/utils/event_manager.dart';
 import 'package:permission_handler/permission_handler.dart';
 import 'dart:io';
 
@@ -18,6 +23,8 @@ class RootPageController extends StatefulWidget {
 }
 
 class _RootPageControllerState extends State<RootPageController> {
+  late StreamSubscription<DataUpdatedEvent> _subscription;
+
   int _currentIndex = 0;
   final List<Widget> _pages = [
     FactoryResetPage(),
@@ -49,9 +56,14 @@ class _RootPageControllerState extends State<RootPageController> {
         throw ();
       }
     }else{
-      Future.delayed(Duration(milliseconds: 3000), () {
-        CommStatusManager().startScan();
+      EventBus eventBus = EventBusManager().eventBus;
+      _subscription = eventBus.on<DataUpdatedEvent>().listen((event) {
+        if(event.data == kBLEReady){
+          print('开始iOS蓝牙搜索');
+          CommStatusManager().startScan();
+        }
       });
+
     }
 
   }
@@ -100,5 +112,12 @@ class _RootPageControllerState extends State<RootPageController> {
         child: const Icon(Icons.view_list),
       ),
     );
+  }
+
+  @override
+  void dispose() {
+    // TODO: implement dispose
+    _subscription.cancel();
+    super.dispose();
   }
 }

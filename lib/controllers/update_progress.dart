@@ -3,6 +3,7 @@ import 'dart:async';
 import 'package:event_bus/event_bus.dart';
 import 'package:flutter/material.dart';
 import 'package:ota/controllers/log_show.dart';
+import 'package:ota/utils/ota_service_data.dart';
 
 import '../constants.dart';
 import '../utils/comm_statu_manager.dart';
@@ -84,8 +85,11 @@ class _UpdateProgressState extends State<UpdateProgress> {
 
   /*开始升级*/
   begainUpdate() {
+    bleNotAllData.clear();
     CommStatusManager().progress = CommProgress.idle;
     CommStatusManager().writerData(systemResetData());
+    CommStatusManager().otaStrings.clear();
+    CommStatusManager().otaStrings = ['','','','','','',''];
     CommStatusManager().otaStrings[0] = '已发送Reset';
   }
 

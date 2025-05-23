@@ -4,6 +4,7 @@ import 'package:event_bus/event_bus.dart';
 import 'package:flutter/material.dart';
 import 'package:ota/controllers/factory_log_show.dart';
 import 'package:ota/controllers/log_show.dart';
+import 'package:ota/utils/ota_service_data.dart';
 
 import '../constants.dart';
 import '../utils/comm_statu_manager.dart';
@@ -75,10 +76,15 @@ class _UpdateProgressState extends State<FactoryProgress> {
 
   /*开始升级*/
   begainUpdate(){
+    bleNotAllData.clear();
+    print('bleNotAllData=${bleNotAllData.length}');
     CommStatusManager().progress = CommProgress.ping;
+    CommStatusManager().factoryStrings.clear();
+    CommStatusManager().factoryStrings = ['','','','','','',];
+
     CommStatusManager().writerData(pingData());
     CommStatusManager().factoryStrings[0] = '已发送Ping';
-    Future.delayed(Duration(seconds: 5),(){
+    Future.delayed(Duration(milliseconds: 150),(){
       if(CommStatusManager().progress == CommProgress.ping){
         CommStatusManager().writerData(pingData());
         CommStatusManager().factoryStrings[0] = '已发送Ping两次';

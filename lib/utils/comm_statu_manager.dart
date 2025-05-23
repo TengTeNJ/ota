@@ -80,12 +80,6 @@ class CommStatusManager {
     Iterable<BLEModel> filteredDevice =
     this.deviceList.where((element) => element.device!.id == id);
     bool value = filteredDevice != null && filteredDevice.length > 0;
-    // print('value = ${value} --- ${id}---${ this.deviceList.length}');
-    // if(!value){
-    //   for (var value in this.deviceList) {
-    //     print('+++${value}+++');
-    //   }
-    // }
     return value;
   }
 
@@ -131,6 +125,9 @@ class CommStatusManager {
     }
   }
 
+  /*
+  * 蓝牙状态监听
+  * */
   listenBLEStatu() {
     if (_bleStatuListen == null) {
       _bleStatuListen = FlutterReactiveBle().statusStream.listen((status) {
@@ -144,7 +141,9 @@ class CommStatusManager {
           // 安卓位置权限不允许
         } else if (status == BleStatus.unauthorized) {
           // 未授权蓝牙权限
-        } else if (status == BleStatus.ready) {}
+        } else if (status == BleStatus.ready) {
+          EventBusManager().eventBus.fire(DataUpdatedEvent(kBLEReady));
+        }
       });
     }
   }

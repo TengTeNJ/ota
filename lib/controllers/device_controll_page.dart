@@ -31,8 +31,8 @@ class _DeviceControlPageState extends State<DeviceControlPage> {
   void initState() {
     // TODO: implement initState
     super.initState();
+    CommStatusManager().progress = CommProgress.ready;
     // 加载bin文件
-    CommStatusManager().loadBinFile();
     EventBus eventBus = EventBusManager().eventBus;
     _subscription = eventBus.on<DataUpdatedEvent>().listen((event) {
       setState(() {
