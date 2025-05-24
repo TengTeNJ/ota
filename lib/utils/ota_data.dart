@@ -29,6 +29,12 @@ List<int> pingData() {
   return values;
 }
 
+List<int> pingPreData() {
+  List<int> values = [0xA5];
+  print('Ping Pre 握手数据');
+  return values;
+}
+
 /*
 * 通用的ACK回复
 * */

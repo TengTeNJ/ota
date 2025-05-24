@@ -32,3 +32,4 @@ const kHasSendData = 'has_send_data';
 
 const kBLEReady = 'ble_ready';
 
+const kPrePing= 'pre_ping_ff';

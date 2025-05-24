@@ -23,6 +23,7 @@ final List<CommProgress> factoryProgressDatas = [
   CommProgress.finished,
 ];
 
+Timer? prePingTimer;
 const kBLEDataFrameHeader = 0x5A; // 蓝牙数据帧头
 const kACKPacketType = 0xA4; // ACK PacketType
 const kLapCommandId = 0x07;// Iap升级反馈,不升级时升级状态为0  同时有版本号 0是完成
@@ -135,6 +136,15 @@ bool areListsEqual(List<int> a, List<int> b) {
 
 int _dataIndex = 0;
 
+sendPrePing(){
+  if(prePingTimer == null){
+    prePingTimer = Timer.periodic(Duration(milliseconds: 300), (timer){
+      CommStatusManager().writerData(pingPreData());
+    });
+  }else{
+    CommStatusManager().writerData(pingPreData());
+  }
+}
 
 insertTexts(){
  if(CommStatusManager().isOta){
@@ -291,52 +301,33 @@ class OTAServiceDataParse {
           }
       }
     }else if (CommStatusManager().progress == CommProgress.idle) {
-
+      print('++++++------');
       handleTimeOut('系统复位');
-
       bleNotAllData.addAll(data);
       if (areListsEqual(bleNotAllData, _systemResetResponse)) {
         // 代表收到正确的回复 可以进入到下一个环节：清除all
         print('收到系统复位回复');
-
         /**111*/
         insertTexts();
-
         bleNotAllData.clear();
        CommStatusManager().timer?.cancel();
 
         CommStatusManager().progress = CommProgress.ping;
-        CommStatusManager().writerData(pingData());
+
+        sendPrePing();
 
         EventBusManager().eventBus.fire(DataUpdatedEvent(kOTAProgress));
+        Future.delayed(Duration(milliseconds: 1),(){
 
-        Future.delayed(Duration(milliseconds: 50),(){
-          if(CommStatusManager().progress == CommProgress.ping){
-            bleNotAllData.clear();
-            print('第二次ping数据');
-            CommStatusManager().writerData(pingData());
-            Future.delayed(Duration(milliseconds: 50),(){
-              if(CommStatusManager().progress == CommProgress.ping){
-                bleNotAllData.clear();
-                print('第二次ping数据');
-                CommStatusManager().writerData(pingData());
-              }
-            });
-          }
         });
-
       }
     }
-    if (CommStatusManager().progress == CommProgress.ping) {
+
+    else if (CommStatusManager().progress == CommProgress.ping) {
       /* 发送的是Ping Packet 0x5a 0xa6
        回复的是0x5a 0xa7 0x00 0x02 0x01 0x50 0x00 0x00 0xaa 0xea
     * */
-      // late Timer _timer;
-      // _timer = Timer(Duration(milliseconds: 10000), () {
-      //   bleNotAllData.clear();
-      //   print('Ping接收超时');
-      //   _timer.cancel();
-      // });
+      print('++++++');
       handleTimeOut('Ping');
       bleNotAllData.addAll(data);
       print('--${bleNotAllData.length}---');
@@ -353,6 +344,11 @@ class OTAServiceDataParse {
 
         CommStatusManager().timer?.cancel();
         CommStatusManager().writerData(eraseAllData());
+      }else if(areListsEqual(bleNotAllData,[0xFF])){
+        bleNotAllData.clear();
+        prePingTimer?.cancel();
+        prePingTimer = null;
+        CommStatusManager().writerData(pingData());
       }
     } else if (CommStatusManager().progress == CommProgress.eraseAll) {
       // 发送的是0x5a a4 08 00 0c 22 01 00 00 01 00 00 00 00

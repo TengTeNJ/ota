@@ -82,14 +82,8 @@ class _UpdateProgressState extends State<FactoryProgress> {
     CommStatusManager().factoryStrings.clear();
     CommStatusManager().factoryStrings = ['','','','','','',];
 
-    CommStatusManager().writerData(pingData());
+    CommStatusManager().writerData(pingPreData());
     CommStatusManager().factoryStrings[0] = '已发送Ping';
-    Future.delayed(Duration(milliseconds: 150),(){
-      if(CommStatusManager().progress == CommProgress.ping){
-        CommStatusManager().writerData(pingData());
-        CommStatusManager().factoryStrings[0] = '已发送Ping两次';
-      }
-    });
   }
   @override
   Widget build(BuildContext context) {

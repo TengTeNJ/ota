@@ -71,8 +71,8 @@ class _UpdateProgressState extends State<UpdateProgress> {
             _currentStep = _progress;
           });
         } else if (event.data == kOTATextProgress) {
-          print(
-              'CommStatusManager().otaStrings=${CommStatusManager().otaStrings}');
+          // print(
+          //     'CommStatusManager().otaStrings=${CommStatusManager().otaStrings}');
           // setState(() {
           //
           // });
