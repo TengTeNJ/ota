@@ -35,6 +35,12 @@ List<int> pingPreData() {
   return values;
 }
 
+List<int> resetToPreVersion(){
+  List<int> values = [0xAA];
+  print('强制恢复到上一个版本数据');
+  return values;
+}
+
 /*
 * 通用的ACK回复
 * */

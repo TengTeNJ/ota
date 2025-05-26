@@ -317,9 +317,6 @@ class OTAServiceDataParse {
         sendPrePing();
 
         EventBusManager().eventBus.fire(DataUpdatedEvent(kOTAProgress));
-        Future.delayed(Duration(milliseconds: 1),(){
-
-        });
       }
     }
 

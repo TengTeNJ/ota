@@ -36,9 +36,9 @@ class _DeviceControlPageState extends State<DeviceControlPage> {
     EventBus eventBus = EventBusManager().eventBus;
     _subscription = eventBus.on<DataUpdatedEvent>().listen((event) {
       setState(() {
-        if(event.data == kBLEConneted){
-        initData();
-        }else if(event.data == kBLEDisconneted){
+        if (event.data == kBLEConneted) {
+          initData();
+        } else if (event.data == kBLEDisconneted) {
           initData();
         }
       });
@@ -46,13 +46,13 @@ class _DeviceControlPageState extends State<DeviceControlPage> {
     initData();
   }
 
-  initData(){
-    if(CommStatusManager().currentConnectedDevice != null){
+  initData() {
+    if (CommStatusManager().currentConnectedDevice != null) {
       setState(() {
         _connectedDevice = CommStatusManager().currentConnectedDevice!.device;
         _connected = true;
       });
-    }else{
+    } else {
       _connectedDevice = null;
       _connected = false;
     }
@@ -63,11 +63,15 @@ class _DeviceControlPageState extends State<DeviceControlPage> {
   * */
   Future<void> _connectToDevice(BLEModel model) async {
     // 断开连接
-    if(CommStatusManager().currentConnectedDevice != null && CommStatusManager().currentConnectedDevice!.device!.id == model.device!.id){
+    if (CommStatusManager().currentConnectedDevice != null &&
+        CommStatusManager().currentConnectedDevice!.device!.id ==
+            model.device!.id) {
       // 断开连接
       CommStatusManager().currentConnectedDevice!.bleStream?.cancel();
-      BLEModel _device = CommStatusManager().deviceList.firstWhere((_element) => _element.device!.id == model.device!.id);
-      if(_device != null){
+      BLEModel _device = CommStatusManager()
+          .deviceList
+          .firstWhere((_element) => _element.device!.id == model.device!.id);
+      if (_device != null) {
         setState(() {
           CommStatusManager().currentConnectedDevice = null;
           _connectedDevice = null;
@@ -78,7 +82,6 @@ class _DeviceControlPageState extends State<DeviceControlPage> {
     }
 
     CommStatusManager().connectToDevice(model);
-
   }
 
   Widget _buildDeviceItem(BLEModel model) {
@@ -87,7 +90,11 @@ class _DeviceControlPageState extends State<DeviceControlPage> {
       subtitle: Text('${model.device!.id}    RSSI:${model.device!.rssi}'),
       trailing: ElevatedButton(
         onPressed: () => _connectToDevice(model),
-        child:  Text( CommStatusManager().currentConnectedDevice != null && CommStatusManager().currentConnectedDevice!.device!.id == model.device!.id ? "断开连接" : '连接'),
+        child: Text(CommStatusManager().currentConnectedDevice != null &&
+                CommStatusManager().currentConnectedDevice!.device!.id ==
+                    model.device!.id
+            ? "断开连接"
+            : '连接'),
       ),
     );
   }
@@ -108,6 +115,10 @@ class _DeviceControlPageState extends State<DeviceControlPage> {
   Widget _buildModeButton(BuildContext context, String text, String data) {
     return ElevatedButton(
       onPressed: () {
+        if (data == 'reset') {
+          CommStatusManager().writerData(resetToPreVersion());
+          return;
+        }
         // 在这里调用发送蓝牙数据的逻辑
         _sendBluetoothData(context, data);
       },
@@ -123,6 +134,7 @@ class _DeviceControlPageState extends State<DeviceControlPage> {
       ),
     );
   }
+
   @override
   Widget build(BuildContext context) {
     return Scaffold(
@@ -132,66 +144,106 @@ class _DeviceControlPageState extends State<DeviceControlPage> {
             'OTA',
             style: TextStyle(fontSize: 18, fontWeight: FontWeight.bold),
           )),
-      body:  CommStatusManager().deviceList.length == 0 ? EmptyView(): Padding(
-        padding: EdgeInsets.all(16),
-        child: Column(
-          children: [
-            const SizedBox(
-              height: 16,
-            ),
-            if (CommStatusManager().deviceList.length != 0)
-              Padding(padding: EdgeInsets.only(left: 16,right: 16),child: Row(
+      body: CommStatusManager().deviceList.length == 0
+          ? EmptyView()
+          : Padding(
+              padding: EdgeInsets.all(16),
+              child: Column(
                 children: [
-                  Text(
-                    '设备列表',
-                    style: TextStyle(fontWeight: FontWeight.bold, fontSize: 16),
+                  const SizedBox(
+                    height: 16,
                   ),
-                  const Spacer()
-                ],
-              ),),
-            ListView.builder(
-              shrinkWrap: true,
-              itemCount: CommStatusManager().deviceList.length,
-              itemBuilder: (_, index) => _buildDeviceItem(CommStatusManager().deviceList[index]),
-            ),
-            const Spacer(),
-            const SizedBox(height: 32,),
-            if(_connected)
-              Column(
-                children: [
-                  Row(
-                    children: [
-                      Text(
-                        '选择模式',
-                        style: TextStyle(fontSize: 16, fontWeight: FontWeight.bold),
+                  if (CommStatusManager().deviceList.length != 0)
+                    Padding(
+                      padding: EdgeInsets.only(left: 16, right: 16),
+                      child: Row(
+                        children: [
+                          Text(
+                            '设备列表',
+                            style: TextStyle(
+                                fontWeight: FontWeight.bold, fontSize: 16),
+                          ),
+                          const Spacer()
+                        ],
                       ),
-                      const Spacer()
-                    ],
+                    ),
+                  ListView.builder(
+                    shrinkWrap: true,
+                    itemCount: CommStatusManager().deviceList.length,
+                    itemBuilder: (_, index) =>
+                        _buildDeviceItem(CommStatusManager().deviceList[index]),
                   ),
-                  const SizedBox(height: 12,),
-                  Row(
-                    mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                    children: [
-                      _buildModeButton(context, '模式 1', '0'),
-                      SizedBox(height: 20),
-                      _buildModeButton(context, '模式 2', '1'),
-                      SizedBox(height: 20),
-                      _buildModeButton(context, '模式 3', '2'),
-                    ],
+                  const Spacer(),
+                  const SizedBox(
+                    height: 32,
                   ),
+                  if (_connected)
+                    Column(
+                      children: [
+                        Row(
+                          children: [
+                            Text(
+                              '恢复版本',
+                              style: TextStyle(
+                                  fontSize: 16, fontWeight: FontWeight.bold),
+                            ),
+                            const Spacer()
+                          ],
+                        ),
+                        const SizedBox(
+                          height: 12,
+                        ),
+                        Row(
+                          mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                          children: [
+                            _buildModeButton(context, '恢复', 'reset'),
+                          ],
+                        ),
+                      ],
+                    ),
+                  const SizedBox(
+                    height: 32,
+                  ),
+                  if (_connected)
+                    Column(
+                      children: [
+                        Row(
+                          children: [
+                            Text(
+                              '选择模式',
+                              style: TextStyle(
+                                  fontSize: 16, fontWeight: FontWeight.bold),
+                            ),
+                            const Spacer()
+                          ],
+                        ),
+                        const SizedBox(
+                          height: 12,
+                        ),
+                        Row(
+                          mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                          children: [
+                            _buildModeButton(context, '模式 1', '0'),
+                            SizedBox(height: 20),
+                            _buildModeButton(context, '模式 2', '1'),
+                            SizedBox(height: 20),
+                            _buildModeButton(context, '模式 3', '2'),
+                          ],
+                        ),
+                      ],
+                    ),
+                  const SizedBox(
+                    height: 36,
+                  ),
+                  if (_connectedDevice != null)
+                    Padding(
+                      padding: const EdgeInsets.all(8.0),
+                      child: Text("当前连接设备：${_connectedDevice!.id}",
+                          style: TextStyle(fontWeight: FontWeight.bold)),
+                    ),
                 ],
               ),
-            const SizedBox(height: 36,),
-
-            if (_connectedDevice != null)
-              Padding(
-                padding: const EdgeInsets.all(8.0),
-                child: Text("当前连接设备：${_connectedDevice!.id}",
-                    style: TextStyle(fontWeight: FontWeight.bold)),
-              ),
-          ],
-        ),
-      ),
+            ),
     );
   }
 

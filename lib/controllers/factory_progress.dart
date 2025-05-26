@@ -82,7 +82,7 @@ class _UpdateProgressState extends State<FactoryProgress> {
     CommStatusManager().factoryStrings.clear();
     CommStatusManager().factoryStrings = ['','','','','','',];
 
-    CommStatusManager().writerData(pingPreData());
+    CommStatusManager().writerData(pingData());
     CommStatusManager().factoryStrings[0] = '已发送Ping';
   }
   @override
