@@ -36,9 +36,11 @@ class _AboutPageState extends State<AboutPage> {
     final themeProvider = Provider.of<ThemeProvider>(context);
     return Scaffold(
       appBar: AppBar(
-        title: Text('关于页面'),
-
-      ),
+          centerTitle: true,
+          title: Text(
+            '关于',
+            style: TextStyle(fontSize: 18, fontWeight: FontWeight.bold),
+          )),
       body: Padding(
         padding: const EdgeInsets.all(16.0),
         child: Column(
