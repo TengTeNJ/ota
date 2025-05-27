@@ -30,7 +30,7 @@ class _RootPageControllerState extends State<RootPageController> {
     FactoryResetPage(),
     const OtaPage(),
     DeviceControlPage(),
-    // AboutPage()
+    AboutPage()
   ];
 
   @override
@@ -81,6 +81,12 @@ class _RootPageControllerState extends State<RootPageController> {
       body: _pages[_currentIndex],
       bottomNavigationBar: BottomNavigationBar(
         // backgroundColor: Colors.grey,
+        /*
+        * 在 Flutter 的 BottomNavigationBar 中，当 item 数量超过 3 个时，
+        * 默认会切换为 shifting 类型，这会导致背景色变为白色。
+        * 而 item 数量 ≤3 时默认使用 fixed 类型，背景色跟随主题色
+        * */
+        type: BottomNavigationBarType.fixed,
         currentIndex: _currentIndex,
         onTap: (index) {
           setState(() {
@@ -100,10 +106,10 @@ class _RootPageControllerState extends State<RootPageController> {
             icon: Icon(Icons.devices),
             label: '设备详情',
           ),
-          // BottomNavigationBarItem(
-          //   icon: Icon(Icons.settings),
-          //   label: '关于',
-          // ),
+          BottomNavigationBarItem(
+            icon: Icon(Icons.settings),
+            label: '关于',
+          ),
         ],
       ),
       floatingActionButton: FloatingActionButton(
