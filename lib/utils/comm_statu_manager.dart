@@ -1,4 +1,6 @@
 import 'dart:async';
+import 'dart:io';
+import 'package:path/path.dart' as path;
 
 import 'package:flutter/cupertino.dart';
 import 'package:flutter_reactive_ble/flutter_reactive_ble.dart';
@@ -6,6 +8,8 @@ import 'dart:typed_data';
 import 'package:flutter/services.dart' show rootBundle;
 import 'package:ota/constants.dart';
 import 'package:ota/model/ble_model.dart';
+import 'package:ota/utils/service_util.dart';
+import 'package:path_provider/path_provider.dart';
 
 import 'event_manager.dart';
 import 'ota_service_data.dart';
@@ -249,18 +253,37 @@ class CommStatusManager {
     }
   }
 
+
   Future<ByteData> loadBinFile() async {
     this.binData.clear();
     this.packetBinDatas.clear();
 
     // 从 lib 目录中读取文件
     // Uint8List bytes = await File('assets/severingcan.bin').readAsBytes();
-    final ByteData videoData = await rootBundle.load('assets/severingcan.bin');
-    // Uint8List bytes = videoData.buffer as  Uint8List();
-    Uint8List bytes = videoData.buffer.asUint8List();
+
+    final dir = await getTemporaryDirectory();
+    final file = File(path.join(dir.path, 'downloaded.bin'));
+
+    // 4. 读取文件字节数据
+    Uint8List bytes;
+    ByteData videoData;
+    try {
+      bytes = await file.readAsBytes();
+      videoData = bytes.buffer.asByteData();
+      List<int> intList = bytes.toList();
+      this.binData.addAll(intList);
+    } catch (e) {
+      //throw Exception('读取文件失败: $e');
+      videoData = await rootBundle.load('assets/severingcan.bin');
+      bytes = videoData.buffer.asUint8List();
+      // Uint8List 本质上是一个 List<int>
+      List<int> intList = bytes.toList();
+      this.binData.addAll(intList);
+    }
+
+    //final ByteData videoData = await rootBundle.load('assets/severingcan.bin');
+   // Uint8List bytes = videoData.buffer.asUint8List();
     // Uint8List 本质上是一个 List<int>
-    List<int> intList = bytes.toList();
-    this.binData.addAll(intList);
 
     // List<int> chunks = [];
     int chunkSize = 128;

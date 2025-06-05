@@ -51,8 +51,6 @@ class _FactoryResetPageState extends State<FactoryResetPage> {
   void initState() {
     // TODO: implement initState
     super.initState();
-    // 加载bin文件
-    CommStatusManager().loadBinFile();
     EventBus eventBus = EventBusManager().eventBus;
     _subscription = eventBus.on<DataUpdatedEvent>().listen((event) {
       setState(() {

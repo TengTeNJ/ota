@@ -5,6 +5,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter_reactive_ble/flutter_reactive_ble.dart';
 import 'package:ota/controllers/update_progress.dart';
 import 'package:ota/model/ble_model.dart';
+import 'package:ota/utils/service_util.dart';
 import 'package:ota/views/empty_view.dart';
 
 import '../constants.dart';
@@ -69,7 +70,6 @@ class _OtaPageState extends State<OtaPage> {
     // TODO: implement initState
     super.initState();
     // 加载bin文件
-    CommStatusManager().loadBinFile();
     EventBus eventBus = EventBusManager().eventBus;
     _subscription = eventBus.on<DataUpdatedEvent>().listen((event) {
       setState(() {

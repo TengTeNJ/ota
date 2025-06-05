@@ -1,5 +1,4 @@
 import 'dart:async';
-
 import 'package:event_bus/event_bus.dart';
 import 'package:flutter/material.dart';
 import 'package:ota/constants.dart';
@@ -7,12 +6,12 @@ import 'package:ota/controllers/abount_page.dart';
 import 'package:ota/controllers/ble_log_show.dart';
 import 'package:ota/controllers/device_controll_page.dart';
 import 'package:ota/controllers/factory_reset_page.dart';
-import 'package:ota/test_controller.dart';
 import 'package:ota/utils/comm_statu_manager.dart';
 import 'package:ota/utils/event_manager.dart';
+import 'package:ota/utils/service_util.dart';
 import 'package:permission_handler/permission_handler.dart';
 import 'dart:io';
-
+import 'package:loading_animation_widget/loading_animation_widget.dart';
 import 'controllers/ota_page.dart';
 
 class RootPageController extends StatefulWidget {
@@ -24,7 +23,7 @@ class RootPageController extends StatefulWidget {
 
 class _RootPageControllerState extends State<RootPageController> {
   late StreamSubscription<DataUpdatedEvent> _subscription;
-
+  bool _hasRequest = false;
   int _currentIndex = 0;
   final List<Widget> _pages = [
     FactoryResetPage(),
@@ -39,10 +38,51 @@ class _RootPageControllerState extends State<RootPageController> {
     super.initState();
     // 开始蓝牙搜索
     scanBLE();
+    dataRequest();
+
+// // 创建原始字节数据
+//     final bytes = Uint8List(8);
+//
+// // 创建ByteData视图
+//     final view = ByteData.view(bytes.buffer);
+//
+// // 通过ByteData修改
+//     view.setInt32(0, 42);
+//
+// // Uint8List会立即反映变化
+//     print(bytes[0]); // 42
+//     print(bytes.sublist(0, 4)); // [42, 0, 0, 0]
+//
+// // 反之亦然
+//     bytes[4] = 255;
+//     print(view.getUint8(4)); // 255
+  }
+
+  void dataRequest() async {
+    bool _value = await downloadAndConvertBin(
+        'https://potent-hockey-us.s3.us-east-1.amazonaws.com/images/20250604/e452450fff07482d98fe8457878e5d9b.bin');
+    setState(() {
+      _hasRequest = true;
+    });
+    if(_value){
+      ScaffoldMessenger.of(context).showSnackBar(
+        SnackBar(
+          content: Text('更新下载最新的固件成功'),
+          duration: Duration(seconds: 2),
+        ),
+      );
+    }else{
+      ScaffoldMessenger.of(context).showSnackBar(
+        SnackBar(
+          content: Text('更新下载最新的固件失败，使用本地默认固件'),
+          duration: Duration(seconds: 5),
+        ),
+      );
+    }
   }
 
   scanBLE() async {
-    if (Platform.isAndroid){
+    if (Platform.isAndroid) {
       var permissionStatus = await Permission.location.request();
       PermissionStatus bleScan = await Permission.bluetoothScan.request();
       PermissionStatus bleConnect = await Permission.bluetoothConnect.request();
@@ -55,17 +95,15 @@ class _RootPageControllerState extends State<RootPageController> {
       } else {
         throw ();
       }
-    }else{
+    } else {
       EventBus eventBus = EventBusManager().eventBus;
       _subscription = eventBus.on<DataUpdatedEvent>().listen((event) {
-        if(event.data == kBLEReady){
+        if (event.data == kBLEReady) {
           print('开始iOS蓝牙搜索');
           CommStatusManager().startScan();
         }
       });
-
     }
-
   }
 
   checkLog() {
@@ -78,7 +116,13 @@ class _RootPageControllerState extends State<RootPageController> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      body: _pages[_currentIndex],
+      body: _hasRequest
+          ? _pages[_currentIndex]
+          :  Center(
+        child: LoadingAnimationWidget.staggeredDotsWave(
+        color: Colors.orange,
+        size: 60,
+    )),
       bottomNavigationBar: BottomNavigationBar(
         // backgroundColor: Colors.grey,
         /*
