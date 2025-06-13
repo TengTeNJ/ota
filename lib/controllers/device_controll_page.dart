@@ -12,6 +12,7 @@ import '../utils/event_manager.dart';
 import '../utils/ota_data.dart';
 import '../utils/ota_service_data.dart';
 import '../views/empty_view.dart';
+import '../views/speed_wheel.dart';
 
 class DeviceControlPage extends StatefulWidget {
   const DeviceControlPage({super.key});
@@ -26,11 +27,14 @@ class _DeviceControlPageState extends State<DeviceControlPage> {
   List<DiscoveredDevice> _devices = [];
   DiscoveredDevice? _connectedDevice;
   bool _connected = false;
+  DateTime _currentTimer = DateTime.now();
 
   @override
   void initState() {
     // TODO: implement initState
     super.initState();
+    bleNotAllData.clear();
+    CommStatusManager().isDeviceDeail = true;
     CommStatusManager().progress = CommProgress.ready;
     // 加载bin文件
     EventBus eventBus = EventBusManager().eventBus;
@@ -40,7 +44,18 @@ class _DeviceControlPageState extends State<DeviceControlPage> {
           initData();
         } else if (event.data == kBLEDisconneted) {
           initData();
+        }else if(event.data == kModeControlResponse){
+         Future.delayed(Duration(milliseconds: 500),(){
+           ScaffoldMessenger.of(context).showSnackBar(
+               SnackBar(
+                 content: Text('收到模式的控制回复'),
+                 duration: Duration(milliseconds:2000 ),
+               )
+           );
+
+         });
         }
+
       });
     });
     initData();
@@ -107,7 +122,7 @@ class _DeviceControlPageState extends State<DeviceControlPage> {
     ScaffoldMessenger.of(context).showSnackBar(
       SnackBar(
         content: Text('已发送: $data'),
-        duration: Duration(seconds: 2),
+        duration: Duration(milliseconds:200 ),
       ),
     );
   }
@@ -126,7 +141,7 @@ class _DeviceControlPageState extends State<DeviceControlPage> {
         shape: RoundedRectangleBorder(
           borderRadius: BorderRadius.circular(10),
         ),
-        padding: EdgeInsets.symmetric(horizontal: 20, vertical: 10),
+        padding: EdgeInsets.symmetric(horizontal: 10, vertical: 10),
       ),
       child: Text(
         text,
@@ -141,7 +156,7 @@ class _DeviceControlPageState extends State<DeviceControlPage> {
       appBar: AppBar(
           centerTitle: true,
           title: Text(
-            'OTA',
+            '设备详情',
             style: TextStyle(fontSize: 18, fontWeight: FontWeight.bold),
           )),
       body: CommStatusManager().deviceList.length == 0
@@ -173,9 +188,8 @@ class _DeviceControlPageState extends State<DeviceControlPage> {
                     itemBuilder: (_, index) =>
                         _buildDeviceItem(CommStatusManager().deviceList[index]),
                   ),
-                  const Spacer(),
                   const SizedBox(
-                    height: 32,
+                    height: 12,
                   ),
                   if (_connected)
                     Column(
@@ -202,7 +216,7 @@ class _DeviceControlPageState extends State<DeviceControlPage> {
                       ],
                     ),
                   const SizedBox(
-                    height: 32,
+                    height: 12,
                   ),
                   if (_connected)
                     Column(
@@ -223,15 +237,57 @@ class _DeviceControlPageState extends State<DeviceControlPage> {
                         Row(
                           mainAxisAlignment: MainAxisAlignment.spaceBetween,
                           children: [
-                            _buildModeButton(context, '模式 1', '0'),
+                            _buildModeButton(context, '模式 1', '1'),
                             SizedBox(height: 20),
-                            _buildModeButton(context, '模式 2', '1'),
+                            _buildModeButton(context, '模式 2', '2'),
                             SizedBox(height: 20),
-                            _buildModeButton(context, '模式 3', '2'),
+                            _buildModeButton(context, '模式 3', '3'),
+                            SizedBox(height: 20),
+                            _buildModeButton(context, '手动模式', '4'),
                           ],
                         ),
                       ],
                     ),
+                  const SizedBox(
+                    height: 12,
+                  ),
+                  Column(
+                    children: [
+                     Row(
+                       mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                       children: [
+                       Text(
+                         '控制速度',
+                         style: TextStyle(
+                             fontSize: 16, fontWeight: FontWeight.bold),
+                       ),
+                        const Spacer()
+                       ],),
+                      Container(
+                        width: 200,
+                        height: 200,
+                        child: SpeedWheel(
+                          onSpeedChanged: (x, y) {
+                            print(0.00 == 0);
+//                         CommStatusManager().writerData(setSpeedData(0, 0));
+// return;
+                            DateTime endTime = DateTime.now();
+                            Duration difference = endTime.difference(_currentTimer);
+                            int milliseconds = difference.inMilliseconds;
+                            if(milliseconds >= 100){
+                              print('发送数据');
+                              _currentTimer = endTime;
+                              CommStatusManager().writerData(setSpeedData(x, y));
+                            }else{
+                              print('时间过短，不发送数据');
+                            }
+
+                            //  print('X: ${x.toStringAsFixed(2)}, Y: ${y.toStringAsFixed(2)}');
+                          },
+                        ),
+                      ),
+                    ],
+                  ),
                   const SizedBox(
                     height: 36,
                   ),
@@ -251,6 +307,7 @@ class _DeviceControlPageState extends State<DeviceControlPage> {
   void dispose() {
     // TODO: implement dispose
     _subscription.cancel();
+    CommStatusManager().isDeviceDeail = false;
     super.dispose();
   }
 }

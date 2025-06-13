@@ -1,8 +1,10 @@
 import 'package:flutter/material.dart';
+import 'package:ota/utils/comm_statu_manager.dart';
 import 'package:package_info_plus/package_info_plus.dart';
 import 'package:provider/provider.dart';
 
 import '../utils/theme_provider.dart';
+import 'package:numberpicker/numberpicker.dart';
 
 class AboutPage extends StatefulWidget {
   const AboutPage({super.key});
@@ -17,6 +19,7 @@ class _AboutPageState extends State<AboutPage> {
   packageName: 'com.potent.ota',
   version: '1.0',
   buildNumber: '1');
+  int _currentValue = 2;
 
   fetchApplicationInfo() async {
     PackageInfo _packageInfo = await PackageInfo.fromPlatform();
@@ -68,6 +71,25 @@ class _AboutPageState extends State<AboutPage> {
               onChanged: (value) => themeProvider.toggleTheme(value),
             ),
             SizedBox(height: 20),
+            Row(
+              mainAxisAlignment: MainAxisAlignment.spaceBetween,
+              children: [
+                Text('设置最大速度: ${CommStatusManager().maxSpeed}'),
+                SizedBox(height: 20),
+                NumberPicker(
+                  value: CommStatusManager().maxSpeed.toInt(),
+                  minValue: 1,
+                  maxValue: 10,
+                  step: 1,
+                  onChanged: (value) {
+                    setState(() {
+                      CommStatusManager().maxSpeed = value.toDouble();
+                      _currentValue = value;
+                    });
+                  },
+                ),
+              ],
+            ),
           ],
         ),
       ),

@@ -59,6 +59,7 @@ class _RootPageControllerState extends State<RootPageController> {
   }
 
   void dataRequest() async {
+
     bool _value = await downloadAndConvertBin(
         'https://potent-hockey-us.s3.us-east-1.amazonaws.com/images/20250604/e452450fff07482d98fe8457878e5d9b.bin');
     setState(() {

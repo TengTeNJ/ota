@@ -52,6 +52,7 @@ class CommStatusManager {
   StreamSubscription? _bleStatuListen;
 
   List<String> logDatas = ['蓝牙通讯日志：'];
+  bool isDeviceDeail = false;
 
   bool isOta = true;
   List<String> otaStrings = ['','','','','','',''];
@@ -60,6 +61,7 @@ class CommStatusManager {
   BLEModel? currentConnectedDevice;
   FlutterReactiveBle ble = FlutterReactiveBle();
   Stream<DiscoveredDevice>? _scanStream;
+  double maxSpeed = 2;
 
   int totalDataLength = 0;
   int hasSendDataLength = 0;
@@ -151,6 +153,9 @@ class CommStatusManager {
       });
     }
   }
+  /*
+  * 连接
+  * */
   Future<void> connectToDevice(BLEModel model) async {
 
     late  StreamSubscription<ConnectionStateUpdate> stream;

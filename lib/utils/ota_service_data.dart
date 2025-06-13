@@ -273,6 +273,20 @@ class OTAServiceDataParse {
     if (data.isEmpty) {
       return;
     }
+    if(CommStatusManager().isDeviceDeail){
+      bleNotAllData.addAll(data);
+      if(bleNotAllData[0] == 0x5a && bleNotAllData[bleNotAllData.length-1] == 0xaa){
+        if(bleNotAllData.length == bleNotAllData[1] && bleNotAllData.length >= 3){
+          int cmd = bleNotAllData[2];
+          if(cmd == 0x16){
+            print('控制模式的回复');
+            EventBusManager().eventBus.fire(DataUpdatedEvent(kModeControlResponse));
+          }
+          bleNotAllData.clear();
+        }
+      }
+      return;
+    }
     if (CommStatusManager().progress == CommProgress.ready) {
       return;
 /*

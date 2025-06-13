@@ -2,6 +2,8 @@ import 'package:flutter/material.dart';
 import 'package:ota/utils/comm_statu_manager.dart';
 import 'dart:io' show Platform;
 
+import 'package:ota/views/speed_wheel.dart';
+
 class EmptyView extends StatefulWidget {
   const EmptyView({super.key});
 
@@ -67,6 +69,16 @@ class _EmptyViewState extends State<EmptyView> {
   Widget build(BuildContext context) {
     return  Padding(
       padding: const EdgeInsets.all(16.0),
+      // child: Container(
+      //   width: 200,
+      //   height: 200,
+      //   child: SpeedWheel(
+      //     onSpeedChanged: (x, y) {
+      //       print(0.00 == 0);
+      //       print('X: ${x.toStringAsFixed(2)}, Y: ${y.toStringAsFixed(2)}');
+      //     },
+      //   ),
+      // ),
       child: Column(
         mainAxisAlignment: MainAxisAlignment.center,
         crossAxisAlignment: CrossAxisAlignment.center,
