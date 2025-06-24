@@ -26,6 +26,18 @@
 	<string>$(FLUTTER_BUILD_NUMBER)</string>
 	<key>LSRequiresIPhoneOS</key>
 	<true/>
+	<key>NSBluetoothAlwaysUsageDescription</key>
+	<string>Need Bluetooth access for scanning devices</string>
+	<key>NSBluetoothPeripheralUsageDescription</key>
+	<string>Need Bluetooth access for scanning devices</string>
+	<key>NSCameraUsageDescription</key>
+	<string>your usage description here</string>
+	<key>NSFileProviderDomainUsageDescription</key>
+	<string>App需要访问文件系统。</string>
+	<key>NSMicrophoneUsageDescription</key>
+	<string>your usage description here</string>
+	<key>NSPhotoLibraryUsageDescription</key>
+	<string>Save video in gallery</string>
 	<key>UIApplicationSupportsIndirectInputEvents</key>
 	<true/>
 	<key>UILaunchStoryboardName</key>
@@ -45,17 +57,5 @@
 		<string>UIInterfaceOrientationLandscapeLeft</string>
 		<string>UIInterfaceOrientationLandscapeRight</string>
 	</array>
-    <key>NSBluetoothAlwaysUsageDescription</key>
-    <string>Need Bluetooth access for scanning devices</string>
-    <key>NSBluetoothPeripheralUsageDescription</key>
-    <string>Need Bluetooth access for scanning devices</string>
-    <key>NSCameraUsageDescription</key>
-    <string>your usage description here</string>
-    <key>NSFileProviderDomainUsageDescription</key>
-    <string>App需要访问文件系统。</string>
-    <key>NSMicrophoneUsageDescription</key>
-    <string>your usage description here</string>
-    <key>NSPhotoLibraryUsageDescription</key>
-    <string>Save video in gallery</string>
 </dict>
 </plist>

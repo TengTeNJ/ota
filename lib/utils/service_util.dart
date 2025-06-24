@@ -71,3 +71,12 @@ Future<void> _saveToFile(Uint8List bytes) async {
   await file.writeAsBytes(bytes);
   print('文件已保存到: ${file.path}');
 }
+
+// 将整数转换为两个字节
+List<int> intToBytes(int value) {
+  // 提取高8位（右移8位）
+  final highByte = (value >> 8) & 0xFF;
+  // 提取低8位
+  final lowByte = value & 0xFF;
+  return [highByte, lowByte];
+}

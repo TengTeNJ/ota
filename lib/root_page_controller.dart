@@ -6,6 +6,8 @@ import 'package:ota/controllers/abount_page.dart';
 import 'package:ota/controllers/ble_log_show.dart';
 import 'package:ota/controllers/device_controll_page.dart';
 import 'package:ota/controllers/factory_reset_page.dart';
+import 'package:ota/controllers/step_control_page.dart';
+import 'package:ota/controllers/target_page.dart';
 import 'package:ota/utils/comm_statu_manager.dart';
 import 'package:ota/utils/event_manager.dart';
 import 'package:ota/utils/service_util.dart';
@@ -23,13 +25,13 @@ class RootPageController extends StatefulWidget {
 
 class _RootPageControllerState extends State<RootPageController> {
   late StreamSubscription<DataUpdatedEvent> _subscription;
-  bool _hasRequest = false;
+  bool _hasRequest = true;
   int _currentIndex = 0;
   final List<Widget> _pages = [
     FactoryResetPage(),
     const OtaPage(),
     DeviceControlPage(),
-    AboutPage()
+    AboutPage(),
   ];
 
   @override
@@ -149,11 +151,11 @@ class _RootPageControllerState extends State<RootPageController> {
           ),
           BottomNavigationBarItem(
             icon: Icon(Icons.devices),
-            label: '设备详情',
+            label: '设备',
           ),
           BottomNavigationBarItem(
-            icon: Icon(Icons.settings),
-            label: '关于',
+            icon: Icon(Icons.more),
+            label: '更多',
           ),
         ],
       ),

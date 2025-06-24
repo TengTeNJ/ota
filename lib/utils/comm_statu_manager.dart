@@ -54,6 +54,8 @@ class CommStatusManager {
   List<String> logDatas = ['蓝牙通讯日志：'];
   bool isDeviceDeail = false;
 
+  int powerValue = 100; // 电池电量
+
   bool isOta = true;
   List<String> otaStrings = ['','','','','','',''];
   List<String> factoryStrings = ['','','','','','',];
@@ -66,6 +68,7 @@ class CommStatusManager {
   int totalDataLength = 0;
   int hasSendDataLength = 0;
 
+  bool isStepControlling = false; // 步伐控制中
   // 当前状态
   CommProgress _progress = CommProgress.ready;
 
@@ -292,6 +295,7 @@ class CommStatusManager {
 
     // List<int> chunks = [];
     int chunkSize = 128;
+
 
     totalDataLength = this.binData.length; // 总数据长度
 

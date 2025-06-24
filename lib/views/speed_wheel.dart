@@ -29,7 +29,8 @@ class _SpeedWheelState extends State<SpeedWheel> {
         _wheelRadius = min(constraints.maxWidth, constraints.maxHeight) / 2;
         _wheelCenter = Offset(_wheelRadius, _wheelRadius);
 
-        return GestureDetector(
+        return  GestureDetector(
+          behavior: HitTestBehavior.opaque,
           onPanStart: (details) => _handleTouch(details.localPosition),
           onPanUpdate: (details) => _handleTouch(details.localPosition),
           onPanEnd: (_) => _reset(),

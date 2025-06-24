@@ -273,14 +273,43 @@ class OTAServiceDataParse {
     if (data.isEmpty) {
       return;
     }
+    print('data=${data}');
+    if(bleNotAllData.length>20){
+      bleNotAllData.clear();
+    }
+    print('bleNotAllData=${bleNotAllData}');
+    print('CommStatusManager().isDeviceDeail=${CommStatusManager().isDeviceDeail}');
     if(CommStatusManager().isDeviceDeail){
+      print('bleNotAllData===${bleNotAllData}');
       bleNotAllData.addAll(data);
       if(bleNotAllData[0] == 0x5a && bleNotAllData[bleNotAllData.length-1] == 0xaa){
         if(bleNotAllData.length == bleNotAllData[1] && bleNotAllData.length >= 3){
           int cmd = bleNotAllData[2];
+          print('cmd=${cmd}');
           if(cmd == 0x16){
             print('控制模式的回复');
             EventBusManager().eventBus.fire(DataUpdatedEvent(kModeControlResponse));
+          }else if(cmd == 0x14){
+            print('步伐控制步伐的回复${bleNotAllData[3]}');
+            if(bleNotAllData.length >= 3 &&  bleNotAllData[3] == 2){
+              CommStatusManager().isStepControlling = false;
+              EventBusManager().eventBus.fire(DataUpdatedEvent(kStepControlFinishResponse));
+            }
+          }else if(cmd == 0x19){
+            print('系统状态反馈');
+            // 0：初始化，1：运行，2：停止，3：校零
+            int statu = bleNotAllData[3];
+            int batteryValue = bleNotAllData[4];
+            int error1 = bleNotAllData[5];
+            int error2 = bleNotAllData[6];
+            print('系统状态:${statu}');
+            print('电池电量:${batteryValue}');
+            CommStatusManager().powerValue = batteryValue;
+            EventBusManager().eventBus.fire(DataUpdatedEvent(kPowerValue));
+            print('故障信息1:${error1}');
+            print('故障信息2:${error2}');
+          }else if(cmd == 0x18){
+            print('位置校准的回复${bleNotAllData[3]}');
           }
           bleNotAllData.clear();
         }

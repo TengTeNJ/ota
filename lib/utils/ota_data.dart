@@ -1,5 +1,7 @@
 import 'dart:typed_data';
+import 'package:ota/controllers/step_control_page.dart';
 import 'package:ota/utils/comm_statu_manager.dart';
+import 'package:ota/utils/service_util.dart';
 
 import '../constants.dart';
 import 'event_manager.dart';
@@ -185,7 +187,47 @@ List<int> setSpeedData(double x,double y){
   print('设置速度--${xSpeed}---${ySpeed}');
   List<int> data = [kBLEDataFrameHeader,8,0x03,xSpeed,ySpeed,0,0xff,0xaa];
   print('data=${data}');
-return data;
+  return data;
+}
 
+/*
+* 步伐控制
+* */
+List<int> stepControlData(TennisMachineParams params){
+  List<int> data = [kBLEDataFrameHeader,19,0x04];
+ // x轴
+  data.addAll( intToBytes(params.xPosition));
+  // y轴
+  data.addAll( intToBytes(params.yPosition));
+  // z轴
+  data.addAll( intToBytes(params.zRotation));
+  // 上发球轮
+  data.add(params.topWheelSpeed);
+  // 下发球轮
+  data.add(params.bottomWheelSpeed);
+  // 转盘
+  data.add(params.turntableSpeed);
+  // 发球角度
+  data.addAll( intToBytes(params.ballAngle));
+  // 发球间隔
+  data.addAll( intToBytes((params.ballInterval).round()));
+  // 发球球数
+  data.add(params.ballCount);
 
+  data.addAll([0xff,0xaa]);
+  print("步伐控制data = ${data.map((toElement) => toElement.toRadixString(16)).toList()}");
+  CommStatusManager().isStepControlling = true;
+  return data;
+}
+
+List<int>systemFeedbackData(){
+  print('请求系统状态反馈指令');
+  List<int> data = [kBLEDataFrameHeader,6,0x09,0x01,0xff,0xaa];
+  return data;
+}
+
+List<int>positionCheckData(){
+  print('位置校准');
+  List<int> data = [kBLEDataFrameHeader,6,0x08,0x01,0xff,0xaa];
+  return data;
 }
