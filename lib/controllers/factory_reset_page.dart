@@ -107,6 +107,7 @@ class _FactoryResetPageState extends State<FactoryResetPage> {
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
+          backgroundColor: Color.fromRGBO(182, 246, 29, 1.0),
           centerTitle: true,
           title: Text(
             '烧录',

@@ -1,13 +1,16 @@
 import 'dart:async';
 import 'dart:math';
 
+import 'package:ota/utils/comm_statu_manager.dart';
+
 class LightController {
   static const int lightCount = 8;
   static const int round1LightCount = 1;
   static const int round2LightCount = 2;
   static const int totalActions = 50;
   static const Duration initialDelay = Duration(seconds: 5);
-  static const Duration actionDelay = Duration(seconds: 3);
+
+  Duration actionDelay = Duration(seconds: CommStatusManager().targetInteral);
 
   final List<bool> _lights = List.filled(lightCount, true);
   late Timer _timer;

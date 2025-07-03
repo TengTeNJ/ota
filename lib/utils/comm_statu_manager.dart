@@ -56,6 +56,8 @@ class CommStatusManager {
 
   int powerValue = 100; // 电池电量
 
+  int targetInteral = 6; // 时间间隔
+
   bool isOta = true;
   List<String> otaStrings = ['','','','','','',''];
   List<String> factoryStrings = ['','','','','','',];

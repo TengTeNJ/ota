@@ -134,6 +134,7 @@ class _OtaPageState extends State<OtaPage> {
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
+          backgroundColor: Color.fromRGBO(182, 246, 29, 1.0),
           centerTitle: true,
           title: Text(
             'OTA',

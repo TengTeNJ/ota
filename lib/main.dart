@@ -23,6 +23,7 @@ class MyApp extends StatelessWidget {
     return MaterialApp(
       debugShowCheckedModeBanner: false,
       title: 'Flutter Demo',
+
       theme: ThemeData.light(), // 亮色主题
       darkTheme: ThemeData(
         brightness: Brightness.dark, // 关键：标记为暗色模式
@@ -36,7 +37,6 @@ class MyApp extends StatelessWidget {
         ),
       ), // 暗色主题
       themeMode: themeProvider.themeMode, // 动态绑定主题模式
-
       // theme: ThemeData(
       //   // This is the theme of your application.
       //   //

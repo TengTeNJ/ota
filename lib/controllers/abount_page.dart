@@ -41,6 +41,7 @@ class _AboutPageState extends State<AboutPage> {
     final themeProvider = Provider.of<ThemeProvider>(context);
     return Scaffold(
       appBar: AppBar(
+          backgroundColor: Color.fromRGBO(182, 246, 29, 1.0),
           centerTitle: true,
           title: Text(
             '设置',
@@ -93,6 +94,31 @@ class _AboutPageState extends State<AboutPage> {
                     setState(() {
                       CommStatusManager().maxSpeed = value.toDouble();
                       _currentValue = value;
+                    });
+                  },
+                ),
+              ],
+            ),
+            SizedBox(height: 20),
+            Row(
+              mainAxisAlignment: MainAxisAlignment.spaceBetween,
+              children: [
+                Text('设置标靶时间间隔: ${CommStatusManager().targetInteral}秒',style: TextStyle(fontSize: 18, fontWeight: FontWeight.bold),),
+                SizedBox(height: 20),
+                NumberPicker(
+                  decoration: BoxDecoration(
+                    border: Border(
+                      top: BorderSide(color: Colors.grey),
+                      bottom: BorderSide(color: Colors.grey),
+                    ),
+                  ),
+                  value: CommStatusManager().targetInteral,
+                  minValue: 1,
+                  maxValue: 20,
+                  step: 1,
+                  onChanged: (value) {
+                    setState(() {
+                      CommStatusManager().targetInteral = value.toInt();
                     });
                   },
                 ),

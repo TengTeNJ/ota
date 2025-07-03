@@ -14,7 +14,8 @@ class TargetPage extends StatefulWidget {
 
 class _TargetPageState extends State<TargetPage> {
   List<bool> lights = [true, true, true, true, true, true, true,true];
-
+   int _index = 1;
+   int _currentIndex = 0;
   @override
   void initState() {
     // TODO: implement initState
@@ -27,8 +28,16 @@ class _TargetPageState extends State<TargetPage> {
         },
         onAction: (int round, int action) {
           print('round=${round} -- action=${action}');
+          setState(() {
+            _currentIndex ++;
+          });
         },
         onRoundComplete: () {
+          setState(() {
+            lights = [true,true,true,true,true,true,true,true];
+            _index = 2;
+            _currentIndex = 0;
+          });
           print('第一轮完成');
         },
         onAllRoundsComplete: () {
@@ -58,20 +67,27 @@ class _TargetPageState extends State<TargetPage> {
                 Column(
                   children: [
                     Text(
+                      '第${_index}轮',
+                      style: TextStyle(
+                          fontWeight: FontWeight.bold,
+                          fontSize: 18,
+                          color: Colors.white),
+                    ),
+                    Text(
                       'Total Shots',
                       style: TextStyle(
                           fontWeight: FontWeight.bold,
-                          fontSize: 16,
+                          fontSize: 18,
                           color: Colors.white),
                     ),
                     SizedBox(
                       height: 6,
                     ),
                     Text(
-                      '50/50',
+                      '${_currentIndex}/50',
                       style: TextStyle(
                           fontWeight: FontWeight.bold,
-                          fontSize: 16,
+                          fontSize: 18,
                           color: Color.fromRGBO(21, 233, 120, 1.0)),
                     ),
                   ],

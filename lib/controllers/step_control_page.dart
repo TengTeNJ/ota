@@ -433,7 +433,7 @@ class _TennisBallMachineControlState extends State<TennisBallMachineControl> {
                             value: zRotation,
                             min: -360.0,
                             max: 360.0,
-                            divisions: 36,
+                            divisions: 720,
                             label: zRotation.round().toString(),
                             onChanged: (double value) {
                               setState(() {
@@ -771,6 +771,7 @@ class _TennisBallMachineControlState extends State<TennisBallMachineControl> {
 
   // 发送控制命令的方法
   void sendControlCommand(TennisMachineParams params) {
+    params.ballInterval = params.ballInterval*50;
     // if(CommStatusManager().isStepControlling){
     //   ScaffoldMessenger.of(context).showSnackBar(
     //     SnackBar(
