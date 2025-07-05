@@ -80,3 +80,23 @@ List<int> intToBytes(int value) {
   final lowByte = value & 0xFF;
   return [highByte, lowByte];
 }
+
+int calculatePercentage(int part, int whole) {
+  if (whole == 0) return 0; // 避免除以零
+  return ((part / whole) * 100).round();
+}
+
+int calculateScopePercentage(int part, int whole) {
+  if (whole == 0) return 0; // 避免除以零
+
+  int percent = ((part / whole) * 100).round();
+
+  if (percent >= 30 && percent < 50) return 40;
+  if (percent >= 50 && percent < 70) return 60;
+  if (percent >= 70 && percent < 90) return 80;
+  if (percent >= 90 && percent <= 110) return 100;
+  if (percent > 110 && percent <= 130) return 120;
+
+  return percent;
+}
+

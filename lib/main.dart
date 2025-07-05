@@ -3,7 +3,7 @@ import 'package:ota/root_page_controller.dart';
 import 'package:ota/test_controller.dart';
 import 'package:ota/utils/theme_provider.dart';
 import 'package:provider/provider.dart';
-
+import 'package:any_loading/any_loading.dart';
 void main() {
   runApp(
     ChangeNotifierProvider(
@@ -59,6 +59,7 @@ class MyApp extends StatelessWidget {
       // ),
       // home: const MyHomePage(title: 'Flutter Demo Home Page'),
       home: RootPageController(),
+      builder: AnyLoading.init(),
       // home: BluetoothDebugPage(),
     );
   }

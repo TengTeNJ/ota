@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:ota/controllers/power_page.dart';
 import 'package:ota/controllers/target_page.dart';
 import 'package:ota/utils/comm_statu_manager.dart';
 import 'package:package_info_plus/package_info_plus.dart';
@@ -149,6 +150,31 @@ class _AboutPageState extends State<AboutPage> {
                 Icon(Icons.arrow_forward_ios, size: 16)
               ],
             ),),
+            SizedBox(height: 20),
+            GestureDetector(
+              behavior: HitTestBehavior.opaque,
+              onTap: (){
+                SystemUtil.lockScreenHorizontalDirection();
+                Future.delayed(Duration(milliseconds: 500),(){
+                  Navigator.push(
+                    context,
+                    MaterialPageRoute(builder: (context) =>PowerPage()), // 目标页面
+                  );
+                });
+              },
+              child: Row(
+                mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                children: [
+                  Row(
+                    children: [
+                      Text('力量训练',style: TextStyle(fontSize: 18, fontWeight: FontWeight.bold),),
+                      SizedBox(width: 2,),
+                      Icon(Icons.track_changes)
+                    ],
+                  ),
+                  Icon(Icons.arrow_forward_ios, size: 16)
+                ],
+              ),),
           ],
         ),
       ),

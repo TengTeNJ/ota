@@ -33,6 +33,7 @@ bool _loadBin = false;
 class CommStatusManager {
   // 私有构造
   CommStatusManager._internal();
+
   Timer? timer;
 
   // 单例实例
@@ -51,7 +52,7 @@ class CommStatusManager {
   StreamSubscription? _bleListen;
   StreamSubscription? _bleStatuListen;
 
-  List<String> logDatas = ['蓝牙通讯日志：'];
+  List<String> logDatas = ['-'];
   bool isDeviceDeail = false;
 
   int powerValue = 100; // 电池电量
@@ -59,16 +60,27 @@ class CommStatusManager {
   int targetInteral = 6; // 时间间隔
 
   bool isOta = true;
-  List<String> otaStrings = ['','','','','','',''];
-  List<String> factoryStrings = ['','','','','','',];
+  List<String> otaStrings = ['', '', '', '', '', '', ''];
+  List<String> factoryStrings = [
+    '',
+    '',
+    '',
+    '',
+    '',
+    '',
+  ];
   List<BLEModel> deviceList = [];
   BLEModel? currentConnectedDevice;
+  BLEModel? myspeedzConnectedDevice;
+
   FlutterReactiveBle ble = FlutterReactiveBle();
   Stream<DiscoveredDevice>? _scanStream;
   double maxSpeed = 2;
 
   int totalDataLength = 0;
   int hasSendDataLength = 0;
+
+  int currentSpeed = 0;
 
   bool isStepControlling = false; // 步伐控制中
   // 当前状态
@@ -87,22 +99,23 @@ class CommStatusManager {
   set progress(CommProgress progress) {
     _progress = progress;
   }
+
   bool hasDevice(String id) {
     Iterable<BLEModel> filteredDevice =
-    this.deviceList.where((element) => element.device!.id == id);
+        this.deviceList.where((element) => element.device!.id == id);
     bool value = filteredDevice != null && filteredDevice.length > 0;
     return value;
   }
 
-  refresh(){
+  refresh() {
     CommStatusManager().ble.deinitialize(); // 停止旧的 BLE 流
     _scanStream = null;
     // CommStatusManager().deviceList.clear();
     // CommStatusManager().currentConnectedDevice = null;
     startScan();
     // EventBusManager().eventBus.fire(DataUpdatedEvent(kBLEDisconneted));
-
   }
+
   /*开始扫描*/
   Future<void> startScan() async {
     // 不能重复扫描
@@ -117,11 +130,12 @@ class CommStatusManager {
       );
       _bleListen = _scanStream!.listen((DiscoveredDevice event) {
         // 处理扫描到的蓝牙设备
-        if(event.name.isEmpty){
+        if (event.name.isEmpty) {
           return;
         }
         // print('event.name=${event.name}====${event.name.length}');
-        if (event.name.contains(kBLEDeviceName) || event.name.contains(kBLENewDeviceName)) {
+        if (event.name.contains(kBLEDeviceName) ||
+            event.name.contains(kBLENewDeviceName)) {
           // 如果设备列表数组中无，则添加
           if (!hasDevice(event.id)) {
             print('添加新设备--${event.id}----${event.name}');
@@ -129,8 +143,16 @@ class CommStatusManager {
                 .deviceList
                 .add(BLEModel(deviceName: event.name, device: event));
             EventBusManager().eventBus.fire(DataUpdatedEvent(kFindNewDevice));
-
           }
+        } else if (event.name.contains(kBLEMySpeedzName)) {
+          if(this.myspeedzConnectedDevice  != null){
+            print('已发现测速器---');
+            return;
+          }
+          // 测速器
+          // 保存测速器变量
+          print('发现测速器---');
+          this.myspeedzConnectedDevice = BLEModel(deviceName: event.name, device: event);
         }
       });
     }
@@ -158,16 +180,19 @@ class CommStatusManager {
       });
     }
   }
+
   /*
   * 连接
   * */
   Future<void> connectToDevice(BLEModel model) async {
-
-    late  StreamSubscription<ConnectionStateUpdate> stream;
+    late StreamSubscription<ConnectionStateUpdate> stream;
     var notifyChar;
     var writeChar;
-    stream = CommStatusManager().ble.connectToDevice(
-        id: model.device!.id, connectionTimeout: const Duration(seconds: 10))
+    stream = CommStatusManager()
+        .ble
+        .connectToDevice(
+            id: model.device!.id,
+            connectionTimeout: const Duration(seconds: 10))
         .listen((event) async {
       if (event.connectionState == DeviceConnectionState.connected) {
         notifyChar = QualifiedCharacteristic(
@@ -180,7 +205,6 @@ class CommStatusManager {
             deviceId: model.device!.id);
         CommStatusManager().writeChar = writeChar;
         CommStatusManager().notifyChar = notifyChar;
-
 
         BLEModel currentModel = model;
         currentModel.device = model.device!;
@@ -201,25 +225,95 @@ class CommStatusManager {
           print(
               "上报来的数据data = ${data.map((toElement) => toElement.toRadixString(16)).toList()}");
           // 解析数据
-          this.logDatas.add('${data.map((toElement) => toElement.toRadixString(16)).toList()}');
+          if(logDatas.length == 1 && logDatas.contains('-')){
+            logDatas.remove('-');
+          }
+          this.logDatas.add(
+              '${data.map((toElement) => toElement.toRadixString(16)).toList()}');
           EventBusManager().eventBus.fire(DataUpdatedEvent(kBLElog));
           OTAServiceDataParse.parseData(data);
           // 解析270
         });
       } else if (event.connectionState == DeviceConnectionState.disconnected) {
-          // 移除元素
-          try {
-            BLEModel firstEven = this.deviceList.firstWhere((element) => element.device!.id == model.device!.id);
-            this.deviceList.remove(firstEven);
-            CommStatusManager().currentConnectedDevice = null;
-            EventBusManager().eventBus.fire(DataUpdatedEvent(kBLEDisconneted));
-          } catch (e) {
-            print('没有找到满足条件的元素');
-          }
+        // 移除元素
+        try {
+          BLEModel firstEven = this
+              .deviceList
+              .firstWhere((element) => element.device!.id == model.device!.id);
+          this.deviceList.remove(firstEven);
+          CommStatusManager().currentConnectedDevice = null;
+          EventBusManager().eventBus.fire(DataUpdatedEvent(kBLEDisconneted));
+        } catch (e) {
+          print('没有找到满足条件的元素');
+        }
         print("设备已断开连接");
       }
     });
   }
+
+  Future<void> connectToMyspeedzDevice() async {
+    if(this.myspeedzConnectedDevice == null){
+      print('测速器未在线');
+      return;
+    }
+    BLEModel model = this.myspeedzConnectedDevice!;
+    late StreamSubscription<ConnectionStateUpdate> stream;
+    var notifyChar;
+    stream = CommStatusManager()
+        .ble
+        .connectToDevice(
+        id: model.device!.id,
+        connectionTimeout: const Duration(seconds: 10))
+        .listen((event) async {
+      if (event.connectionState == DeviceConnectionState.connected) {
+        notifyChar = QualifiedCharacteristic(
+            serviceId: Uuid.parse(KBLE_MYSPEEDZ_SERVICE_UUID),
+            characteristicId: Uuid.parse(KBLE_MYSPEEDZ_CHARACTERISTIC_NOTIFY_UUID),
+            deviceId: model.device!.id);
+        CommStatusManager().myspeedzConnectedDevice?.notifyCharacteristic = notifyChar;
+
+        BLEModel currentModel = model;
+        currentModel.device = model.device!;
+        currentModel.bleStream = stream;
+        currentModel.hasConected = true;
+        currentModel.notifyCharacteristic = notifyChar;
+        CommStatusManager().myspeedzConnectedDevice = currentModel;
+
+        // kBLEConneted
+        EventBusManager().eventBus.fire(DataUpdatedEvent(kBLEConneted));
+        print("连接测速器成功，并获取到特征");
+        CommStatusManager()
+            .ble
+            .subscribeToCharacteristic(notifyChar!)
+            .listen((List<int> data) {
+          print(
+              "上报来的数据data = ${data.map((toElement) => toElement.toRadixString(16)).toList()}");
+          if(logDatas.length == 1 && logDatas.contains('-')){
+            logDatas.remove('-');
+          }
+          // 解析数据
+          this.logDatas.add(
+              '${data.map((toElement) => toElement.toRadixString(16)).toList()}');
+          EventBusManager().eventBus.fire(DataUpdatedEvent(kBLElog));
+          int value = data.first;
+          print('测速器的值--${value}');
+          CommStatusManager().currentSpeed = value;
+          EventBusManager().eventBus.fire(DataUpdatedEvent(kSpeedValue));
+          // 解析270
+        });
+      } else if (event.connectionState == DeviceConnectionState.disconnected) {
+        // 移除元素
+        try {
+          CommStatusManager().myspeedzConnectedDevice = null;
+        } catch (e) {
+          print('没有找到满足条件的元素');
+        }
+        print("设备已断开连接");
+      }
+    });
+  }
+
+
   // 设置状态（你也可以加入日志打印）
   void updateProgress(CommProgress newProgress) {
     _progress = newProgress;
@@ -263,7 +357,6 @@ class CommStatusManager {
     }
   }
 
-
   Future<ByteData> loadBinFile() async {
     this.binData.clear();
     this.packetBinDatas.clear();
@@ -292,12 +385,11 @@ class CommStatusManager {
     }
 
     //final ByteData videoData = await rootBundle.load('assets/severingcan.bin');
-   // Uint8List bytes = videoData.buffer.asUint8List();
+    // Uint8List bytes = videoData.buffer.asUint8List();
     // Uint8List 本质上是一个 List<int>
 
     // List<int> chunks = [];
     int chunkSize = 128;
-
 
     totalDataLength = this.binData.length; // 总数据长度
 
@@ -312,5 +404,4 @@ class CommStatusManager {
 
     return videoData;
   }
-
 }

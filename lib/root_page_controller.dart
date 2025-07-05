@@ -1,4 +1,5 @@
 import 'dart:async';
+import 'package:any_loading/any_loading.dart';
 import 'package:event_bus/event_bus.dart';
 import 'package:flutter/material.dart';
 import 'package:ota/constants.dart';
@@ -15,6 +16,8 @@ import 'package:permission_handler/permission_handler.dart';
 import 'dart:io';
 import 'package:loading_animation_widget/loading_animation_widget.dart';
 import 'controllers/ota_page.dart';
+import 'package:http/http.dart' as http;
+import 'dart:convert';
 
 class RootPageController extends StatefulWidget {
   const RootPageController({super.key});
@@ -61,13 +64,24 @@ class _RootPageControllerState extends State<RootPageController> {
   }
 
   void dataRequest() async {
+    AnyLoading.showLoading();
 
-    bool _value = await downloadAndConvertBin(
-        'https://potent-hockey-us.s3.us-east-1.amazonaws.com/images/20250604/e452450fff07482d98fe8457878e5d9b.bin');
+    final response = await http.get(Uri.parse('http://3.236.189.174:91/api/upgrade/getUrl'));
+    print('Response data: ${response.body}');
+    final jsonData = jsonDecode(response.body);
+    // 获取 data 字段
+    String data = jsonData['data'];
+    String url = 'https://potent-hockey-us.s3.us-east-1.amazonaws.com/images/20250703/6aa14410702d47d79d0598a35097a60b.bin';
+    if(data != null && data.contains('http')){
+      url = data;
+    }
+    print('Response url: ${url}');
+    bool _value = await downloadAndConvertBin(url);
     setState(() {
       _hasRequest = true;
     });
     if(_value){
+      AnyLoading.dismiss();
       ScaffoldMessenger.of(context).showSnackBar(
         SnackBar(
           content: Text('更新下载最新的固件成功'),
@@ -75,6 +89,7 @@ class _RootPageControllerState extends State<RootPageController> {
         ),
       );
     }else{
+      AnyLoading.dismiss();
       ScaffoldMessenger.of(context).showSnackBar(
         SnackBar(
           content: Text('更新下载最新的固件失败，使用本地默认固件'),
