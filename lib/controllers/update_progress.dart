@@ -4,10 +4,12 @@ import 'package:event_bus/event_bus.dart';
 import 'package:flutter/material.dart';
 import 'package:ota/controllers/log_show.dart';
 import 'package:ota/utils/ota_service_data.dart';
+import 'package:provider/provider.dart';
 
 import '../constants.dart';
 import '../utils/comm_statu_manager.dart';
 import '../utils/event_manager.dart';
+import '../utils/language_model.dart';
 import '../utils/ota_data.dart';
 
 class UpdateProgress extends StatefulWidget {
@@ -25,11 +27,11 @@ class _UpdateProgressState extends State<UpdateProgress> {
   final List<String> _steps = [
     '发送Reset',
     '发送Ping',
-    '发送eraseAll',
-    '发送开始写',
-    '开始发送升级包数据',
-    '重启设备',
-    '完成'
+    '发送Erase all',
+    '发送开始写Begain write',
+    '开始发送升级包数据Send data',
+    '重启设备 Restart device',
+    '完成 Finish'
   ];
   late StreamSubscription<DataUpdatedEvent> _subscription;
   final List<CommProgress> progressDatas = [
@@ -137,7 +139,9 @@ class _UpdateProgressState extends State<UpdateProgress> {
                     MaterialPageRoute(builder: (context) => LogShow()), // 目标页面
                   );
                 },
-                child: Text('查看详细日志')),
+                child: Text(
+                  '${Provider.of<LanguageModel>(context, listen: true).getText('查看详细日志')}'
+                )),
             if (_currentStep == 4)
               Column(
                 children: [

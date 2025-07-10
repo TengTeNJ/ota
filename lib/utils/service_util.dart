@@ -57,8 +57,6 @@ Future<bool> downloadAndConvertBin(String url) async {
     await _saveToFile(bytes);
   } catch (e) {
     CommStatusManager().loadBinFile();
-
-
     return false;
     throw Exception('处理失败: $e');
   }

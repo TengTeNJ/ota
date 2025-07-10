@@ -22,11 +22,11 @@ class _UpdateProgressState extends State<FactoryProgress> {
   // 模拟升级步骤
   final List<String> _steps = [
     '发送Ping',
-    '发送eraseAll',
-    '发送开始写',
-    '开始发送升级包数据',
-    '重启设备',
-    '完成'
+    '发送Erase all',
+    '发送开始写Begain write',
+    '开始发送升级包数据 Sending data',
+    '重启设备 Restart device',
+    '完成 Finish'
   ];
   late StreamSubscription<DataUpdatedEvent> _subscription;
   final List<CommProgress> progressDatas = [

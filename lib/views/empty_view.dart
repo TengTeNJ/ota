@@ -3,6 +3,9 @@ import 'package:ota/utils/comm_statu_manager.dart';
 import 'dart:io' show Platform;
 
 import 'package:ota/views/speed_wheel.dart';
+import 'package:provider/provider.dart';
+
+import '../utils/language_model.dart';
 
 class EmptyView extends StatefulWidget {
   const EmptyView({super.key});
@@ -14,23 +17,24 @@ class EmptyView extends StatefulWidget {
 Widget _buildPlatformSpecificTips(BuildContext context) {
   if (Platform.isAndroid) {
     return Column(
+      crossAxisAlignment: CrossAxisAlignment.start,
       children: [
         Text(
-          '1. 确保蓝牙已开启，并且设备处于可发现状态。',
+          '1 . ${Provider.of<LanguageModel>(context, listen: true).getText('蓝牙1')}',
           style: TextStyle(fontSize: 16),
-          textAlign: TextAlign.center,
+          textAlign: TextAlign.left,
         ),
         SizedBox(height: 10),
         Text(
-          '2. 确保已开启定位服务（Android 6.0 及以上设备需要此权限才能搜索蓝牙设备）[^13^][^16^]。',
+          '2. ${Provider.of<LanguageModel>(context, listen: true).getText('蓝牙2')}',
           style: TextStyle(fontSize: 16),
-          textAlign: TextAlign.center,
+          textAlign: TextAlign.left,
         ),
         SizedBox(height: 10),
         Text(
-          '3. 确保设备在扫描范围内，并且没有被其他设备连接。',
+          ' 3. ${Provider.of<LanguageModel>(context, listen: true).getText('蓝牙3')}',
           style: TextStyle(fontSize: 16),
-          textAlign: TextAlign.center,
+          textAlign: TextAlign.left,
         ),
       ],
     );
@@ -38,19 +42,19 @@ Widget _buildPlatformSpecificTips(BuildContext context) {
     return Column(
       children: [
         Text(
-          '1. 确保蓝牙已开启，并且设备处于可发现状态。',
+          '1. ${Provider.of<LanguageModel>(context, listen: true).getText('蓝牙1')}',
           style: TextStyle(fontSize: 16),
           textAlign: TextAlign.center,
         ),
         SizedBox(height: 10),
         Text(
-          '2. 确保已开启定位服务（iOS 13 及以上版本需要此权限才能使用蓝牙功能）[^15^][^20^]。',
+          '2. ${Provider.of<LanguageModel>(context, listen: true).getText('蓝牙2')}',
           style: TextStyle(fontSize: 16),
           textAlign: TextAlign.center,
         ),
         SizedBox(height: 10),
         Text(
-          '3. 确保设备在扫描范围内，并且没有被其他设备连接。',
+          '3. ${Provider.of<LanguageModel>(context, listen: true).getText('蓝牙3')}',
           style: TextStyle(fontSize: 16),
           textAlign: TextAlign.center,
         ),
@@ -58,7 +62,7 @@ Widget _buildPlatformSpecificTips(BuildContext context) {
     );
   } else {
     return Text(
-      '1. 确保蓝牙已开启，并且设备处于可发现状态。',
+      '1. ${Provider.of<LanguageModel>(context, listen: true).getText('蓝牙1')}',
       style: TextStyle(fontSize: 16),
       textAlign: TextAlign.center,
     );
@@ -99,7 +103,7 @@ class _EmptyViewState extends State<EmptyView> {
               );
               CommStatusManager().refresh();
             },
-            child: Text('重新搜索'),
+            child:Text( Provider.of<LanguageModel>(context, listen: true).getText('重新搜索')),
           ),
         ],
       ),

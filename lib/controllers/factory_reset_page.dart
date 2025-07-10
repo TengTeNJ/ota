@@ -4,10 +4,12 @@ import 'package:event_bus/event_bus.dart';
 import 'package:flutter_reactive_ble/flutter_reactive_ble.dart';
 import 'package:ota/controllers/factory_progress.dart';
 import 'package:ota/controllers/update_progress.dart';
+import 'package:provider/provider.dart';
 import '../constants.dart';
 import '../model/ble_model.dart';
 import '../utils/comm_statu_manager.dart';
 import '../utils/event_manager.dart';
+import '../utils/language_model.dart';
 import '../utils/ota_data.dart';
 import '../utils/ota_service_data.dart';
 import '../views/empty_view.dart';
@@ -98,7 +100,7 @@ class _FactoryResetPageState extends State<FactoryResetPage> {
       subtitle: Text('${model.device!.id}    RSSI:${model.device!.rssi}'),
       trailing: ElevatedButton(
         onPressed: () => _connectToDevice(model),
-        child:  Text( CommStatusManager().currentConnectedDevice != null && CommStatusManager().currentConnectedDevice!.device!.id == model.device!.id ? "断开连接" : '连接'),
+        child:  Text( CommStatusManager().currentConnectedDevice != null && CommStatusManager().currentConnectedDevice!.device!.id == model.device!.id ? '${Provider.of<LanguageModel>(context, listen: true).getText('断开连接')}' : '${Provider.of<LanguageModel>(context, listen: true).getText('连接')}'),
       ),
     );
   }
@@ -124,7 +126,7 @@ class _FactoryResetPageState extends State<FactoryResetPage> {
               Padding(padding: EdgeInsets.only(left: 16,right: 16),child: Row(
                 children: [
                   Text(
-                    '设备列表',
+                    '${Provider.of<LanguageModel>(context, listen: true).getText('设备列表')}',
                     style: TextStyle(fontWeight: FontWeight.bold, fontSize: 16),
                   ),
                   const Spacer()

@@ -35,32 +35,33 @@ class _PowerPageState extends State<PowerPage> {
     EventBus eventBus = EventBusManager().eventBus;
     _subscription = eventBus.on<DataUpdatedEvent>().listen((event) {
       if (event.data == kSpeedValue) {
+        // 监测到速度数据
         if (!_startFlag) {
           return;
         }
         // 显示速度
         SpeedPopup.show(context, speed: CommStatusManager().currentSpeed);
+        // 监测到的速度数据变量递增
         speedIndexs++;
-        if (speedIndexs <10) {
+        if (speedIndexs <=10) {
           // 力量范围测量结束 进入训练
           maxSpeed = maxSpeed > CommStatusManager().currentSpeed
               ? maxSpeed
               : CommStatusManager().currentSpeed;
-          // // 开始发球了
-          // TennisMachineParams params = TennisMachineParams.fromState(0, 0, 0, 13, 13, 40, 110, 200, 1);
-          // CommStatusManager().writerData(stepControlData(params));
-        } else if (speedIndexs <30) {
-          if (speedIndexs == 10) {
+        } else if (speedIndexs <=30) {
+          if (speedIndexs == 11) {
             gameIndex++;
             // 进入到力量训练
           }
         } else {
-          if (speedIndexs == 30) {
+          if (speedIndexs == 31) {
             gameIndex++;
             // 进入到组合训练
           }
         }
+        print('kSpeedValue--speedIndexs=${speedIndexs}');
       } else if (event.data == kStepControlFinishResponse) {
+        // 步伐控制结束回复
         if (gameIndex == 0 && speedIndexs < 10) {
           // 开始发球了
           TennisMachineParams params =
@@ -72,8 +73,8 @@ class _PowerPageState extends State<PowerPage> {
         }else if(speedIndexs >= 30){
 
         }
+        print('kStepControlFinishResponse--speedIndexs=${speedIndexs}');
       }
-      print('speedIndexs=${speedIndexs}');
       setState(() {});
     });
     // 延迟两秒后开始
@@ -89,13 +90,13 @@ class _PowerPageState extends State<PowerPage> {
       return;
     }
     TennisMachineParams params =
-        TennisMachineParams.fromState(600, 0, 0, 12, 12, 40, 110, 125, 0);
+        TennisMachineParams.fromState(400, 0, 0, 12, 12, 40, 110, 125, 0);
     CommStatusManager().writerData(stepControlData(params));
   }
   /*力量训练第二阶段*/
   void secondProgressGame(){
     if(speedIndexs < 10){
-      print('未进入第二阶段，不处理');
+      print('未进入第二阶段，不处理--${speedIndexs}');
       return;
     }
     TennisMachineParams params =
@@ -106,7 +107,6 @@ class _PowerPageState extends State<PowerPage> {
   @override
   Widget build(BuildContext context) {
     double _width = (Constants.screenWidth(context) - 98 - 28 * 7) / 8;
-    // print('_width=${_width}');
     return Scaffold(
       backgroundColor: Color.fromRGBO(18, 83, 157, 1.0),
       body: Stack(

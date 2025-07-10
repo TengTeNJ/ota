@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:ota/root_page_controller.dart';
 import 'package:ota/test_controller.dart';
+import 'package:ota/utils/language_model.dart';
 import 'package:ota/utils/theme_provider.dart';
 import 'package:provider/provider.dart';
 import 'package:any_loading/any_loading.dart';
@@ -8,7 +9,10 @@ void main() {
   runApp(
     ChangeNotifierProvider(
       create: (_) => ThemeProvider(),
-      child: const MyApp(),
+      child: ChangeNotifierProvider(
+        create: (_) => LanguageModel(), // 添加语言管理
+        child: const MyApp(),
+      ),
     ),
   );
 }
@@ -20,48 +24,49 @@ class MyApp extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     final themeProvider = Provider.of<ThemeProvider>(context);
-    return MaterialApp(
-      debugShowCheckedModeBanner: false,
-      title: 'Flutter Demo',
-
-      theme: ThemeData.light(), // 亮色主题
-      darkTheme: ThemeData(
-        brightness: Brightness.dark, // 关键：标记为暗色模式
-        primaryColor: Colors.blue,
-        colorScheme: ColorScheme.dark().copyWith( // 推荐使用 ColorScheme
-          secondary: Colors.orange, // 替代旧版 accentColor
-        ),
-        fontFamily: 'Roboto',
-        textTheme: const TextTheme(
-          headlineLarge: TextStyle(fontSize: 20, fontWeight: FontWeight.bold),
-        ),
-      ), // 暗色主题
-      themeMode: themeProvider.themeMode, // 动态绑定主题模式
-      // theme: ThemeData(
-      //   // This is the theme of your application.
-      //   //
-      //   // TRY THIS: Try running your application with "flutter run". You'll see
-      //   // the application has a purple toolbar. Then, without quitting the app,
-      //   // try changing the seedColor in the colorScheme below to Colors.green
-      //   // and then invoke "hot reload" (save your changes or press the "hot
-      //   // reload" button in a Flutter-supported IDE, or press "r" if you used
-      //   // the command line to start the app).
-      //   //
-      //   // Notice that the counter didn't reset back to zero; the application
-      //   // state is not lost during the reload. To reset the state, use hot
-      //   // restart instead.
-      //   //
-      //   // This works for code too, not just values: Most code changes can be
-      //   // tested with just a hot reload.
-      //   colorScheme: ColorScheme.fromSeed(seedColor: Colors.deepPurple),
-      //   useMaterial3: true,
-      //
-      // ),
-      // home: const MyHomePage(title: 'Flutter Demo Home Page'),
-      home: RootPageController(),
-      builder: AnyLoading.init(),
-      // home: BluetoothDebugPage(),
-    );
+    return Consumer<LanguageModel>(builder: (context,language,child){
+      return MaterialApp(
+        debugShowCheckedModeBanner: false,
+        title: 'Flutter Demo',
+        theme: ThemeData.light(), // 亮色主题
+        darkTheme: ThemeData(
+          brightness: Brightness.dark, // 关键：标记为暗色模式
+          primaryColor: Colors.blue,
+          colorScheme: ColorScheme.dark().copyWith( // 推荐使用 ColorScheme
+            secondary: Colors.orange, // 替代旧版 accentColor
+          ),
+          fontFamily: 'Roboto',
+          textTheme: const TextTheme(
+            headlineLarge: TextStyle(fontSize: 20, fontWeight: FontWeight.bold),
+          ),
+        ), // 暗色主题
+        themeMode: themeProvider.themeMode, // 动态绑定主题模式
+        // theme: ThemeData(
+        //   // This is the theme of your application.
+        //   //
+        //   // TRY THIS: Try running your application with "flutter run". You'll see
+        //   // the application has a purple toolbar. Then, without quitting the app,
+        //   // try changing the seedColor in the colorScheme below to Colors.green
+        //   // and then invoke "hot reload" (save your changes or press the "hot
+        //   // reload" button in a Flutter-supported IDE, or press "r" if you used
+        //   // the command line to start the app).
+        //   //
+        //   // Notice that the counter didn't reset back to zero; the application
+        //   // state is not lost during the reload. To reset the state, use hot
+        //   // restart instead.
+        //   //
+        //   // This works for code too, not just values: Most code changes can be
+        //   // tested with just a hot reload.
+        //   colorScheme: ColorScheme.fromSeed(seedColor: Colors.deepPurple),
+        //   useMaterial3: true,
+        //
+        // ),
+        // home: const MyHomePage(title: 'Flutter Demo Home Page'),
+        home: RootPageController(),
+        builder: AnyLoading.init(),
+        // home: BluetoothDebugPage(),
+      );
+    });
   }
 }
 

@@ -5,6 +5,8 @@
 
 
 import 'package:flutter/cupertino.dart';
+import 'package:ota/utils/language_model.dart';
+import 'package:provider/provider.dart';
 
 const kBLE_SERVICE_NOTIFY_UUID = "fff0";
 const kBLE_SERVICE_WRITER_UUID = "fff0";
@@ -62,7 +64,12 @@ class Constants{
   static double screenHeight(BuildContext context) {
     return MediaQuery.of(context).size.height;
   }
+
+  static String keyToString(String key,BuildContext context){
+    return Provider.of<LanguageModel>(context, listen: true).getText(key);
+  }
 }
+
 
 
 

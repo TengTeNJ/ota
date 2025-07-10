@@ -7,10 +7,12 @@ import 'package:ota/controllers/update_progress.dart';
 import 'package:ota/model/ble_model.dart';
 import 'package:ota/utils/service_util.dart';
 import 'package:ota/views/empty_view.dart';
+import 'package:provider/provider.dart';
 
 import '../constants.dart';
 import '../utils/comm_statu_manager.dart';
 import '../utils/event_manager.dart';
+import '../utils/language_model.dart';
 import '../utils/ota_data.dart';
 import '../utils/ota_service_data.dart';
 
@@ -125,7 +127,7 @@ class _OtaPageState extends State<OtaPage> {
       subtitle: Text('${model.device!.id}    RSSI:${model.device!.rssi}'),
       trailing: ElevatedButton(
         onPressed: () => _connectToDevice(model),
-        child:  Text( CommStatusManager().currentConnectedDevice != null && CommStatusManager().currentConnectedDevice!.device!.id == model.device!.id ? "断开连接" : '连接'),
+        child:  Text( CommStatusManager().currentConnectedDevice != null && CommStatusManager().currentConnectedDevice!.device!.id == model.device!.id ? '${Provider.of<LanguageModel>(context, listen: true).getText('断开连接')}' : '${Provider.of<LanguageModel>(context, listen: true).getText('连接')}'),
       ),
     );
   }
@@ -151,7 +153,7 @@ class _OtaPageState extends State<OtaPage> {
               Padding(padding: EdgeInsets.only(left: 16,right: 16),child: Row(
                 children: [
                   Text(
-                    '设备列表',
+                    '${Provider.of<LanguageModel>(context, listen: true).getText('设备列表')}',
                     style: TextStyle(fontWeight: FontWeight.bold, fontSize: 16),
                   ),
                   const Spacer()

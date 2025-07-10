@@ -11,10 +11,12 @@ import 'package:ota/controllers/step_control_page.dart';
 import 'package:ota/controllers/target_page.dart';
 import 'package:ota/utils/comm_statu_manager.dart';
 import 'package:ota/utils/event_manager.dart';
+import 'package:ota/utils/language_model.dart';
 import 'package:ota/utils/service_util.dart';
 import 'package:permission_handler/permission_handler.dart';
 import 'dart:io';
 import 'package:loading_animation_widget/loading_animation_widget.dart';
+import 'package:provider/provider.dart';
 import 'controllers/ota_page.dart';
 import 'package:http/http.dart' as http;
 import 'dart:convert';
@@ -64,35 +66,37 @@ class _RootPageControllerState extends State<RootPageController> {
   }
 
   void dataRequest() async {
-    AnyLoading.showLoading();
-
-    final response = await http.get(Uri.parse('http://3.236.189.174:91/api/upgrade/getUrl'));
+    final response =
+        await http.get(Uri.parse('http://3.236.189.174:91/api/upgrade/getUrl'));
     print('Response data: ${response.body}');
     final jsonData = jsonDecode(response.body);
     // 获取 data 字段
     String data = jsonData['data'];
-    String url = 'https://potent-hockey-us.s3.us-east-1.amazonaws.com/images/20250703/6aa14410702d47d79d0598a35097a60b.bin';
-    if(data != null && data.contains('http')){
+    String url =
+        'https://potent-hockey-us.s3.us-east-1.amazonaws.com/images/20250703/6aa14410702d47d79d0598a35097a60b.bin';
+    if (data != null && data.contains('http')) {
       url = data;
     }
     print('Response url: ${url}');
+    AnyLoading.showLoading(
+        title: Provider.of<LanguageModel>(context, listen: false).getText('正在更新最新固件程序...'), maskType: AnyLoadingMaskType.black);
     bool _value = await downloadAndConvertBin(url);
     setState(() {
       _hasRequest = true;
     });
-    if(_value){
+    if (_value) {
       AnyLoading.dismiss();
       ScaffoldMessenger.of(context).showSnackBar(
         SnackBar(
-          content: Text('更新下载最新的固件成功'),
+          content: Text(Provider.of<LanguageModel>(context, listen: false).getText('更新下载最新的固件成功')),
           duration: Duration(seconds: 2),
         ),
       );
-    }else{
+    } else {
       AnyLoading.dismiss();
       ScaffoldMessenger.of(context).showSnackBar(
         SnackBar(
-          content: Text('更新下载最新的固件失败，使用本地默认固件'),
+          content:Text(Provider.of<LanguageModel>(context, listen: false).getText('更新下载最新的固件失败，使用本地默认固件')),
           duration: Duration(seconds: 5),
         ),
       );
@@ -136,11 +140,11 @@ class _RootPageControllerState extends State<RootPageController> {
     return Scaffold(
       body: _hasRequest
           ? _pages[_currentIndex]
-          :  Center(
-        child: LoadingAnimationWidget.staggeredDotsWave(
-        color: Colors.orange,
-        size: 60,
-    )),
+          : Center(
+              child: LoadingAnimationWidget.staggeredDotsWave(
+              color: Colors.orange,
+              size: 60,
+            )),
       bottomNavigationBar: BottomNavigationBar(
         // backgroundColor: Colors.grey,
         /*
@@ -155,22 +159,22 @@ class _RootPageControllerState extends State<RootPageController> {
             _currentIndex = index;
           });
         },
-        items: const [
+        items: [
           BottomNavigationBarItem(
-            icon: Icon(Icons.copy),
-            label: '出厂烧录',
+            icon: const Icon(Icons.copy),
+            label: Provider.of<LanguageModel>(context, listen: true).getText('烧录'),
           ),
-          BottomNavigationBarItem(
+           BottomNavigationBarItem(
             icon: Icon(Icons.system_update),
-            label: 'OTA升级',
+            label: Provider.of<LanguageModel>(context, listen: true).getText('OTA升级'),
           ),
-          BottomNavigationBarItem(
+           BottomNavigationBarItem(
             icon: Icon(Icons.devices),
-            label: '设备',
+            label: Provider.of<LanguageModel>(context, listen: true).getText('设备'),
           ),
-          BottomNavigationBarItem(
+           BottomNavigationBarItem(
             icon: Icon(Icons.more),
-            label: '更多',
+            label: Provider.of<LanguageModel>(context, listen: true).getText('更多'),
           ),
         ],
       ),

@@ -10,10 +10,12 @@ import 'package:ota/controllers/update_progress.dart';
 import 'package:ota/model/ble_model.dart';
 import 'package:ota/utils/demo_util.dart';
 import 'package:ota/views/hight_low_view.dart';
+import 'package:provider/provider.dart';
 import 'package:wheel_chooser/wheel_chooser.dart';
 import '../constants.dart';
 import '../utils/comm_statu_manager.dart';
 import '../utils/event_manager.dart';
+import '../utils/language_model.dart';
 import '../utils/ota_data.dart';
 import '../utils/ota_service_data.dart';
 import '../views/empty_view.dart';
@@ -152,11 +154,7 @@ class _DeviceControlPageState extends State<DeviceControlPage> {
       subtitle: Text('${model.device!.id}    RSSI:${model.device!.rssi}'),
       trailing: ElevatedButton(
         onPressed: () => _connectToDevice(model),
-        child: Text(CommStatusManager().currentConnectedDevice != null &&
-                CommStatusManager().currentConnectedDevice!.device!.id ==
-                    model.device!.id
-            ? "断开连接"
-            : '连接'),
+          child:  Text( CommStatusManager().currentConnectedDevice != null && CommStatusManager().currentConnectedDevice!.device!.id == model.device!.id ? '${Provider.of<LanguageModel>(context, listen: true).getText('断开连接')}' : '${Provider.of<LanguageModel>(context, listen: true).getText('连接')}'),
       ),
     );
   }
@@ -209,6 +207,21 @@ class _DeviceControlPageState extends State<DeviceControlPage> {
         }
         if (data == 'mode3') {
           CommStatusManager().writerData(changeModeData(3));
+          return;
+        }
+        // 力量训练
+        if (data == 'mode5') {
+          CommStatusManager().writerData(changeModeData(5));
+          return;
+        }
+        // 标靶训练
+        if (data == 'mode6') {
+          CommStatusManager().writerData(changeModeData(6));
+          return;
+        }
+        // 结束
+        if (data == 'mode7') {
+          CommStatusManager().writerData(changeModeData(0xff));
           return;
         }
 
@@ -344,7 +357,7 @@ class _DeviceControlPageState extends State<DeviceControlPage> {
                           child: Row(
                             children: [
                               Text(
-                                '设备列表',
+                                '${Provider.of<LanguageModel>(context, listen: true).getText('设备列表')}',
                                 style: TextStyle(
                                     fontWeight: FontWeight.bold, fontSize: 16),
                               ),
@@ -387,15 +400,15 @@ class _DeviceControlPageState extends State<DeviceControlPage> {
                             Row(
                               mainAxisAlignment: MainAxisAlignment.spaceBetween,
                               children: [
-                                _buildModeButton(context, '手动模式', '4'),
-                                _buildModeButton(context, '结束手动模式', '5'),
+                                _buildModeButton(context, '${Provider.of<LanguageModel>(context, listen: true).getText('手动模式')}', '4'),
+                                _buildModeButton(context, '${Provider.of<LanguageModel>(context, listen: true).getText('结束手动模式')}', '5'),
                               ],
                             ),
                             Row(
                               mainAxisAlignment: MainAxisAlignment.spaceBetween,
                               children: [
-                                _buildModeButton(context, '位置校准', 'position'),
-                                _buildModeButton(context, '请求系统状态', 'statu'),
+                                _buildModeButton(context, '${Provider.of<LanguageModel>(context, listen: true).getText('位置校准')}', 'position'),
+                                _buildModeButton(context, '${Provider.of<LanguageModel>(context, listen: true).getText('请求系统状态')}', 'statu'),
                               ],
                             ),
                           ],
@@ -423,39 +436,39 @@ class _DeviceControlPageState extends State<DeviceControlPage> {
                             Row(
                               mainAxisAlignment: MainAxisAlignment.spaceBetween,
                               children: [
-                                _buildModeButton(context, '步伐1', '1'),
+                                _buildModeButton(context, 'Step1', '1'),
                                 SizedBox(height: 20),
-                                _buildModeButton(context, '步伐2', '2'),
+                                _buildModeButton(context, 'Step2', '2'),
                                 SizedBox(height: 20),
-                                _buildModeButton(context, '调节步伐', 'adjust'),
+                                _buildModeButton(context, 'Adjust your pace', 'adjust'),
                               ],
                             ),
                             Row(
                               mainAxisAlignment: MainAxisAlignment.spaceBetween,
                               children: [
-                                _buildModeButton(context, '左侧高球', 'left'),
+                                _buildModeButton(context, '${Provider.of<LanguageModel>(context, listen: true).getText('左侧高球')}', 'left'),
                                 SizedBox(height: 20),
-                                _buildModeButton(context, '右侧高球', 'right'),
+                                _buildModeButton(context, '${Provider.of<LanguageModel>(context, listen: true).getText('右侧高球')}', 'right'),
                               ],
                             ),
                             Row(
                               mainAxisAlignment: MainAxisAlignment.spaceBetween,
                               children: [
-                                _buildModeButton(context, '左侧低球', 'leftlow'),
+                                _buildModeButton(context, '${Provider.of<LanguageModel>(context, listen: true).getText('左侧低球')}', 'leftlow'),
                                 SizedBox(height: 20),
-                                _buildModeButton(context, '右侧低球', 'rightlow'),
+                                _buildModeButton(context, '${Provider.of<LanguageModel>(context, listen: true).getText('右侧低球')}', 'rightlow'),
                               ],
                             ),
                             Row(
                               mainAxisAlignment: MainAxisAlignment.spaceBetween,
                               children: [
                                 Row(children: [
-                                  _buildModeButton(context, '模式1(左旋-右旋)', 'mode1'),
+                                  _buildModeButton(context, 'Mode1(Rotation: Left-Right)', 'mode1'),
                                 ],),
                                 SizedBox(height: 20),
                                Row(
                                  children: [
-                                   _buildModeButton(context, '模式2(前方-后方)', 'mode2'),
+                                   _buildModeButton(context, 'Mode2(Forward - Backward)', 'mode2'),
                                  ],
                                ),
                                 SizedBox(height: 20),
@@ -463,7 +476,27 @@ class _DeviceControlPageState extends State<DeviceControlPage> {
                             ),
                             Row(
                               children: [
-                                _buildModeButton(context, '模式3(左移-右移)', 'mode3'),
+                                _buildModeButton(context, 'Mode3(Mover: Left - Right)', 'mode3'),
+                              ],
+                            ),
+                            Row(
+                              mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                              children: [
+                                Row(children: [
+                                  _buildModeButton(context, 'Mode5(Strength Training)', 'mode5'),
+                                ],),
+                                SizedBox(height: 20),
+                                Row(
+                                  children: [
+                                    _buildModeButton(context, 'Mode6(Target Training)', 'mode6'),
+                                  ],
+                                ),
+                                SizedBox(height: 20),
+                              ],
+                            ),
+                            Row(
+                              children: [
+                                _buildModeButton(context, 'End(End current mode)', 'mode7'),
                               ],
                             )
                           ],
@@ -477,7 +510,7 @@ class _DeviceControlPageState extends State<DeviceControlPage> {
                             mainAxisAlignment: MainAxisAlignment.spaceBetween,
                             children: [
                               Text(
-                                '移动发球',
+                                '${Provider.of<LanguageModel>(context, listen: true).getText('移动发球')}',
                                 style: TextStyle(
                                     fontSize: 16, fontWeight: FontWeight.bold),
                               ),
@@ -531,7 +564,7 @@ class _DeviceControlPageState extends State<DeviceControlPage> {
                             mainAxisAlignment: MainAxisAlignment.spaceBetween,
                             children: [
                               Text(
-                                '调节发球',
+                                '${Provider.of<LanguageModel>(context, listen: true).getText('调节发球')}',
                                 style: TextStyle(
                                     fontSize: 16, fontWeight: FontWeight.bold),
                               ),
@@ -543,7 +576,7 @@ class _DeviceControlPageState extends State<DeviceControlPage> {
                           ),
                           Row(
                             children: [
-                              _buildModeButton(context, '调节速度', 'speed'),
+                              _buildModeButton(context, '${Provider.of<LanguageModel>(context, listen: true).getText('手动遥控')}', 'speed'),
                               const Spacer()
                             ],
                           )
