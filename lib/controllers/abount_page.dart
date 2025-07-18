@@ -1,5 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:ota/constants.dart';
+import 'package:ota/controllers/new_battle_target_page.dart';
+import 'package:ota/controllers/new_target_single_ppage.dart';
 import 'package:ota/controllers/power_page.dart';
 import 'package:ota/controllers/target_page.dart';
 import 'package:ota/utils/comm_statu_manager.dart';
@@ -49,7 +51,7 @@ class _AboutPageState extends State<AboutPage> {
           backgroundColor: Color.fromRGBO(182, 246, 29, 1.0),
           centerTitle: true,
           title: Text(
-            '设置',
+            '${'${Provider.of<LanguageModel>(context, listen: true).getText('更多功能')}'}',
             style: TextStyle(fontSize: 18, fontWeight: FontWeight.bold),
           )),
       body: SingleChildScrollView(child: Padding(
@@ -137,7 +139,9 @@ class _AboutPageState extends State<AboutPage> {
                 Future.delayed(Duration(milliseconds: 500),(){
                   Navigator.push(
                     context,
-                    MaterialPageRoute(builder: (context) =>TargetPage()), // 目标页面
+                    MaterialPageRoute(builder: (context) =>NewBattleTargetPage()), // 目标页面
+                    // MaterialPageRoute(builder: (context) =>NewTargetSinglePpage()), // 目标页面
+                    // MaterialPageRoute(builder: (context) =>TargetPage()), // 目标页面
                   );
                 });
               },

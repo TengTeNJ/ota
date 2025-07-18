@@ -135,7 +135,7 @@ class CommStatusManager {
         }
         // print('event.name=${event.name}====${event.name.length}');
         if (event.name.contains(kBLEDeviceName) ||
-            event.name.contains(kBLENewDeviceName)) {
+            event.name.contains(kBLENewDeviceName) ||  event.name.contains('NB')) {
           // 如果设备列表数组中无，则添加
           if (!hasDevice(event.id)) {
             print('添加新设备--${event.id}----${event.name}');
@@ -153,6 +153,9 @@ class CommStatusManager {
           // 保存测速器变量
           print('发现测速器---');
           this.myspeedzConnectedDevice = BLEModel(deviceName: event.name, device: event);
+          Future.delayed(Duration(milliseconds: 1000),(){
+            connectToMyspeedzDevice();
+          });
         }
       });
     }
@@ -195,6 +198,36 @@ class CommStatusManager {
             connectionTimeout: const Duration(seconds: 10))
         .listen((event) async {
       if (event.connectionState == DeviceConnectionState.connected) {
+        if(model.deviceName.toString().contains(kBLEDeviceName)){
+           // 摄像头主机
+          notifyChar = QualifiedCharacteristic(
+              serviceId: Uuid.parse(kBLE_CAMERA_SERVICE_NOTIFY_UUID),
+              characteristicId: Uuid.parse(kBLE_CAMERA_CHARACTERISTIC_NOTIFY_UUID),
+              deviceId: model.device!.id);
+          writeChar = QualifiedCharacteristic(
+              serviceId: Uuid.parse(kBLE_CAMERA_SERVICE_WRITER_UUID),
+              characteristicId: Uuid.parse(kBLE_CAMERA_CHARACTERISTIC_WRITER_UUID),
+              deviceId: model.device!.id);
+          print("摄像头主机连接成功，并获取到特征");
+          CommStatusManager()
+              .ble
+              .subscribeToCharacteristic(notifyChar!)
+              .listen((List<int> data) {
+            print(
+                "上报来的数据data = ${data.map((toElement) => toElement.toRadixString(16)).toList()}");
+            // 解析数据
+            if(logDatas.length == 1 && logDatas.contains('-')){
+              logDatas.remove('-');
+            }
+            this.logDatas.add(
+                '${data.map((toElement) => toElement.toRadixString(16)).toList()}');
+            EventBusManager().eventBus.fire(DataUpdatedEvent(kBLElog));
+            OTAServiceDataParse.parseCameraData(data);
+            // 解析270
+          });
+          EventBusManager().eventBus.fire(DataUpdatedEvent(kBLEConneted));
+          return;
+        }
         notifyChar = QualifiedCharacteristic(
             serviceId: Uuid.parse(kBLE_SERVICE_NOTIFY_UUID),
             characteristicId: Uuid.parse(kBLE_CHARACTERISTIC_NOTIFY_UUID),

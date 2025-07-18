@@ -42,7 +42,11 @@ class LanguageModel extends ChangeNotifier {
       '手动模式': '手动模式',
       '结束手动模式': '结束手动模式',
       '位置校准': '位置校准',
-      '请求系统状态': '请求系统状态'
+      '请求系统状态': '请求系统状态',
+      '网球发球机器人':'网球发球机器人',
+      '更多功能':'更多功能',
+      '设置':'设置',
+      '调节':'调节'
       // 添加所有需要翻译的文本
     },
     'en': {
@@ -84,7 +88,11 @@ class LanguageModel extends ChangeNotifier {
       '手动模式': 'Manual Mode',
       '结束手动模式': 'Exit Manual Mode',
       '位置校准': 'Position calibration',
-      '请求系统状态': 'Request system status'
+      '请求系统状态': 'Request system status',
+      '网球发球机器人':'Roboti10',
+      '更多功能':'More Features',
+      '设置':'Setting',
+      '调节':'Adjust'
 // 添加所有需要翻译的文本
     },
   };

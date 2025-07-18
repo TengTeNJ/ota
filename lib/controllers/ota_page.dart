@@ -142,7 +142,7 @@ class _OtaPageState extends State<OtaPage> {
             'OTA',
             style: TextStyle(fontSize: 18, fontWeight: FontWeight.bold),
           )),
-      body:  CommStatusManager().deviceList.length == 0 ? EmptyView(): Padding(
+      body:  CommStatusManager().deviceList.length == 0 ? Center(child: EmptyView(),): Padding(
         padding: EdgeInsets.all(16),
         child: Column(
           children: [

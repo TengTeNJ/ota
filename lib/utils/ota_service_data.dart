@@ -126,6 +126,10 @@ const List<int> _resetResponse = [
 List<int> bleNotAllData = []; // 不完整数据 被分包发送的蓝牙数据
 bool isNew = true;
 
+List<int> bleCameraNotAllData = []; // 不完整数据 被分包发送的蓝牙数据
+bool isNewCamera = true;
+Timer? delayTimer;
+
 bool areListsEqual(List<int> a, List<int> b) {
   if (a.length != b.length) return false;
   for (int i = 0; i < a.length; i++) {
@@ -249,7 +253,6 @@ insertTexts(){
 
 
 }
-
 handleTimeOut(String msg){
   if( CommStatusManager().timer == null){
     CommStatusManager().timer   = Timer(Duration(milliseconds: 60000), () {
@@ -266,9 +269,99 @@ handleTimeOut(String msg){
     });
   }
 }
+List<int> parseTargetsHit(List<int> bytes) {
+  if (bytes.length != 2) {
+    throw ArgumentError('必须是两个字节');
+  }
 
+  int value = (bytes[0] << 8) | bytes[1];
+
+  List<int> hitTargets = [];
+  for (int i = 0; i < 16; i++) {
+    if ((value & (1 << i)) != 0) {
+      hitTargets.add(i); // 第 i 个标靶被击中
+    }
+  }
+
+  return hitTargets;
+}
 // Timer _timer;
 class OTAServiceDataParse {
+
+static  handleData(List<int> element){
+       print('----element==$element}');
+       if(element[2] == 0x10){
+         List<int> targets = [element[3],element[4],];
+         List<int> temp = parseTargetsHit(targets);
+         print('targets=${temp}');
+       }
+  }
+  static handleNotFullData(List<int> data) {
+    bleCameraNotAllData.addAll(data);
+    if (isNewCamera) {
+      isNewCamera = false;
+      delayTimer = Timer(Duration(milliseconds: 150), () {
+        if (!isNewCamera) {
+          print(
+              '解析数据超时 ${bleNotAllData.map((toElement) => toElement.toRadixString(16)).toList()}');
+          // print(Œ
+          //     'bleNotAllData.toString()} == ${bleNotAllData.map((toElement) => toElement.toRadixString(16)).toList()}}');
+          bleCameraNotAllData.clear();
+          isNewCamera = true;
+        }
+      });
+    } else {
+      // print('handleNotFullData3${bleNotAllData.map((toElement) => toElement.toRadixString(16)).toList()}');
+      if (bleCameraNotAllData.length >= 4 &&
+          bleCameraNotAllData[0] == kBLEDataFrameHeader) {
+        int length = bleCameraNotAllData[3];
+        if (bleCameraNotAllData.length >= length &&
+            bleCameraNotAllData[length - 1] == 0XAA) {
+          List<int> rightData = bleCameraNotAllData.sublist(0, length);
+          handleData(rightData); // 完整的一帧数据
+          List<int> othersData =
+          bleCameraNotAllData.sublist(length, bleNotAllData.length);
+          isNewCamera = true;
+          bleCameraNotAllData.clear();
+          if (delayTimer != null) {
+            delayTimer!.cancel();
+          }
+          if (!othersData.isEmpty) {
+            parseCameraData(othersData);
+          }
+        }
+      }
+    }
+  }
+  /*解析摄像头的数据*/
+  static parseCameraData(List<int>data){
+    if (data.isEmpty) {
+      return;
+    }
+    if (data.length >= 4 && data[0] == 0xA5) {
+      // 取出来数据的长度标识位
+      int length = data[1];
+      // 通过 帧头 帧尾 length数据位的值和实际的数据包length进行匹配
+      if (data.length >= length && data[length - 1] == 0XAA) {
+        List<int> rightData = data.sublist(0, length);
+        handleData(rightData); // 完整的一帧数据
+        List<int> othersData = data.sublist(length, data.length);
+        isNewCamera = true;
+        bleNotAllData.clear();
+        if (delayTimer != null) {
+          delayTimer!.cancel();
+        }
+        if (!othersData.isEmpty) {
+          print('othersData=${othersData}');
+          parseCameraData(othersData);
+        }
+      } else {
+        handleNotFullData(data);
+      }
+    } else {
+      handleNotFullData(data);
+    }
+  }
   static parseData(List<int> data) {
     if (data.isEmpty) {
       return;
@@ -285,10 +378,17 @@ class OTAServiceDataParse {
       if(bleNotAllData[0] == 0x5a && bleNotAllData[bleNotAllData.length-1] == 0xaa){
         if(bleNotAllData.length == bleNotAllData[1] && bleNotAllData.length >= 3){
           int cmd = bleNotAllData[2];
+          int value = bleNotAllData[3];
           print('cmd=${cmd}');
           if(cmd == 0x16){
-            print('控制模式的回复');
-            EventBusManager().eventBus.fire(DataUpdatedEvent(kModeControlResponse));
+            print('控制模式的回复:${value}');
+            if(value == 1){
+              // 收到模式控制的回复
+              EventBusManager().eventBus.fire(DataUpdatedEvent(kModeControlResponse));
+            }else{
+              // 收到模式控制完成的回复
+              EventBusManager().eventBus.fire(DataUpdatedEvent(kModeControlResponse));
+            }
           }else if(cmd == 0x14){
             print('步伐控制步伐的回复${bleNotAllData[3]}');
             if(bleNotAllData.length >= 3 &&  bleNotAllData[3] == 2){
@@ -305,9 +405,13 @@ class OTAServiceDataParse {
             print('系统状态:${statu}');
             print('电池电量:${batteryValue}');
             CommStatusManager().powerValue = batteryValue;
-            EventBusManager().eventBus.fire(DataUpdatedEvent(kPowerValue));
             print('故障信息1:${error1}');
             print('故障信息2:${error2}');
+            String version = '${bleNotAllData[7]}.${bleNotAllData[8]}.${bleNotAllData[9]}.${bleNotAllData[10]}';
+            print('版本号:${version}');
+            CommStatusManager().versionName = version;
+
+            EventBusManager().eventBus.fire(DataUpdatedEvent(kPowerValue));
           }else if(cmd == 0x18){
             print('位置校准的回复${bleNotAllData[3]}');
           }

@@ -112,10 +112,10 @@ class _FactoryResetPageState extends State<FactoryResetPage> {
           backgroundColor: Color.fromRGBO(182, 246, 29, 1.0),
           centerTitle: true,
           title: Text(
-            '烧录',
+            '${Provider.of<LanguageModel>(context, listen: true).getText('烧录')}',
             style: TextStyle(fontSize: 18, fontWeight: FontWeight.bold),
           )),
-      body:  CommStatusManager().deviceList.length == 0 ? EmptyView(): Padding(
+      body:  CommStatusManager().deviceList.length == 0 ? Center(child: EmptyView(),): Padding(
         padding: EdgeInsets.all(16),
         child: Column(
           children: [

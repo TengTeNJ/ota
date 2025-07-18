@@ -31,7 +31,7 @@ class _PowerPageState extends State<PowerPage> {
     // TODO: implement initState
     super.initState();
     CommStatusManager().isDeviceDeail = true;
-    CommStatusManager().connectToMyspeedzDevice();
+    //CommStatusManager().connectToMyspeedzDevice();
     EventBus eventBus = EventBusManager().eventBus;
     _subscription = eventBus.on<DataUpdatedEvent>().listen((event) {
       if (event.data == kSpeedValue) {
