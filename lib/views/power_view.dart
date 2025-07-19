@@ -6,8 +6,10 @@ class PowerView extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return Container(
+      padding: EdgeInsets.only(top: 140),
+      // color: Colors.red,
       width: 206 + 68 *2 + 58,
-      height: 132 + 58 * 3,
+      height: 132 + 58 * 3 +100,
       child: Column(
         crossAxisAlignment: CrossAxisAlignment.center,
         children: [
