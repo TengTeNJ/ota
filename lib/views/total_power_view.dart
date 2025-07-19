@@ -50,6 +50,7 @@ class _TotalPowerViewState extends State<TotalPowerView> {
       _rightDatas.addAll(widget.hideIndex.sublist(6, 9));
     }
     return Container(
+      margin: EdgeInsets.only(left: 32,right: 32),
       height: max(max(_leftHeight, _rightHeight), _middleHeight),
       child: Row(
         mainAxisAlignment: MainAxisAlignment.spaceBetween,

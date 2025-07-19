@@ -36,9 +36,9 @@ class _PowerPageState extends State<PowerPage> {
     _subscription = eventBus.on<DataUpdatedEvent>().listen((event) {
       if (event.data == kSpeedValue) {
         // 监测到速度数据
-        if (!_startFlag) {
-          return;
-        }
+        // if (!_startFlag) {
+        //   return;
+        // }
         // 显示速度
         SpeedPopup.show(context, speed: CommStatusManager().currentSpeed);
         // 监测到的速度数据变量递增
@@ -79,7 +79,7 @@ class _PowerPageState extends State<PowerPage> {
     });
     // 延迟两秒后开始
     Future.delayed(Duration(milliseconds: 2000), () {
-      startGame();
+      //startGame();
     });
   }
 
@@ -231,7 +231,7 @@ class _PowerPageState extends State<PowerPage> {
                     width: 12,
                   ),
                   Text(
-                    '${calculateScopePercentage(CommStatusManager().currentSpeed, maxSpeed)}/%',
+                    '${calculateScopePercentage(CommStatusManager().currentSpeed, maxSpeed)}%',
                     style: TextStyle(
                         fontWeight: FontWeight.bold,
                         fontSize: 18,
