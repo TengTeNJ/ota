@@ -54,6 +54,9 @@ class _NewBattleTargetPageState extends State<NewBattleTargetPage> {
 
   List<int> _leftTotalSpeeds = []; /// 左侧总的得分
   List<int> _rightTotalSpeeds = []; /// 右侧总的得分
+  ///
+  DateTime _lastShotInTime = DateTime.now(); // 记录上次击中的时间
+
   late StreamSubscription<DataUpdatedEvent> _subscription;
   final FlutterTts flutterTts = FlutterTts();
 
@@ -70,22 +73,6 @@ class _NewBattleTargetPageState extends State<NewBattleTargetPage> {
     super.initState();
     print("进入到battle 界面");
 
-    // Future.delayed(Duration(milliseconds: 500),(){
-    //   var leftUserModel = BattleUserModel(score: 30,shotInCount: 10,
-    //       topSpeed: 65, avgSpeed: 54,isWinner:true);
-    //   var rightUserModel = BattleUserModel(score: 23, shotInCount: 20,
-    //       topSpeed: 65, avgSpeed:45,isWinner: false);
-    //
-    //   Navigator.push(
-    //     context,
-    //     MaterialPageRoute(builder: (context) =>NewBattleTargetEndPage( leftUserModel: leftUserModel,
-    //       rightUserModel: rightUserModel,
-    //     )), // 结算页面
-    //   );
-    // });
-  // }
-
-
     playLocalAudio('yangBG1.MP3',isAlwaysplay: true);
 
     CommStatusManager().isDeviceDeail = true;
@@ -97,6 +84,42 @@ class _NewBattleTargetPageState extends State<NewBattleTargetPage> {
         //   return;
         // }
         // _currentIndex++;
+
+
+        // 显示速度
+        SpeedPopup.show(context, speed: CommStatusManager().currentSpeed);
+        if (CommStatusManager().currentSpeed > 70) {
+          playOnceLocalAudio("greatjob.mp3");
+          setState(() {});
+        }
+
+        if (CommStatusManager().currentSpeed < 70 ) {
+          _speakNumber(CommStatusManager().currentSpeed);
+        }
+
+        if (_currentIndex % 2 != 0) {
+          _leftMaxSpeed = max(_leftMaxSpeed, CommStatusManager().currentSpeed);
+          print('左侧-----');
+          _leftCurrentSpeed = CommStatusManager().currentSpeed;
+          _leftTotalSpeeds.add(_leftCurrentSpeed);
+
+        } else {
+          _rightMaxSpeed =
+              max(_rightMaxSpeed, CommStatusManager().currentSpeed);
+          print('右侧-----');
+          _rightCurrentSpeed = CommStatusManager().currentSpeed;
+          _rightTotalSpeeds.add(_rightCurrentSpeed);
+        }
+      } else if (event.data == kStepControlFinishResponse) {
+        // 步伐控制结束回复
+        _currentIndex ++;
+        // 延迟1秒后开始,防止测速器反应不过来
+        Future.delayed(Duration(milliseconds: 1000), () {
+          if(_currentIndex <=50) {
+            leftRightLoopGame();
+          }
+        });
+
         /// 50轮 一局结束  跳转到结算界面
         if (_currentIndex == 50) {
           double leftSum = _leftTotalSpeeds.fold(0.0, (previousValue, element) => previousValue + element);
@@ -110,87 +133,28 @@ class _NewBattleTargetPageState extends State<NewBattleTargetPage> {
           SystemUtil.lockScreenHorizontalDirection();
           Future.delayed(Duration(milliseconds: 500),(){
             var leftUserModel = BattleUserModel(score: _leftScore,shotInCount: _leftShotInCount,
-               topSpeed: _leftMaxSpeed, avgSpeed: leftAverage.toInt(),isWinner: _leftScore > _rightScore ?true:false);
+                topSpeed: _leftMaxSpeed, avgSpeed: leftAverage.toInt(),isWinner: _leftScore > _rightScore ?true:false);
             var rightUserModel = BattleUserModel(score: _rightScore, shotInCount: _rightShotInCount,
                 topSpeed: _rightMaxSpeed, avgSpeed: rightAverage.toInt(),isWinner: _leftScore > _rightScore ?false:true);
 
             Navigator.push(
               context,
               MaterialPageRoute(builder: (context) =>NewBattleTargetEndPage( leftUserModel: leftUserModel,
-                 rightUserModel: rightUserModel,
-                )), // 结算页面
+                rightUserModel: rightUserModel,
+              )), // 结算页面
             );
           });
           return;
         }
 
-        // 显示速度
-        SpeedPopup.show(context, speed: CommStatusManager().currentSpeed);
-        if (CommStatusManager().currentSpeed > 70) {
-          setState(() {});
-          playOnceLocalAudio("greatjob.mp3");
-        }
-
-        if (CommStatusManager().currentSpeed < 70 ) {
-          _speakNumber(CommStatusManager().currentSpeed);
-        }
-
-        if (_currentIndex % 2 != 0) {
-          _leftMaxSpeed = max(_leftMaxSpeed, CommStatusManager().currentSpeed);
-          print('左侧-----');
-          //  左侧
-          _leftIndex++;
-          if (_leftIndex == 3) {
-            _leftIndex = 0;
-          }
-          _leftCurrentSpeed = CommStatusManager().currentSpeed;
-          _leftTotalSpeeds.add(_leftCurrentSpeed);
-
-        } else {
-          _rightMaxSpeed =
-              max(_rightMaxSpeed, CommStatusManager().currentSpeed);
-          print('右侧-----');
-          // 右侧
-          _rightIndex++;
-          if (_rightIndex == 3) {
-            _rightIndex = 0;
-          }
-          _rightCurrentSpeed = CommStatusManager().currentSpeed;
-          _rightTotalSpeeds.add(_rightCurrentSpeed);
-
-        }
-      } else if (event.data == kStepControlFinishResponse) {
-        // 步伐控制结束回复
-        _currentIndex ++;
-        leftRightLoopGame();
-        if (_currentIndex % 2 != 0) {
-          _leftMaxSpeed = max(_leftMaxSpeed, CommStatusManager().currentSpeed);
-          print('左侧-----');
-          //  左侧
-          _leftIndex++;
-          if (_leftIndex == 3) {
-            _leftIndex = 0;
-          }
-          _leftCurrentSpeed = CommStatusManager().currentSpeed;
-          _leftTotalSpeeds.add(_leftCurrentSpeed);
-
-        } else {
-          _rightMaxSpeed =
-              max(_rightMaxSpeed, CommStatusManager().currentSpeed);
-          print('右侧-----');
-          // 右侧
-          _rightIndex++;
-          if (_rightIndex == 3) {
-            _rightIndex = 0;
-          }
-          _rightCurrentSpeed = CommStatusManager().currentSpeed;
-          _rightTotalSpeeds.add(_rightCurrentSpeed);
-
-        }
 
 
       } else if(event.data == kTargetIndex) { /// 击中标靶的索引
         print('battle 界面击中标靶的索引为${CommStatusManager().targetIndex}');
+        if (calculateTime(1) < 1000) {
+          return; /// 1s内不处理
+        }
+
         if (CommStatusManager().currentSpeed > 70) {
           print("Great Job");
           playLocalAudio('greatjob.mp3');
@@ -261,6 +225,24 @@ class _NewBattleTargetPageState extends State<NewBattleTargetPage> {
     }
   }
 
+  int calculateTime( double timeStamp) {
+    // 如果这是第一次调用，记录当前时间
+    if (_lastShotInTime == null) {
+      _lastShotInTime = DateTime.now();
+      return 0;
+    }
+    // 计算时间差
+    final timeDifference = DateTime.now().difference(_lastShotInTime).inMilliseconds;
+    print('时间差: $timeDifference');
+    if (timeDifference > 1000) {
+      _lastShotInTime = DateTime.now();
+    }
+    // 更新最后一次时间
+    //   _lastUpdateTime = DateTime.now();
+    return timeDifference;
+  }
+
+
   /// 计算右侧得分
   void calculateRightScore() {
     // 计算最后三个元素中有多少个是 true
@@ -286,6 +268,8 @@ class _NewBattleTargetPageState extends State<NewBattleTargetPage> {
     TennisMachineParams params =
     TennisMachineParams.fromState(0, 0, 0, 12, 12, 40, 110, 125, 0);
     CommStatusManager().writerData(stepControlData(params));
+    _currentIndex --;
+
   }
 
   /*左右循环发球*/
