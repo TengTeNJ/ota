@@ -290,9 +290,13 @@ class OTAServiceDataParse {
 
 static  handleData(List<int> element){
        print('----element==$element}');
+       /// 虚拟标靶击中的索引
        if(element[2] == 0x10){
          List<int> targets = [element[3],element[4],];
          List<int> temp = parseTargetsHit(targets);
+         CommStatusManager().targetIndex = temp;
+         EventBusManager().eventBus.fire(DataUpdatedEvent(kTargetIndex));
+
          print('targets=${temp}');
        }
   }

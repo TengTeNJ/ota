@@ -1,5 +1,6 @@
 import 'dart:async';
 import 'dart:io';
+import 'package:any_loading/any_loading.dart';
 import 'package:path/path.dart' as path;
 
 import 'package:flutter/cupertino.dart';
@@ -13,6 +14,8 @@ import 'package:path_provider/path_provider.dart';
 
 import 'event_manager.dart';
 import 'ota_service_data.dart';
+import 'package:flutter_easyloading/flutter_easyloading.dart';
+
 
 // 1️⃣ 定义ota进度枚举
 enum CommProgress {
@@ -59,6 +62,7 @@ class CommStatusManager {
 
   int targetInteral = 6; // 时间间隔
 
+  List<int> targetIndex = [];/// 击中标靶的索引
   bool isOta = true;
   List<String> otaStrings = ['', '', '', '', '', '', ''];
   List<String> factoryStrings = [
@@ -146,7 +150,7 @@ class CommStatusManager {
           }
         } else if (event.name.contains(kBLEMySpeedzName)) {
           if(this.myspeedzConnectedDevice  != null){
-            print('已发现测速器---');
+            print('已发现测速器---${event.name}');
             return;
           }
           // 测速器
@@ -209,6 +213,9 @@ class CommStatusManager {
               characteristicId: Uuid.parse(kBLE_CAMERA_CHARACTERISTIC_WRITER_UUID),
               deviceId: model.device!.id);
           print("摄像头主机连接成功，并获取到特征");
+          AnyLoading.showSuccess("Camera connection successful");
+
+
           CommStatusManager()
               .ble
               .subscribeToCharacteristic(notifyChar!)
@@ -315,6 +322,9 @@ class CommStatusManager {
         // kBLEConneted
         EventBusManager().eventBus.fire(DataUpdatedEvent(kBLEConneted));
         print("连接测速器成功，并获取到特征");
+        AnyLoading.showSuccess("My Speedz connection successful");
+
+
         CommStatusManager()
             .ble
             .subscribeToCharacteristic(notifyChar!)

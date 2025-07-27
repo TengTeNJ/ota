@@ -6,13 +6,15 @@ class PowerView extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return Container(
-      padding: EdgeInsets.only(top: 140),
+      // padding: EdgeInsets.only(top: 40),
       // color: Colors.red,
       width: 206 + 68 *2 + 58,
-      height: 132 + 58 * 3 +100,
+      height: 132 + 58 * 3 +60,
       child: Column(
         crossAxisAlignment: CrossAxisAlignment.center,
+        mainAxisAlignment: MainAxisAlignment.end,
         children: [
+
           Image.asset('assets/images/sanjiao.png',width: 68*2,height: 58*2,),
           SizedBox(height: 6,),
           Row(

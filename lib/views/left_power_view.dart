@@ -2,6 +2,8 @@ import 'package:flutter/material.dart';
 import 'package:ota/constants.dart';
 import 'dart:math';
 
+import '../utils/comm_statu_manager.dart';
+
 class LeftPowerView extends StatefulWidget {
   List<bool> hideIndex ;
    LeftPowerView({super.key,this.hideIndex = const [false,false,false]});
@@ -24,7 +26,17 @@ class _LeftPowerViewState extends State<LeftPowerView> {
           Row(
             mainAxisAlignment: MainAxisAlignment.center,
             children: [
-              widget.hideIndex[0] ? Container(width: kYuanSize*kScale,height: kYuanSize*kScale) : Image.asset('assets/images/yuan.png',width: kYuanSize*kScale,height: kYuanSize*kScale,),
+              widget.hideIndex[0] ? Container(width: kYuanSize*kScale,height: kYuanSize*kScale) :
+
+              GestureDetector(onTap: (){
+                print("点击圆形");
+                CommStatusManager().targetIndex = [15];
+
+
+              },
+              child:Image.asset('assets/images/yuan.png',width: kYuanSize*kScale,height: kYuanSize*kScale,),
+              ),
+
               SizedBox(width: 32,)
             ],
           ),
@@ -32,9 +44,31 @@ class _LeftPowerViewState extends State<LeftPowerView> {
           Row(
             mainAxisAlignment: MainAxisAlignment.center,
             children: [
-              widget.hideIndex[1] ? Container(width: kSanjiaoWidth*kScale,height: kSanjiaoHeight*kScale) : Image.asset('assets/images/sanjiao.png',width: kSanjiaoWidth*kScale,height: kSanjiaoHeight*kScale,),
+              widget.hideIndex[1] ?
+              Container(width: kSanjiaoWidth*kScale,height: kSanjiaoHeight*kScale) :
+              GestureDetector(onTap: (){
+                print("点击三角");
+                CommStatusManager().targetIndex = [0];
+
+
+              },
+              child:Image.asset('assets/images/sanjiao.png',width: kSanjiaoWidth*kScale,height: kSanjiaoHeight*kScale,),
+              ),
+
               SizedBox(width: kYuanSize*kScale,),
-              widget.hideIndex[2] ? Container(width: kLiuWidth*kScale,height: kLiuHeight*kScale) : Image.asset('assets/images/liu.png',width: kLiuWidth*kScale,height: kLiuHeight*kScale,),
+
+
+
+
+              widget.hideIndex[2] ?
+              Container(width: kLiuWidth*kScale,height: kLiuHeight*kScale) :
+              GestureDetector(onTap: (){
+                 print("点击六边形");
+                 CommStatusManager().targetIndex = [14];
+
+              },
+              child:Image.asset('assets/images/liu.png',width: kLiuWidth*kScale,height: kLiuHeight*kScale,),
+              )
             ],
           )
         ],

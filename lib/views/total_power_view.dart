@@ -50,20 +50,34 @@ class _TotalPowerViewState extends State<TotalPowerView> {
       _rightDatas.addAll(widget.hideIndex.sublist(6, 9));
     }
     return Container(
-      margin: EdgeInsets.only(left: 32,right: 32),
+      // margin: EdgeInsets.only(left: 32,right: 32),
       height: max(max(_leftHeight, _rightHeight), _middleHeight),
       child: Row(
         mainAxisAlignment: MainAxisAlignment.spaceBetween,
         children: [
-          LeftPowerView(
-            hideIndex: _leftDatas,
+          Container(
+            // color: Colors.red,
+            margin: EdgeInsets.only(left: 100),
+            child:LeftPowerView(
+              hideIndex: _leftDatas,
+            ),
           ),
-          MiddlePowerView(
-            hideIndex: _middleDatas,
+
+          Container(
+            // color: Colors.red,
+            child:MiddlePowerView(
+              hideIndex: _middleDatas,
+            ),
           ),
-          RightPowerView(
-            hideIndex: _rightDatas,
+
+          Container(
+            margin: EdgeInsets.only(right: 100),
+            // color: Colors.red,
+            child:  RightPowerView(
+              hideIndex: _rightDatas,
+            ),
           ),
+
         ],
       ),
     );

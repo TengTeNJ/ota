@@ -26,10 +26,12 @@ class _PowerPageState extends State<PowerPage> {
   List<bool> lights = [false, false, false, true, true, true, false, false];
   int maxSpeed = 0;
   int speedIndexs = 0;
+  int numbersOfHit = 0; // 击中中间三个图形标靶的次数
   int gameIndex = 0; // 0 测试力量 1 训练 2位置训练
   bool _startFlag = false;
   String endPrompt = '';// 一轮结束提示语
   String greatJobPrompt = '';// GreatJob 提示语
+  DateTime _lastShotInTime = DateTime.now(); // 记录上次击中的时间
 
   late StreamSubscription<DataUpdatedEvent> _subscription;
   final FlutterTts flutterTts = FlutterTts();
@@ -47,7 +49,7 @@ class _PowerPageState extends State<PowerPage> {
     super.initState();
     print('进入到力量训练');
 
-    // playLocalAudio('blueMonday.MP3',isAlwaysplay: true);
+    playLocalAudio('blueMonday.MP3',isAlwaysplay: true);
 
     // Future.delayed(Duration(milliseconds: 2000), () {
     //   endPrompt = "Shot in ${calculatePercentage(CommStatusManager().currentSpeed, maxSpeed)}";
@@ -84,15 +86,7 @@ class _PowerPageState extends State<PowerPage> {
 
 
         // 监测到的速度数据变量递增
-        speedIndexs++;
-
-        /// 一轮结束显示Shot in
-        if (speedIndexs == 30) {
-          endPrompt = "Shot in ${calculatePercentage(CommStatusManager().currentSpeed, maxSpeed)}";
-          setState(() {});
-        }
-
-
+        //  speedIndexs++;
         if (speedIndexs <=10) {
           // 力量范围测量结束 进入训练
           maxSpeed = maxSpeed > CommStatusManager().currentSpeed
@@ -109,30 +103,66 @@ class _PowerPageState extends State<PowerPage> {
             // 进入到组合训练
           }
         }
+        //
+        /// 一轮结束显示Shot in
+        if (speedIndexs == 30) {
+          endPrompt = "Shot in ${calculatePercentage(CommStatusManager().currentSpeed, maxSpeed)}";
+          setState(() {});
+        }
+
         print('kSpeedValue--speedIndexs=${speedIndexs}');
       } else if (event.data == kStepControlFinishResponse) {
-        // 步伐控制结束回复
-        if (gameIndex == 0 && speedIndexs < 10) {
-          // 开始发球了
-          TennisMachineParams params =
-              TennisMachineParams.fromState(0, 0, 0, 13, 13, 40, 110, 125, 1);
-          CommStatusManager().writerData(stepControlData(params));
-          _startFlag = true;
-        }else if(speedIndexs >=10){
-          secondProgressGame();
-        }else if(speedIndexs >= 30){
+         if (speedIndexs < 50){
+           speedIndexs++;
+         }
+          if (speedIndexs <=10) {
+            // 力量范围测量结束 进入训练
+            maxSpeed = maxSpeed > CommStatusManager().currentSpeed
+                ? maxSpeed
+                : CommStatusManager().currentSpeed;
+          } else if (speedIndexs <=30) {
+            if (speedIndexs == 11) {
+              gameIndex++;
+              // 进入到力量训练
+            }
+          } else {
+            if (speedIndexs == 31) {
+              gameIndex++;
+              // 进入到组合训练
+            }
+          }
 
-        }
+          // 第一个不发球
+          if (speedIndexs == 50){
+            // 步伐控制结束回复
+            // 开始发球了
+            TennisMachineParams params =
+            TennisMachineParams.fromState(0, 0, 0, 13, 13, 40, 110, 125, 0);
+            CommStatusManager().writerData(stepControlData(params));
+          }
+
+          if(speedIndexs < 50) {
+            // 步伐控制结束回复
+            // 开始发球了
+            TennisMachineParams params =
+            TennisMachineParams.fromState(0, 0, 0, 13, 13, 40, 110, 125, 1);
+            CommStatusManager().writerData(stepControlData(params));
+          }
+
+
+          _startFlag = true;
         print('kStepControlFinishResponse--speedIndexs=${speedIndexs}');
       } else if(event.data == kTargetIndex) { /// 击中标靶的索引
+       if (_updateTime(1) < 1000) {
+         return; /// 1s内不处理
+       }
+
         print('power界面 击中标靶的索引为${CommStatusManager().targetIndex}');
-        if(CommStatusManager().targetIndex[0] == 10) {// 顶部  三角形 10
-          lights.fillRange(2, 3, true);
-        } else if(CommStatusManager().targetIndex[0] == 9) {//  右侧矩形9
-          lights.fillRange(0, 1, true);
+        numbersOfHit += 1;
+        if(CommStatusManager().targetIndex[0] == 12) {// 顶部  三角形 12
+        } else if(CommStatusManager().targetIndex[0] == 11) {//  右侧矩形11
           print("右侧  矩形");
-        } else if(CommStatusManager().targetIndex[0] == 8) {
-          lights.fillRange(1, 2, true);
+        } else if(CommStatusManager().targetIndex[0] == 13) { // 圆行 13
         }
 
       }
@@ -140,8 +170,26 @@ class _PowerPageState extends State<PowerPage> {
     });
     // 延迟两秒后开始
     Future.delayed(Duration(milliseconds: 2000), () {
-      //startGame();
+      startGame();
     });
+  }
+
+  int _updateTime( double timeStamp) {
+    // 如果这是第一次调用，记录当前时间
+    if (_lastShotInTime == null) {
+      _lastShotInTime = DateTime.now();
+      return 0;
+    }
+
+    // 计算时间差
+    final timeDifference = DateTime.now().difference(_lastShotInTime).inMilliseconds;
+    print('时间差: $timeDifference');
+    if (timeDifference > 1000) {
+      _lastShotInTime = DateTime.now();
+    }
+    // 更新最后一次时间
+    //   _lastUpdateTime = DateTime.now();
+    return timeDifference;
   }
 
   /*开始*/
@@ -151,18 +199,19 @@ class _PowerPageState extends State<PowerPage> {
       return;
     }
     TennisMachineParams params =
-        TennisMachineParams.fromState(400, 0, 0, 12, 12, 40, 110, 125, 0);
+        TennisMachineParams.fromState(0, 0, 0, 12, 12, 40, 110, 125, 0);
     CommStatusManager().writerData(stepControlData(params));
+    speedIndexs --;
   }
   /*力量训练第二阶段*/
   void secondProgressGame(){
-    if(speedIndexs < 10){
-      print('未进入第二阶段，不处理--${speedIndexs}');
-      return;
-    }
-    TennisMachineParams params =
-    TennisMachineParams.fromState(0, 0, (speedIndexs % 2 == 0) ? -13 : 13, 12, 12, 40, 115, 125, 1);
-    CommStatusManager().writerData(stepControlData(params));
+    // if(speedIndexs < 10){
+    //   print('未进入第二阶段，不处理--${speedIndexs}');
+    //   return;
+    // }
+    // TennisMachineParams params =
+    // TennisMachineParams.fromState(0, 0, (speedIndexs % 2 == 0) ? -13 : 13, 12, 12, 40, 115, 125, 1);
+    // CommStatusManager().writerData(stepControlData(params));
   }
 
   @override
@@ -174,15 +223,15 @@ class _PowerPageState extends State<PowerPage> {
         children: [
           Positioned(
             child: Row(
-              mainAxisAlignment: MainAxisAlignment.spaceBetween,
+              mainAxisAlignment: MainAxisAlignment.center,
               children: [
-                IconButton(
-                  onPressed: () {
-                    Navigator.pop(context);
-                  },
-                  icon: Icon(Icons.arrow_back_ios),
-                  color: Colors.white,
-                ),
+                // IconButton(
+                //   onPressed: () {
+                //     Navigator.pop(context);
+                //   },
+                //   icon: Icon(Icons.arrow_back_ios),
+                //   color: Colors.white,
+                // ),
                 Column(
                   children: [
                     Text(
@@ -193,7 +242,8 @@ class _PowerPageState extends State<PowerPage> {
                               : '组合训练',
                       style: TextStyle(
                           fontWeight: FontWeight.bold,
-                          fontSize: 18,
+                          fontFamily: "tengxun",
+                          fontSize: 16,
                           color: Colors.white),
                     ),
                   ],
@@ -202,7 +252,7 @@ class _PowerPageState extends State<PowerPage> {
             ),
             left: 16,
             right: 16,
-            top: 16,
+            top: 40,
           ),
           Positioned(
               left: 32,
@@ -218,6 +268,7 @@ class _PowerPageState extends State<PowerPage> {
                         style: TextStyle(
                             fontWeight: FontWeight.bold,
                             fontSize: 18,
+                            fontFamily: "SanFranciscoDisplay",
                             color: Colors.white),
                       ),
                       Text(
@@ -225,6 +276,7 @@ class _PowerPageState extends State<PowerPage> {
                         style: TextStyle(
                             fontWeight: FontWeight.bold,
                             fontSize: 18,
+                            fontFamily: "tengxun",
                             color: Color.fromRGBO(21, 233, 120, 1.0)),
                       ),
                     ],
@@ -240,14 +292,15 @@ class _PowerPageState extends State<PowerPage> {
                         style: TextStyle(
                             fontWeight: FontWeight.bold,
                             fontSize: 18,
+                            fontFamily: "SanFranciscoDisplay",
                             color: Colors.white),
                       ),
                       Text(
-                        '${CommStatusManager().currentSpeed}${gameIndex == 0 ? 'km/h' :
-                        '[${calculatePercentage(CommStatusManager().currentSpeed, maxSpeed)}%]'}',
+                        "${numbersOfHit}",
                         style: TextStyle(
                             fontWeight: FontWeight.bold,
                             fontSize: 18,
+                            fontFamily: "tengxun",
                             color: Color.fromRGBO(21, 233, 120, 1.0)),
                       ),
                     ],
@@ -263,6 +316,7 @@ class _PowerPageState extends State<PowerPage> {
                         style: TextStyle(
                             fontWeight: FontWeight.bold,
                             fontSize: 18,
+                            fontFamily: "SanFranciscoDisplay",
                             color: Colors.white),
                       ),
                       Text(
@@ -270,6 +324,7 @@ class _PowerPageState extends State<PowerPage> {
                         style: TextStyle(
                             fontWeight: FontWeight.bold,
                             fontSize: 18,
+                            fontFamily: "tengxun",
                             color: Color.fromRGBO(21, 233, 120, 1.0)),
                       ),
                     ],
@@ -278,8 +333,8 @@ class _PowerPageState extends State<PowerPage> {
               )),
           if(gameIndex !=0)
           Positioned(
-              left: 32,
-              bottom: 32,
+              right: 32,
+              top: 40,
               child: Row(
                 children: [
                   Text(
@@ -287,6 +342,7 @@ class _PowerPageState extends State<PowerPage> {
                     style: TextStyle(
                         fontWeight: FontWeight.bold,
                         fontSize: 18,
+                        fontFamily: "tengxun",
                         color: Colors.white),
                   ),
                   SizedBox(

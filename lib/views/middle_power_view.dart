@@ -15,7 +15,7 @@ class _MiddlePowerViewState extends State<MiddlePowerView> {
   @override
   Widget build(BuildContext context) {
     return Container(
-      width: kJuxingSize * kScale + kSanjiaoWidth * kScale + kYuanSize * kScale,
+      width: kJuxingSize * kScale + kSanjiaoWidth * kScale + kYuanSize * kScale - 43,
       height: max(kJuxingSize * kScale, kYuanSize * kScale) +
           20 +
           kSanjiaoHeight * kScale,
@@ -46,7 +46,7 @@ class _MiddlePowerViewState extends State<MiddlePowerView> {
                       height: kJuxingSize * kScale,
                     ),
               SizedBox(
-                width: 80,
+                width: 80 - 43,
               ),
               widget.hideIndex[2]
                   ? Container(
