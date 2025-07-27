@@ -26,6 +26,7 @@ class _NewTargetSinglePpageState extends State<NewTargetSinglePpage> {
   void initState() {
     // TODO: implement initState
     super.initState();
+
     CommStatusManager().isDeviceDeail = true;
     EventBus eventBus = EventBusManager().eventBus;
     _subscription = eventBus.on<DataUpdatedEvent>().listen((event) {

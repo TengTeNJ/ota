@@ -5,6 +5,7 @@
 
 
 import 'package:flutter/cupertino.dart';
+import 'package:flutter/material.dart';
 import 'package:ota/utils/language_model.dart';
 import 'package:provider/provider.dart';
 
@@ -29,7 +30,7 @@ const kBLE_270_CHARACTERISTIC_WRITER_UUID = "fff2";
 
 const kBLEDeviceName = "Stickhandling";
 const kBLENewDeviceName = "Roboti10";
-const kBLEMySpeedzName = "Myspeedz";
+const kBLEMySpeedzName = "Myspeedz_2";
 
 const kSanjiaoWidth = 66;
 const kSanjiaoHeight = 58;
@@ -73,6 +74,8 @@ const kPowerValue= 'power_value';
 
 const kSpeedValue= 'speed_value';
 
+const kTargetIndex = 'target_index';
+
 class Constants{
   //  屏幕宽度
   static double screenWidth(BuildContext context) {
@@ -86,6 +89,76 @@ class Constants{
 
   static String keyToString(String key,BuildContext context){
     return Provider.of<LanguageModel>(context, listen: true).getText(key);
+  }
+  static Text boldWhiteTextWidget(String text, double fontSize,
+      {int? maxLines,
+        TextAlign textAlign = TextAlign.center,
+        double height = 1.0}) {
+    return Text(
+      textAlign: textAlign,
+      maxLines: maxLines,
+      text,
+      style: TextStyle(
+        height: height,
+        fontFamily: 'SanFranciscoDisplay',
+        fontWeight: FontWeight.bold,
+        color: Colors.white,
+        fontSize: fontSize,
+      ),
+    );
+  }
+
+  static Text tengxunBoldWhiteTextWidget(String text, double fontSize,
+      {int? maxLines,
+        TextAlign textAlign = TextAlign.center,
+        double height = 1.0,
+        bool isHighlight = false }) {
+    return Text(
+      textAlign: textAlign,
+      maxLines: maxLines,
+      text,
+      style: TextStyle(
+        height: height,
+        fontFamily: 'tengxun',
+        fontWeight: FontWeight.bold,
+        color: isHighlight == true ? Color.fromRGBO(21, 233, 120, 1.0) :  Colors.white,
+        fontSize: fontSize,
+      ),
+    );
+  }
+
+  static Text regularWhiteTextWidget(String text, double fontSize,Color color,
+      {int? maxLines,
+        TextAlign textAlign = TextAlign.center,
+        double height = 1.0}) {
+    return Text(
+      maxLines: maxLines ?? null,
+      textAlign: textAlign,
+      text,
+      style: TextStyle(
+          height: height,
+          fontFamily: 'SanFranciscoDisplay',
+          fontWeight: FontWeight.w400,
+          color: color,
+          fontSize: fontSize),
+    );
+  }
+
+  static Text mediumWhiteTextWidget(String text, double fontSize,Color color,
+      {int? maxLines,
+        TextAlign textAlign = TextAlign.center,
+        double height = 1.0}) {
+    return Text(
+      maxLines: maxLines ?? null,
+      textAlign: textAlign,
+      text,
+      style: TextStyle(
+          height: height,
+          fontFamily: 'SanFranciscoDisplay',
+          fontWeight: FontWeight.w500,
+          color: color,
+          fontSize: fontSize),
+    );
   }
 }
 

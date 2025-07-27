@@ -113,7 +113,7 @@ class _NewBattleTargetPageState extends State<NewBattleTargetPage> {
       } else if (event.data == kStepControlFinishResponse) {
         // 步伐控制结束回复
         _currentIndex ++;
-        // 延迟1秒后开始,防止测速器反应不过来
+        // 延迟1秒后开始,防止测速器测速反应不过来（3s以内只能测一次速度）
         Future.delayed(Duration(milliseconds: 1000), () {
           if(_currentIndex <=50) {
             leftRightLoopGame();
