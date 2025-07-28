@@ -73,7 +73,7 @@ class _NewBattleTargetPageState extends State<NewBattleTargetPage> {
     super.initState();
     print("进入到battle 界面");
 
-    playLocalAudio('yangBG1.MP3',isAlwaysplay: true);
+    playLocalAudio('yangBG2.MP3',isAlwaysplay: true);
 
     CommStatusManager().isDeviceDeail = true;
     EventBus eventBus = EventBusManager().eventBus;
@@ -290,117 +290,234 @@ class _NewBattleTargetPageState extends State<NewBattleTargetPage> {
       backgroundColor: Color.fromRGBO(18, 83, 157, 1.0),
       body: Stack(
         children: [
+          /// 左侧击打数据
           Positioned(
-            left: 180,
+            left: 51,
             top: 80,
-            child: Column(
+            child: Row(
               crossAxisAlignment: CrossAxisAlignment.start,
               children: [
-                Text(
-                  ' Top Speed',
-                  style: TextStyle(
-                      fontWeight: FontWeight.bold,
-                      fontSize: 16,
-                      color: Colors.white),
+
+                /// Scores
+                Container(
+                  child: Column(
+                    children: [
+                      Text(
+                        'Scores',
+                        style: TextStyle(
+                            fontWeight: FontWeight.bold,
+                            fontSize: 14,
+                            fontFamily: "SanFranciscoDisplay",
+                            color: Colors.white),
+                      ),
+                      Text(
+                        '${_leftScore}',
+                        style: TextStyle(
+                            fontWeight: FontWeight.bold,
+                            fontSize: 16,
+                            fontFamily: "tengxun",
+                            color: Color.fromRGBO(21, 233, 120, 1.0)),
+                      ),
+                    ],
+                  ),
                 ),
-                Text(
-                  '${_leftMaxSpeed}km/h',
-                  style: TextStyle(
-                      fontWeight: FontWeight.bold,
-                      fontSize: 14,
-                      color: Color.fromRGBO(21, 233, 120, 1.0)),
-                ),
+
                 const SizedBox(
-                  height: 8,
+                  width: 40,
                 ),
-                Text(
-                  ' Speed',
-                  style: TextStyle(
-                      fontWeight: FontWeight.bold,
-                      fontSize: 16,
-                      color: Colors.white),
+                /// Shots In
+                Container(
+                  child: Column(
+                    children: [
+                      Text(
+                        'Shots In',
+                        style: TextStyle(
+                            fontWeight: FontWeight.bold,
+                            fontSize: 14,
+                            color: Colors.white),
+                      ),
+                      Text(
+                        '${_leftShotInCount}',
+                        style: TextStyle(
+                            fontWeight: FontWeight.bold,
+                            fontSize: 16,
+                            fontFamily: "tengxun",
+                            color: Color.fromRGBO(21, 233, 120, 1.0)),
+                      ),
+                    ],
+                  ),
                 ),
-                Text(
-                  '${_leftCurrentSpeed}km/h',
-                  style: TextStyle(
-                      fontWeight: FontWeight.bold,
-                      fontSize: 14,
-                      color: Color.fromRGBO(21, 233, 120, 1.0)),
-                ),
+
+
                 const SizedBox(
-                  height: 8,
+                  width: 40,
                 ),
-                Text(
-                  ' Scores',
-                  style: TextStyle(
-                      fontWeight: FontWeight.bold,
-                      fontSize: 16,
-                      color: Colors.white),
+
+                Container(
+                  child: Column(
+                    children: [
+                      Text(
+                        'Speed',
+                        style: TextStyle(
+                            fontWeight: FontWeight.bold,
+                            fontSize: 14,
+                            fontFamily: "SanFranciscoDisplay",
+                            color: Colors.white),
+                      ),
+                      Text(
+                        '${_leftCurrentSpeed}km/h',
+                        style: TextStyle(
+                            fontWeight: FontWeight.bold,
+                            fontSize: 16,
+                            fontFamily: "tengxun",
+                            color: Color.fromRGBO(21, 233, 120, 1.0)),
+                      ),
+                    ],
+                  ),
                 ),
-                Text(
-                  '${_leftScore}',
-                  style: TextStyle(
-                      fontWeight: FontWeight.bold,
-                      fontSize: 14,
-                      color: Color.fromRGBO(21, 233, 120, 1.0)),
+
+                const SizedBox(
+                  width: 40,
                 ),
+                // Top Speed
+                Container(
+                  child: Column(
+                    children: [
+                      Text(
+                        'Top Speed',
+                        style: TextStyle(
+                            fontWeight: FontWeight.bold,
+                            fontSize: 14,
+                            color: Colors.white),
+                      ),
+                      Text(
+                        '${_leftMaxSpeed}km/h',
+                        style: TextStyle(
+                            fontWeight: FontWeight.bold,
+                            fontSize: 16,
+                            fontFamily: "tengxun",
+                            color: Color.fromRGBO(21, 233, 120, 1.0)),
+                      ),
+                    ],
+                  ),
+                ),
+
+
               ],
             ),
           ),
+          /// 右侧击打数据
           Positioned(
-            right: 180,
+            right: 51,
             top: 80,
-            child: Column(
+            child: Row(
               crossAxisAlignment: CrossAxisAlignment.start,
               children: [
-                Text(
-                  ' Top Speed',
-                  style: TextStyle(
-                      fontWeight: FontWeight.bold,
-                      fontSize: 16,
-                      color: Colors.white),
+                // Scores
+                Container(
+                  child: Column(
+                    children: [
+                      Text(
+                        'Scores',
+                        style: TextStyle(
+                            fontWeight: FontWeight.bold,
+                            fontSize: 16,
+                            fontFamily: "SanFranciscoDisplay",
+                            color: Colors.white),
+                      ),
+                      Text(
+                        '${_rightScore}',
+                        style: TextStyle(
+                            fontWeight: FontWeight.bold,
+                            fontSize: 14,
+                            fontFamily: "tengxun",
+                            color: Color.fromRGBO(21, 233, 120, 1.0)),
+                      ),
+                    ],
+                  ),
                 ),
-                Text(
-                  '${_rightMaxSpeed}km/h',
-                  style: TextStyle(
-                      fontWeight: FontWeight.bold,
-                      fontSize: 14,
-                      color: Color.fromRGBO(21, 233, 120, 1.0)),
+
+                const SizedBox(
+                  width: 40,
+                ),
+
+                /// Shots In
+                Container(
+                  child: Column(
+                    children: [
+                      Text(
+                        'Shots In',
+                        style: TextStyle(
+                            fontWeight: FontWeight.bold,
+                            fontSize: 14,
+                            color: Colors.white),
+                      ),
+                      Text(
+                        '${_leftShotInCount}',
+                        style: TextStyle(
+                            fontWeight: FontWeight.bold,
+                            fontSize: 16,
+                            fontFamily: "tengxun",
+                            color: Color.fromRGBO(21, 233, 120, 1.0)),
+                      ),
+                    ],
+                  ),
                 ),
                 const SizedBox(
-                  height: 8,
+                  width: 40,
                 ),
-                Text(
-                  ' Speed',
-                  style: TextStyle(
-                      fontWeight: FontWeight.bold,
-                      fontSize: 16,
-                      color: Colors.white),
+
+                Container(
+                  child: Column(
+                    children: [
+                      Text(
+                        'Speed',
+                        style: TextStyle(
+                            fontWeight: FontWeight.bold,
+                            fontSize: 14,
+                            fontFamily: "SanFranciscoDisplay",
+                            color: Colors.white),
+                      ),
+                      Text(
+                        '${_rightCurrentSpeed}km/h',
+                        style: TextStyle(
+                            fontWeight: FontWeight.bold,
+                            fontSize: 16,
+                            fontFamily: "tengxun",
+                            color: Color.fromRGBO(21, 233, 120, 1.0)),
+                      ),
+                    ],
+                  ),
                 ),
-                Text(
-                  '${_rightCurrentSpeed}km/h',
-                  style: TextStyle(
-                      fontWeight: FontWeight.bold,
-                      fontSize: 14,
-                      color: Color.fromRGBO(21, 233, 120, 1.0)),
-                ),
+
                 const SizedBox(
-                  height: 8,
+                  width: 40,
                 ),
-                Text(
-                  ' Scores',
-                  style: TextStyle(
-                      fontWeight: FontWeight.bold,
-                      fontSize: 16,
-                      color: Colors.white),
+                // top speed
+                Container(
+                  child: Column(
+                    children: [
+                      Text(
+                        'Top Speed',
+                        style: TextStyle(
+                            fontWeight: FontWeight.bold,
+                            fontSize: 14,
+                            fontFamily: "SanFranciscoDisplay",
+                            color: Colors.white),
+                      ),
+                      Text(
+                        '${_rightMaxSpeed}km/h',
+                        style: TextStyle(
+                            fontWeight: FontWeight.bold,
+                            fontSize: 16,
+                            fontFamily: "tengxun",
+                            color: Color.fromRGBO(21, 233, 120, 1.0)),
+                      ),
+                    ],
+                  ),
                 ),
-                Text(
-                  '${_rightScore}',
-                  style: TextStyle(
-                      fontWeight: FontWeight.bold,
-                      fontSize: 14,
-                      color: Color.fromRGBO(21, 233, 120, 1.0)),
-                ),
+
+
               ],
             ),
           ),
@@ -427,6 +544,16 @@ class _NewBattleTargetPageState extends State<NewBattleTargetPage> {
               hideIndex: lights,
             )),
           ),
+
+          /// 中间的竖的分割线
+          Positioned(
+              left: Constants.screenWidth(context)/2,
+              top: 0,
+              child: Container(
+                color: Color.fromRGBO(93, 148, 212, 1.0),
+                width: 1,
+                height: Constants.screenHeight(context),
+              )),
         ],
       ),
     );

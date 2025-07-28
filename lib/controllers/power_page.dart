@@ -49,7 +49,7 @@ class _PowerPageState extends State<PowerPage> {
     super.initState();
     print('进入到力量训练');
 
-    playLocalAudio('blueMonday.MP3',isAlwaysplay: true);
+    playLocalAudio('blueMonday1.MP3',isAlwaysplay: true);
 
     // Future.delayed(Duration(milliseconds: 2000), () {
     //   endPrompt = "Shot in ${calculatePercentage(CommStatusManager().currentSpeed, maxSpeed)}";
@@ -267,7 +267,7 @@ class _PowerPageState extends State<PowerPage> {
                         'Total Shots',
                         style: TextStyle(
                             fontWeight: FontWeight.bold,
-                            fontSize: 18,
+                            fontSize: 14,
                             fontFamily: "SanFranciscoDisplay",
                             color: Colors.white),
                       ),
@@ -282,7 +282,7 @@ class _PowerPageState extends State<PowerPage> {
                     ],
                   ),
                   SizedBox(
-                    height: 10,
+                    height: 26,
                   ),
                   Column(
                     crossAxisAlignment: CrossAxisAlignment.start,
@@ -291,7 +291,7 @@ class _PowerPageState extends State<PowerPage> {
                         'Shot In',
                         style: TextStyle(
                             fontWeight: FontWeight.bold,
-                            fontSize: 18,
+                            fontSize: 14,
                             fontFamily: "SanFranciscoDisplay",
                             color: Colors.white),
                       ),
@@ -306,7 +306,7 @@ class _PowerPageState extends State<PowerPage> {
                     ],
                   ),
                   SizedBox(
-                    height: 10,
+                    height: 26,
                   ),
                   Column(
                     crossAxisAlignment: CrossAxisAlignment.start,
@@ -315,7 +315,32 @@ class _PowerPageState extends State<PowerPage> {
                         ' Top Speed',
                         style: TextStyle(
                             fontWeight: FontWeight.bold,
+                            fontSize: 14,
+                            fontFamily: "SanFranciscoDisplay",
+                            color: Colors.white),
+                      ),
+                      Text(
+                        '${maxSpeed}km/h',
+                        style: TextStyle(
+                            fontWeight: FontWeight.bold,
                             fontSize: 18,
+                            fontFamily: "tengxun",
+                            color: Color.fromRGBO(21, 233, 120, 1.0)),
+                      ),
+                    ],
+                  ),
+
+                  SizedBox(
+                    height: 26,
+                  ),
+                  Column(
+                    crossAxisAlignment: CrossAxisAlignment.start,
+                    children: [
+                      Text(
+                        'Avg.Speed',
+                        style: TextStyle(
+                            fontWeight: FontWeight.bold,
+                            fontSize: 14,
                             fontFamily: "SanFranciscoDisplay",
                             color: Colors.white),
                       ),
