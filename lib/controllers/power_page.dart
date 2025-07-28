@@ -115,7 +115,41 @@ class _PowerPageState extends State<PowerPage> {
          if (speedIndexs < 50){
            speedIndexs++;
          }
-          if (speedIndexs <=10) {
+
+         /// 步伐控制指令发球  12  18  20
+         if (speedIndexs <=12) {
+           TennisMachineParams params =
+           TennisMachineParams.fromState(0, 0, 0, 14, 14, 40, 110, 175, 1);
+           CommStatusManager().writerData(stepControlData(params));
+         }
+         /// 往前移动一米
+         if(speedIndexs == 13 ) {
+           TennisMachineParams params =
+           TennisMachineParams.fromState(200, 0, 0, 13, 13, 40, 110, 175, 0);
+           CommStatusManager().writerData(stepControlData(params));
+         }
+
+         if(speedIndexs > 13 && speedIndexs <31) {
+           TennisMachineParams params =
+           TennisMachineParams.fromState(0, 0, 0, 14, 14, 40, 110, 175, 1);
+           CommStatusManager().writerData(stepControlData(params));
+         }
+
+         /// 往前移动一米
+         if(speedIndexs == 31 ) {
+           TennisMachineParams params =
+           TennisMachineParams.fromState(200, 0, 0, 12, 12, 40, 110, 175, 0);
+           CommStatusManager().writerData(stepControlData(params));
+         }
+
+         if(speedIndexs > 31 ) {
+           TennisMachineParams params =
+           TennisMachineParams.fromState(0, 0, 0, 13, 13, 40, 100, 175, 1);
+           CommStatusManager().writerData(stepControlData(params));
+         }
+
+
+         if (speedIndexs <=10) {
             // 力量范围测量结束 进入训练
             maxSpeed = maxSpeed > CommStatusManager().currentSpeed
                 ? maxSpeed
@@ -140,14 +174,14 @@ class _PowerPageState extends State<PowerPage> {
             TennisMachineParams.fromState(0, 0, 0, 13, 13, 40, 110, 125, 0);
             CommStatusManager().writerData(stepControlData(params));
           }
-
-          if(speedIndexs < 50) {
-            // 步伐控制结束回复
-            // 开始发球了
-            TennisMachineParams params =
-            TennisMachineParams.fromState(0, 0, 0, 13, 13, 40, 110, 125, 1);
-            CommStatusManager().writerData(stepControlData(params));
-          }
+          //
+          // if(speedIndexs < 50) {
+          //   // 步伐控制结束回复
+          //   // 开始发球了
+          //   TennisMachineParams params =
+          //   TennisMachineParams.fromState(0, 0, 0, 13, 13, 40, 110, 125, 1);
+          //   CommStatusManager().writerData(stepControlData(params));
+          // }
 
 
           _startFlag = true;
@@ -199,7 +233,7 @@ class _PowerPageState extends State<PowerPage> {
       return;
     }
     TennisMachineParams params =
-        TennisMachineParams.fromState(0, 0, 0, 12, 12, 40, 110, 125, 0);
+        TennisMachineParams.fromState(0, 310, 0, 14, 14, 40, 110, 125, 0);
     CommStatusManager().writerData(stepControlData(params));
     speedIndexs --;
   }
@@ -333,27 +367,27 @@ class _PowerPageState extends State<PowerPage> {
                   SizedBox(
                     height: 26,
                   ),
-                  Column(
-                    crossAxisAlignment: CrossAxisAlignment.start,
-                    children: [
-                      Text(
-                        'Avg.Speed',
-                        style: TextStyle(
-                            fontWeight: FontWeight.bold,
-                            fontSize: 14,
-                            fontFamily: "SanFranciscoDisplay",
-                            color: Colors.white),
-                      ),
-                      Text(
-                        '${maxSpeed}km/h',
-                        style: TextStyle(
-                            fontWeight: FontWeight.bold,
-                            fontSize: 18,
-                            fontFamily: "tengxun",
-                            color: Color.fromRGBO(21, 233, 120, 1.0)),
-                      ),
-                    ],
-                  ),
+                  // Column(
+                  //   crossAxisAlignment: CrossAxisAlignment.start,
+                  //   children: [
+                  //     Text(
+                  //       'Avg.Speed',
+                  //       style: TextStyle(
+                  //           fontWeight: FontWeight.bold,
+                  //           fontSize: 14,
+                  //           fontFamily: "SanFranciscoDisplay",
+                  //           color: Colors.white),
+                  //     ),
+                  //     Text(
+                  //       '${maxSpeed}km/h',
+                  //       style: TextStyle(
+                  //           fontWeight: FontWeight.bold,
+                  //           fontSize: 18,
+                  //           fontFamily: "tengxun",
+                  //           color: Color.fromRGBO(21, 233, 120, 1.0)),
+                  //     ),
+                  //   ],
+                  // ),
                 ],
               )),
           if(gameIndex !=0)

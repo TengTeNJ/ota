@@ -74,7 +74,7 @@ class _NewBattleTargetPageState extends State<NewBattleTargetPage> {
     print("进入到battle 界面");
 
     playLocalAudio('yangBG2.MP3',isAlwaysplay: true);
-
+    calculateTime(1);
     CommStatusManager().isDeviceDeail = true;
     EventBus eventBus = EventBusManager().eventBus;
     _subscription = eventBus.on<DataUpdatedEvent>().listen((event) {
@@ -114,13 +114,14 @@ class _NewBattleTargetPageState extends State<NewBattleTargetPage> {
         // 步伐控制结束回复
         _currentIndex ++;
         // 延迟1秒后开始,防止测速器测速反应不过来（3s以内只能测一次速度）
-        Future.delayed(Duration(milliseconds: 1000), () {
-          if(_currentIndex <=50) {
-            leftRightLoopGame();
-          }
-        });
+        // Future.delayed(Duration(milliseconds: 1000), () {
+        //   if(_currentIndex <=50) {
+        //     leftRightLoopGame();
+        //   }
+        // });
+         modeTwoGame();
 
-        /// 50轮 一局结束  跳转到结算界面
+         /// 50轮 一局结束  跳转到结算界面
         if (_currentIndex == 50) {
           double leftSum = _leftTotalSpeeds.fold(0.0, (previousValue, element) => previousValue + element);
           int count = _leftTotalSpeeds.length;
@@ -154,11 +155,7 @@ class _NewBattleTargetPageState extends State<NewBattleTargetPage> {
         if (calculateTime(1) < 1000) {
           return; /// 1s内不处理
         }
-
-        if (CommStatusManager().currentSpeed > 70) {
-          print("Great Job");
-          playLocalAudio('greatjob.mp3');
-        }
+        print("哈哈击中了");
           if (_currentIndex % 2 != 0) {  /// 左侧
             if(CommStatusManager().targetIndex[0] == 15) {// 左侧  圆形 15
               lights.fillRange(0, 1, true);
@@ -266,10 +263,55 @@ class _NewBattleTargetPageState extends State<NewBattleTargetPage> {
       return;
     }
     TennisMachineParams params =
-    TennisMachineParams.fromState(0, 0, 0, 12, 12, 40, 110, 125, 0);
+    TennisMachineParams.fromState(0, 310, 0, 14, 14, 40, 110, 125, 0);
     CommStatusManager().writerData(stepControlData(params));
     _currentIndex --;
 
+  }
+
+  /// P2 发球模式
+  void modeTwoGame( ) {
+    /// 步伐控制指令发球  12  18  20
+    if (_currentIndex <=12) {
+      TennisMachineParams params =
+      TennisMachineParams.fromState(0, 0, (_currentIndex % 2 == 0) ? -13 : 13, 14, 14, 40, 110, 175, 1);
+      CommStatusManager().writerData(stepControlData(params));
+    }
+    /// 往前移动一米
+    if(_currentIndex == 13 ) {
+      TennisMachineParams params =
+      TennisMachineParams.fromState(200, 0, 0, 13, 13, 40, 110, 175, 0);
+      CommStatusManager().writerData(stepControlData(params));
+    }
+
+    if(_currentIndex > 13 && _currentIndex <31) {
+      TennisMachineParams params =
+      TennisMachineParams.fromState(0, 0, (_currentIndex % 2 == 0) ? -13 : 13, 14, 14, 40, 110, 175, 1);
+      CommStatusManager().writerData(stepControlData(params));
+    }
+
+    /// 往前移动一米
+    if(_currentIndex == 31 ) {
+      TennisMachineParams params =
+      TennisMachineParams.fromState(200, 0, 0, 12, 12, 40, 110, 175, 0);
+      CommStatusManager().writerData(stepControlData(params));
+    }
+
+    if(_currentIndex > 31  &&_currentIndex < 51) {
+      TennisMachineParams params =
+      TennisMachineParams.fromState(0, 0, (_currentIndex % 2 == 0) ? -13 : 13, 13, 13, 40, 100, 175, 1);
+      CommStatusManager().writerData(stepControlData(params));
+    }
+
+    if (_currentIndex == 51) {
+      TennisMachineParams params =
+      TennisMachineParams.fromState(0, 0,0, 0, 0, 40, 100, 175, 1);
+      CommStatusManager().writerData(stepControlData(params));
+    }
+
+
+
+    print("发球索引${_currentIndex}");
   }
 
   /*左右循环发球*/
@@ -453,7 +495,7 @@ class _NewBattleTargetPageState extends State<NewBattleTargetPage> {
                             color: Colors.white),
                       ),
                       Text(
-                        '${_leftShotInCount}',
+                        '${_rightShotInCount}',
                         style: TextStyle(
                             fontWeight: FontWeight.bold,
                             fontSize: 16,

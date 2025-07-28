@@ -28,7 +28,7 @@ const kBLE_270_SERVICE_UUID = "fff0";
 const kBLE_270_CHARACTERISTIC_NOTIFY_UUID = "fff1";
 const kBLE_270_CHARACTERISTIC_WRITER_UUID = "fff2";
 
-const kBLEDeviceName = "Stickhandling";
+const kBLEDeviceName = "Tv511u-403F0109";
 const kBLENewDeviceName = "Roboti10";
 const kBLEMySpeedzName = "Myspeedz_2";
 
