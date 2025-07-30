@@ -154,7 +154,7 @@ class _TennisBallMachineControlState extends State<TennisBallMachineControl> {
     // 添加监听器以同步输入框和滑块
     xController.addListener(() {
       updateValueFromController(xController, (value) {
-        if (value >= -100 && value <= 100) {
+        if (value >= -600 && value <= 600) {
           setState(() {
             xPosition = value.toDouble();
           });
@@ -164,7 +164,7 @@ class _TennisBallMachineControlState extends State<TennisBallMachineControl> {
 
     yController.addListener(() {
       updateValueFromController(yController, (value) {
-        if (value >= -100 && value <= 100) {
+        if (value >= -600 && value <= 600) {
           setState(() {
             yPosition = value.toDouble();
           });
@@ -323,8 +323,8 @@ class _TennisBallMachineControlState extends State<TennisBallMachineControl> {
                         Expanded(
                           child: Slider(
                             value: xPosition,
-                            min: -100.0,
-                            max: 100.0,
+                            min: -600.0,
+                            max: 600.0,
                             divisions: 20,
                             label: xPosition.round().toString(),
                             onChanged: (double value) {
@@ -347,7 +347,7 @@ class _TennisBallMachineControlState extends State<TennisBallMachineControl> {
                             ],
                             onFieldSubmitted: (value) {
                               final intValue = int.tryParse(value) ?? 0;
-                              if (intValue >= -100 && intValue <= 100) {
+                              if (intValue >= -600 && intValue <= 600) {
                                 setState(() {
                                   xPosition = intValue.toDouble();
                                 });
@@ -358,8 +358,8 @@ class _TennisBallMachineControlState extends State<TennisBallMachineControl> {
                               border: const OutlineInputBorder(),
                               errorText: xController.text.isNotEmpty &&
                                   (int.tryParse(xController.text) == null ||
-                                      int.parse(xController.text) < -100 ||
-                                      int.parse(xController.text) > 100)
+                                      int.parse(xController.text) < -600 ||
+                                      int.parse(xController.text) > 600)
                                   ? '范围: -100 到 100'
                                   : null,
                             ),
@@ -377,8 +377,8 @@ class _TennisBallMachineControlState extends State<TennisBallMachineControl> {
                         Expanded(
                           child: Slider(
                             value: yPosition,
-                            min: -100.0,
-                            max: 100.0,
+                            min: -600.0,
+                            max: 600.0,
                             divisions: 20,
                             label: yPosition.round().toString(),
                             onChanged: (double value) {
@@ -401,7 +401,7 @@ class _TennisBallMachineControlState extends State<TennisBallMachineControl> {
                             ],
                             onFieldSubmitted: (value) {
                               final intValue = int.tryParse(value) ?? 0;
-                              if (intValue >= -100 && intValue <= 100) {
+                              if (intValue >= -600 && intValue <= 600) {
                                 setState(() {
                                   yPosition = intValue.toDouble();
                                 });
@@ -412,8 +412,8 @@ class _TennisBallMachineControlState extends State<TennisBallMachineControl> {
                               border: const OutlineInputBorder(),
                               errorText: yController.text.isNotEmpty &&
                                   (int.tryParse(yController.text) == null ||
-                                      int.parse(yController.text) < -100 ||
-                                      int.parse(yController.text) > 100)
+                                      int.parse(yController.text) < -600 ||
+                                      int.parse(yController.text) > 600)
                                   ? '范围: -100 到 100'
                                   : null,
                             ),

@@ -1,8 +1,10 @@
 import 'package:flutter/material.dart';
 import 'package:ota/constants.dart';
+import 'package:ota/controllers/count_down_page.dart';
 import 'package:ota/controllers/new_battle_target_page.dart';
 import 'package:ota/controllers/new_target_single_ppage.dart';
 import 'package:ota/controllers/power_page.dart';
+import 'package:ota/controllers/stadium_two_main_page.dart';
 import 'package:ota/controllers/target_page.dart';
 import 'package:ota/utils/comm_statu_manager.dart';
 import 'package:package_info_plus/package_info_plus.dart';
@@ -139,7 +141,7 @@ class _AboutPageState extends State<AboutPage> {
                 Future.delayed(Duration(milliseconds: 500),(){
                   Navigator.push(
                     context,
-                    MaterialPageRoute(builder: (context) =>NewBattleTargetPage()), // 目标页面
+                    MaterialPageRoute(builder: (context) =>StadiumTwoMainPage()), // 目标页面
                     // MaterialPageRoute(builder: (context) =>NewTargetSinglePpage()), // 目标页面
                     // MaterialPageRoute(builder: (context) =>TargetPage()), // 目标页面
                   );
@@ -166,7 +168,7 @@ class _AboutPageState extends State<AboutPage> {
                 Future.delayed(Duration(milliseconds: 500),(){
                   Navigator.push(
                     context,
-                    MaterialPageRoute(builder: (context) =>PowerPage()), // 目标页面
+                    MaterialPageRoute(builder: (context) =>StadiumTwoMainPage()), // 目标页面
                   );
                 });
               },

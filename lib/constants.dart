@@ -28,9 +28,17 @@ const kBLE_270_SERVICE_UUID = "fff0";
 const kBLE_270_CHARACTERISTIC_NOTIFY_UUID = "fff1";
 const kBLE_270_CHARACTERISTIC_WRITER_UUID = "fff2";
 
+
+/// 2 号场设备名字
 const kBLEDeviceName = "Tv511u-403F0109";
 const kBLENewDeviceName = "Roboti10";
 const kBLEMySpeedzName = "Myspeedz_2";
+
+/// 3 号场设备名字
+
+// const kBLEDeviceName = "ARtennis_3";
+// const kBLENewDeviceName = "Roboti10";
+// const kBLEMySpeedzName = "Myspeedz_3";
 
 const kSanjiaoWidth = 66;
 const kSanjiaoHeight = 58;
@@ -42,6 +50,12 @@ const kLiuWidth = 66;
 const kLiuHeight = 56;
 
 const kScale = 1.5;
+
+const kHeigthScale = 768.0/375.0;
+
+const kWidhtScale = 1024.0/812.0;
+
+
 
 
 // OTA 进度变化

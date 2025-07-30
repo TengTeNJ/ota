@@ -305,19 +305,19 @@ class _NewBattleTargetPageState extends State<NewBattleTargetPage> {
 
     if (_currentIndex == 51) {
       TennisMachineParams params =
-      TennisMachineParams.fromState(0, 0,0, 0, 0, 40, 100, 175, 1);
+      TennisMachineParams.fromState(0, 0,0, 0, 0, 40, 100, 175, 0);
       CommStatusManager().writerData(stepControlData(params));
     }
-
-
-
     print("发球索引${_currentIndex}");
   }
+
+
+
 
   /*左右循环发球*/
   void leftRightLoopGame() {
     TennisMachineParams params =
-    TennisMachineParams.fromState(0, 0, (_currentIndex % 2 == 0) ? -13 : 13, 12, 12, 40, 115, 125, 1);
+    TennisMachineParams.fromState(0, 0, (_currentIndex % 2 == 0) ? -13 : 13, 12, 12, 40, 115, 125, 0);
     CommStatusManager().writerData(stepControlData(params));
   }
 
@@ -606,6 +606,7 @@ class _NewBattleTargetPageState extends State<NewBattleTargetPage> {
     // TODO: implement dispose
     SystemUtil.lockScreenDirection();
     _subscription.cancel();
+    CommStatusManager().currentSpeed = 0;
     pause();
     super.dispose();
   }

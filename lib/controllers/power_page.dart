@@ -1,12 +1,14 @@
 import 'dart:async';
 import 'package:event_bus/event_bus.dart';
 import 'package:flutter/material.dart';
+import 'package:ota/controllers/power_end_page.dart';
 import 'package:ota/controllers/step_control_page.dart';
 import 'package:ota/utils/comm_statu_manager.dart';
 import 'package:ota/utils/service_util.dart';
 import 'package:ota/utils/system_util.dart';
 import 'package:ota/views/power_view.dart';
 import '../constants.dart';
+import '../model/Battle_user_model.dart';
 import '../utils/audio_player_util.dart';
 import '../utils/event_manager.dart';
 import '../utils/ota_data.dart';
@@ -16,7 +18,9 @@ import 'package:flutter_tts/flutter_tts.dart';
 
 
 class PowerPage extends StatefulWidget {
-  const PowerPage({super.key});
+   String type = "p1";
+
+   PowerPage({required this.type});
 
   @override
   State<PowerPage> createState() => _PowerPageState();
@@ -32,6 +36,8 @@ class _PowerPageState extends State<PowerPage> {
   String endPrompt = '';// 一轮结束提示语
   String greatJobPrompt = '';// GreatJob 提示语
   DateTime _lastShotInTime = DateTime.now(); // 记录上次击中的时间
+  List<int> _TotalSpeeds = []; /// 总的速度
+  int _ShotInCount = 0; /// 击中次数
 
   late StreamSubscription<DataUpdatedEvent> _subscription;
   final FlutterTts flutterTts = FlutterTts();
@@ -47,19 +53,25 @@ class _PowerPageState extends State<PowerPage> {
   void initState() {
     // TODO: implement initState
     super.initState();
-    print('进入到力量训练');
+    print('进入到力量训练${widget.type}');
+
+
 
     playLocalAudio('blueMonday1.MP3',isAlwaysplay: true);
 
-    // Future.delayed(Duration(milliseconds: 2000), () {
-    //   endPrompt = "Shot in ${calculatePercentage(CommStatusManager().currentSpeed, maxSpeed)}";
-    //   Future.delayed(Duration(milliseconds: 2000), () {
-    //     endPrompt = "Great Job !";
-    //     playOnceLocalAudio("greatjob.mp3");
-    //     setState(() {});
-    //   });
-    //   setState(() {});
-    // });
+      // Future.delayed(Duration(milliseconds: 2000), () {
+      //   double rightSum = _TotalSpeeds.fold(0.0, (previousValue, element) => previousValue + element);
+      //   int rightcount = _TotalSpeeds.length;
+      //   double averagSpeed = rightSum / rightcount;
+      //   var rightUserModel1 = BattleUserModel(score: 10, shotInCount: 20,
+      //       topSpeed: 123, avgSpeed: 67,isWinner: true);
+      //   Navigator.push(
+      //     context,
+      //     MaterialPageRoute(builder: (context) =>PowerEndPage(rightUserModel: rightUserModel1,
+      //     )), // 结算页面
+      //   );
+      //   setState(() {});
+      // });
 
 
 
@@ -72,6 +84,7 @@ class _PowerPageState extends State<PowerPage> {
         // if (!_startFlag) {
         //   return;
         // }
+        _TotalSpeeds.add(CommStatusManager().currentSpeed);
         // 显示速度
         SpeedPopup.show(context, speed: CommStatusManager().currentSpeed);
         if (CommStatusManager().currentSpeed > 70) {
@@ -86,7 +99,10 @@ class _PowerPageState extends State<PowerPage> {
 
 
         // 监测到的速度数据变量递增
-        //  speedIndexs++;
+         if (kBLEDeviceName == "ARtennis_3") {
+            speedIndexs++; //3 号场依赖于测速器
+            print("3号场");
+         }
         if (speedIndexs <=10) {
           // 力量范围测量结束 进入训练
           maxSpeed = maxSpeed > CommStatusManager().currentSpeed
@@ -112,40 +128,17 @@ class _PowerPageState extends State<PowerPage> {
 
         print('kSpeedValue--speedIndexs=${speedIndexs}');
       } else if (event.data == kStepControlFinishResponse) {
-         if (speedIndexs < 50){
+         if (speedIndexs <= 50){
            speedIndexs++;
          }
 
-         /// 步伐控制指令发球  12  18  20
-         if (speedIndexs <=12) {
-           TennisMachineParams params =
-           TennisMachineParams.fromState(0, 0, 0, 14, 14, 40, 110, 175, 1);
-           CommStatusManager().writerData(stepControlData(params));
-         }
-         /// 往前移动一米
-         if(speedIndexs == 13 ) {
-           TennisMachineParams params =
-           TennisMachineParams.fromState(200, 0, 0, 13, 13, 40, 110, 175, 0);
-           CommStatusManager().writerData(stepControlData(params));
-         }
+         if (widget.type == "p1") {
+           print("p1路径");
+           modeOneGame();
+         } else if(widget.type == "p3") {
+           modeThreeGame();
+           print("p3路径");
 
-         if(speedIndexs > 13 && speedIndexs <31) {
-           TennisMachineParams params =
-           TennisMachineParams.fromState(0, 0, 0, 14, 14, 40, 110, 175, 1);
-           CommStatusManager().writerData(stepControlData(params));
-         }
-
-         /// 往前移动一米
-         if(speedIndexs == 31 ) {
-           TennisMachineParams params =
-           TennisMachineParams.fromState(200, 0, 0, 12, 12, 40, 110, 175, 0);
-           CommStatusManager().writerData(stepControlData(params));
-         }
-
-         if(speedIndexs > 31 ) {
-           TennisMachineParams params =
-           TennisMachineParams.fromState(0, 0, 0, 13, 13, 40, 100, 175, 1);
-           CommStatusManager().writerData(stepControlData(params));
          }
 
 
@@ -165,26 +158,7 @@ class _PowerPageState extends State<PowerPage> {
               // 进入到组合训练
             }
           }
-
-          // 第一个不发球
-          if (speedIndexs == 50){
-            // 步伐控制结束回复
-            // 开始发球了
-            TennisMachineParams params =
-            TennisMachineParams.fromState(0, 0, 0, 13, 13, 40, 110, 125, 0);
-            CommStatusManager().writerData(stepControlData(params));
-          }
-          //
-          // if(speedIndexs < 50) {
-          //   // 步伐控制结束回复
-          //   // 开始发球了
-          //   TennisMachineParams params =
-          //   TennisMachineParams.fromState(0, 0, 0, 13, 13, 40, 110, 125, 1);
-          //   CommStatusManager().writerData(stepControlData(params));
-          // }
-
-
-          _startFlag = true;
+         _startFlag = true;
         print('kStepControlFinishResponse--speedIndexs=${speedIndexs}');
       } else if(event.data == kTargetIndex) { /// 击中标靶的索引
        if (_updateTime(1) < 1000) {
@@ -193,6 +167,7 @@ class _PowerPageState extends State<PowerPage> {
 
         print('power界面 击中标靶的索引为${CommStatusManager().targetIndex}');
         numbersOfHit += 1;
+        _ShotInCount +=1;
         if(CommStatusManager().targetIndex[0] == 12) {// 顶部  三角形 12
         } else if(CommStatusManager().targetIndex[0] == 11) {//  右侧矩形11
           print("右侧  矩形");
@@ -200,7 +175,9 @@ class _PowerPageState extends State<PowerPage> {
         }
 
       }
-      setState(() {});
+      if (mounted) {
+        setState(() {});
+      }
     });
     // 延迟两秒后开始
     Future.delayed(Duration(milliseconds: 2000), () {
@@ -237,6 +214,133 @@ class _PowerPageState extends State<PowerPage> {
     CommStatusManager().writerData(stepControlData(params));
     speedIndexs --;
   }
+
+  /// P1发球模式
+  void modeOneGame() {
+    /// 步伐控制指令发球  12  18  20
+    if (speedIndexs <=12) {
+      TennisMachineParams params =
+      TennisMachineParams.fromState(0, 0, 0, 14, 14, 40, 110, 175, 1);
+      CommStatusManager().writerData(stepControlData(params));
+    }
+    /// 往前移动一米
+    if(speedIndexs == 13 ) {
+      TennisMachineParams params =
+      TennisMachineParams.fromState(200, 0, 0, 13, 13, 40, 110, 175, 0);
+      CommStatusManager().writerData(stepControlData(params));
+    }
+
+    if(speedIndexs > 13 && speedIndexs <31) {
+      TennisMachineParams params =
+      TennisMachineParams.fromState(0, 0, 0, 14, 14, 40, 110, 175, 1);
+      CommStatusManager().writerData(stepControlData(params));
+    }
+
+    /// 往前移动一米
+    if(speedIndexs == 31 ) {
+      TennisMachineParams params =
+      TennisMachineParams.fromState(200, 0, 0, 12, 12, 40, 110, 175, 0);
+      CommStatusManager().writerData(stepControlData(params));
+    }
+
+    if(speedIndexs > 31 && speedIndexs < 50) {
+      TennisMachineParams params =
+      TennisMachineParams.fromState(0, 0, 0, 13, 13, 40, 100, 175, 1);
+      CommStatusManager().writerData(stepControlData(params));
+    }
+
+    if (speedIndexs == 50) {
+      print('50个球发送完毕');
+      TennisMachineParams params =
+      TennisMachineParams.fromState(0, 0,0, 0, 0, 40, 110, 175, 0);
+      CommStatusManager().writerData(stepControlData(params));
+      enterEndPage();
+    }
+  }
+
+  /// P3发球模式
+  void modeThreeGame() {
+    /// 步伐控制指令发球  10 *10*10*10*10
+    if (speedIndexs <=10) {
+      TennisMachineParams params =
+      TennisMachineParams.fromState(0, 0,  0, 14, 14, 40, 110, 175, 1);
+      CommStatusManager().writerData(stepControlData(params));
+    }
+    /// 移动2米
+    if(speedIndexs == 11 ) {
+      TennisMachineParams params =
+      TennisMachineParams.fromState(0, 200, 0, 14, 14, 40, 110, 175, 0);
+      CommStatusManager().writerData(stepControlData(params));
+    }
+
+    if(speedIndexs > 11 && speedIndexs <21) {
+      TennisMachineParams params =
+      TennisMachineParams.fromState(0, 0, 0, 14, 14, 40, 110, 175, 1);
+      CommStatusManager().writerData(stepControlData(params));
+    }
+
+    /// 往前移动2米
+    if(speedIndexs == 21 ) {
+      TennisMachineParams params =
+      TennisMachineParams.fromState(300, 0, 0, 13, 13, 40, 110, 175, 0);
+      CommStatusManager().writerData(stepControlData(params));
+    }
+
+    if(speedIndexs > 21  &&speedIndexs < 31) {
+      TennisMachineParams params =
+      TennisMachineParams.fromState(0, 0, 0, 13, 13, 40, 100, 175, 1);
+      CommStatusManager().writerData(stepControlData(params));
+    }
+
+    /// 移动2米
+    if(speedIndexs == 31 ) {
+      TennisMachineParams params =
+      TennisMachineParams.fromState(0, -200, 0, 13, 13, 40, 110, 175, 0);
+      CommStatusManager().writerData(stepControlData(params));
+    }
+
+    if(speedIndexs > 31  &&speedIndexs < 41) {
+      TennisMachineParams params =
+      TennisMachineParams.fromState(0, 0, 0, 13, 13, 40, 100, 175, 1);
+      CommStatusManager().writerData(stepControlData(params));
+    }
+
+    /// 移动一米
+    if(speedIndexs == 41 ) {
+      TennisMachineParams params =
+      TennisMachineParams.fromState(0, -200, 0, 13, 13, 40, 110, 175, 0);
+      CommStatusManager().writerData(stepControlData(params));
+    }
+
+    if(speedIndexs > 41 && speedIndexs < 50) {
+      TennisMachineParams params =
+      TennisMachineParams.fromState(0, 0, 0, 13, 13, 40, 110, 175, 1);
+      CommStatusManager().writerData(stepControlData(params));
+    }
+
+    if (speedIndexs == 50) {
+      print('50个球发送完毕');
+      TennisMachineParams params =
+      TennisMachineParams.fromState(0, 0,0, 0, 0, 40, 110, 175, 0);
+      CommStatusManager().writerData(stepControlData(params));
+      enterEndPage();
+    }
+    print("发球索引${speedIndexs}");
+  }
+
+  void enterEndPage() {
+    double rightSum = _TotalSpeeds.fold(0.0, (previousValue, element) => previousValue + element);
+    int rightcount = _TotalSpeeds.length;
+    double averagSpeed = rightSum / rightcount;
+    var rightUserModel = BattleUserModel(score: 10, shotInCount: _ShotInCount,
+        topSpeed: maxSpeed, avgSpeed: averagSpeed.toInt(),isWinner: true);
+    Navigator.push(
+      context,
+      MaterialPageRoute(builder: (context) =>PowerEndPage(rightUserModel: rightUserModel,
+      )), // 结算页面
+    );
+  }
+
   /*力量训练第二阶段*/
   void secondProgressGame(){
     // if(speedIndexs < 10){
@@ -416,9 +520,6 @@ class _PowerPageState extends State<PowerPage> {
                   ),
                 ],
               )),
-
-
-
           Center(
             child: PowerView(),
           ),
@@ -462,9 +563,6 @@ class _PowerPageState extends State<PowerPage> {
               Container()
 
           ),
-
-
-
         ],
       ),
     );
@@ -476,6 +574,7 @@ class _PowerPageState extends State<PowerPage> {
     SystemUtil.lockScreenDirection();
     _subscription.cancel();
     CommStatusManager().isDeviceDeail = false;
+    CommStatusManager().currentSpeed = 0;
     pause();
     super.dispose();
   }
