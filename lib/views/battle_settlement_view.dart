@@ -44,7 +44,7 @@ class _BattleSettlementViewState extends State<BattleSettlementView> {
          Constants.regularWhiteTextWidget("Hit Rate", 10, Colors.white),
          SizedBox(height: 31 * Constants.screenHeight(context) / 375,),
 
-         widget.userModel.isWinner ?
+         widget.userModel.isWinner || widget.userModel.isDraw ?
          Image.asset(
            'assets/images/winner.png',
            width: 26/2,
@@ -61,7 +61,7 @@ class _BattleSettlementViewState extends State<BattleSettlementView> {
                fontWeight: FontWeight.bold,
                fontSize: 24,
                fontFamily: 'tengxun',
-               color:  widget.userModel.isWinner ? Color.fromRGBO(21, 233, 120, 1.0): Colors.white),
+               color:  widget.userModel.isWinner || widget.userModel.isDraw ? Color.fromRGBO(21, 233, 120, 1.0): Colors.white),
          ),
 
          SizedBox(height: 4,),
