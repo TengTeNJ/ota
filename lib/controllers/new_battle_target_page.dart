@@ -73,6 +73,7 @@ class _NewBattleTargetPageState extends State<NewBattleTargetPage> {
     super.initState();
     print("进入到battle 界面");
 
+
     playLocalAudio('yangBG2.MP3',isAlwaysplay: true);
     calculateTime(1);
     CommStatusManager().isDeviceDeail = true;
@@ -137,7 +138,10 @@ class _NewBattleTargetPageState extends State<NewBattleTargetPage> {
                 topSpeed: _leftMaxSpeed, avgSpeed: leftAverage.toInt(),isWinner: _leftScore > _rightScore ?true:false);
             var rightUserModel = BattleUserModel(score: _rightScore, shotInCount: _rightShotInCount,
                 topSpeed: _rightMaxSpeed, avgSpeed: rightAverage.toInt(),isWinner: _leftScore > _rightScore ?false:true);
-
+            if (leftUserModel.score == rightUserModel.score) {
+              leftUserModel.isDraw = true;
+              rightUserModel.isDraw = true;
+            }
             Navigator.push(
               context,
               MaterialPageRoute(builder: (context) =>NewBattleTargetEndPage( leftUserModel: leftUserModel,
@@ -157,32 +161,41 @@ class _NewBattleTargetPageState extends State<NewBattleTargetPage> {
         }
         print("哈哈击中了");
           if (_currentIndex % 2 != 0) {  /// 左侧
-            if(CommStatusManager().targetIndex[0] == 15) {// 左侧  圆形 15
+            if(CommStatusManager().targetIndex[0] == 15 && lights[0] == false) {// 左侧  圆形 15
               lights.fillRange(0, 1, true);
               calculateLeftScore();
+              _leftShotInCount +=1 ;
               print("左侧  圆形");
-            } else if(CommStatusManager().targetIndex[0] == 0) { // 左侧  三角0
+            } else if(CommStatusManager().targetIndex[0] == 0 && lights[1] == false) { // 左侧  三角0
               lights.fillRange(1, 2, true);
               calculateLeftScore();
+              _leftShotInCount +=1 ;
               print("左侧  三角");
-            } else if(CommStatusManager().targetIndex[0] == 14) {// 左侧  六边形 14
+            } else if(CommStatusManager().targetIndex[0] == 14 && lights[2] == false) {// 左侧  六边形 14
               lights.fillRange(2, 3, true);
               calculateLeftScore();
+              _leftShotInCount +=1 ;
               print("左侧  六边形");
             }
-            _leftShotInCount +=1 ;
 
           } else { // 右侧
-            _rightShotInCount +=1 ;
-            if(CommStatusManager().targetIndex[0] == 9) { // 右侧六边形  9
+            if(CommStatusManager().targetIndex[0] == 9 && lights[6] == false) { // 右侧六边形  9
               lights.fillRange(6, 7, true);
+              /// 并且当前六边形是亮的
               calculateRightScore();
-            } else if(CommStatusManager().targetIndex[0] == 10){ //右侧 三角  10
-              lights.fillRange(7, 8, true);
-              calculateRightScore();
-            } else if(CommStatusManager().targetIndex[0] == 8) {  //右侧 矩形右边  8
+              _rightShotInCount +=1 ;
+
+            } else if(CommStatusManager().targetIndex[0] == 10 && lights[7] == false){ //右侧 三角  10
+               lights.fillRange(7, 8, true);
+                calculateRightScore();
+                _rightShotInCount +=1 ;
+
+
+            } else if(CommStatusManager().targetIndex[0] == 8 && lights[8] == false) {  //右侧 矩形右边  8
               lights.fillRange(8, 9, true);
               calculateRightScore();
+              _rightShotInCount +=1 ;
+
             }
           }
 
