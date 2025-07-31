@@ -30,16 +30,16 @@ class _StadiumModeChooseViewState extends State<StadiumModeChooseView> {
               child: FullScreenImage1()),
 
           Positioned(
-              top: 35,
-              left: 194/ 2 - 65,
+              top: 35 * 2,
+              left:  widget.title == "P3 Mode" ? 194/ 2 + 4: 194/ 2 - 25,
               child: Column(
                 crossAxisAlignment: CrossAxisAlignment.center,
                 mainAxisAlignment: MainAxisAlignment.center,
                 children: [
                   Image.asset(
                     '${widget.imagePath}',
-                    width: 65,
-                    height: 65,
+                    width: 65 * 1.5,
+                    height: 65 * 1.5,
                   ),
                   SizedBox(height: 13*2,),
                   Constants.boldWhiteTextWidget("${widget.title}", 20),
@@ -47,7 +47,6 @@ class _StadiumModeChooseViewState extends State<StadiumModeChooseView> {
                   Constants.regularWhiteTextWidget("${widget.subTitle}", 13,
                       Color.fromRGBO(233, 100, 21, 1.0),
                   ),
-
                 ],
 
               )

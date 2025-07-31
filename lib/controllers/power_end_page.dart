@@ -3,6 +3,8 @@ import 'package:ota/controllers/power_data_view.dart';
 
 import '../constants.dart';
 import '../model/Battle_user_model.dart';
+import '../utils/comm_statu_manager.dart';
+import '../utils/ota_data.dart';
 
 /// 单人 力量训练结算界面
 class PowerEndPage extends StatefulWidget {
@@ -76,10 +78,12 @@ class _PowerEndPageState extends State<PowerEndPage> {
                   child: GestureDetector(onTap: (){
                     Navigator.pop(context);
                     Navigator.pop(context);
+                    /// 机器人位置校准回到原点
+                    CommStatusManager().writerData(positionCheckData());
                   },
               child: Row(
                   mainAxisAlignment: MainAxisAlignment.center,
-                 children: [
+                  children: [
                    Image.asset(
                   'assets/images/stop.png',
                    width: 26/2,
