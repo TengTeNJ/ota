@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:ota/constants.dart';
+import 'package:ota/controllers/ntrp/ntrp_test_controller.dart';
 import 'package:ota/controllers/power_page.dart';
 import 'package:ota/controllers/stadium_mode_choose_view.dart';
 
@@ -76,7 +77,6 @@ class _StadiumTwoMainPageState extends State<StadiumTwoMainPage> {
                    subTitle: "Precision Control Drills",
                    imagePath: "assets/images/solo_mode.png",
                  ),
-
                ),
              ),
            ),
@@ -100,9 +100,7 @@ class _StadiumTwoMainPageState extends State<StadiumTwoMainPage> {
                      subTitle: "Precision Control Drills",
                      imagePath: "assets/images/battle_mode.png",
                    ),
-
                  ),
-
                )
            ),
 
@@ -115,7 +113,9 @@ class _StadiumTwoMainPageState extends State<StadiumTwoMainPage> {
                  print('3');
                  Navigator.push(
                    context,
-                   MaterialPageRoute(builder: (context) =>PowerPage(type: "p3",)), // 力量训练页面
+                   // MaterialPageRoute(builder: (context) =>PowerPage(type: "p3",)), // 力量训练页面
+                   MaterialPageRoute(builder: (context) =>NtrpTestController()), // NTRP测试
+
                  );
                },
                  child:Container(
