@@ -91,6 +91,8 @@ class LanguageModel extends ChangeNotifier {
       '请求系统状态': 'Request system status',
       '网球发球机器人':'Roboti10',
       '更多功能':'More Features',
+      '场地类型':'Site Type',
+
       '设置':'Setting',
       '调节':'Adjust'
 // 添加所有需要翻译的文本

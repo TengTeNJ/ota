@@ -81,6 +81,9 @@ class CommStatusManager {
   Stream<DiscoveredDevice>? _scanStream;
   double maxSpeed = 2;
 
+  double siteType = 2; /// 场地类型（1号场 2号场 3 号场）
+
+
   int totalDataLength = 0;
   int hasSendDataLength = 0;
 

@@ -90,6 +90,8 @@ const kSpeedValue= 'speed_value';
 
 const kTargetIndex = 'target_index';
 
+const kModeDistance = 150;
+
 class Constants{
   //  屏幕宽度
   static double screenWidth(BuildContext context) {
@@ -107,7 +109,9 @@ class Constants{
   static Text boldWhiteTextWidget(String text, double fontSize,
       {int? maxLines,
         TextAlign textAlign = TextAlign.center,
-        double height = 1.0}) {
+        double height = 1.0,
+        Color fontColor = Colors.white,
+      }) {
     return Text(
       textAlign: textAlign,
       maxLines: maxLines,
@@ -116,7 +120,7 @@ class Constants{
         height: height,
         fontFamily: 'SanFranciscoDisplay',
         fontWeight: FontWeight.bold,
-        color: Colors.white,
+        color: fontColor,
         fontSize: fontSize,
       ),
     );

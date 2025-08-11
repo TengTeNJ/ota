@@ -151,9 +151,6 @@ class _NewBattleTargetPageState extends State<NewBattleTargetPage> {
           });
           return;
         }
-
-
-
       } else if(event.data == kTargetIndex) { /// 击中标靶的索引
         print('battle 界面击中标靶的索引为${CommStatusManager().targetIndex}');
         if (calculateTime(1) < 1000) {
@@ -184,18 +181,14 @@ class _NewBattleTargetPageState extends State<NewBattleTargetPage> {
               /// 并且当前六边形是亮的
               calculateRightScore();
               _rightShotInCount +=1 ;
-
             } else if(CommStatusManager().targetIndex[0] == 10 && lights[7] == false){ //右侧 三角  10
                lights.fillRange(7, 8, true);
                 calculateRightScore();
                 _rightShotInCount +=1 ;
-
-
             } else if(CommStatusManager().targetIndex[0] == 8 && lights[8] == false) {  //右侧 矩形右边  8
               lights.fillRange(8, 9, true);
               calculateRightScore();
               _rightShotInCount +=1 ;
-
             }
           }
 
@@ -285,38 +278,38 @@ class _NewBattleTargetPageState extends State<NewBattleTargetPage> {
   /// P2 发球模式
   void modeTwoGame( ) {
     /// 步伐控制指令发球  12  18  20
-    if (_currentIndex <=12) {
+    if (_currentIndex <=11) {
       TennisMachineParams params =
       TennisMachineParams.fromState(0, 0, (_currentIndex % 2 == 0) ? -13 : 13, 14, 14, 40, 110, 175, 1);
       CommStatusManager().writerData(stepControlData(params));
     }
-    /// 往前移动一米
-    if(_currentIndex == 13 ) {
+    /// 往前移动两米
+    if(_currentIndex == 12 ) {
       TennisMachineParams params =
       TennisMachineParams.fromState(200, 0, 0, 13, 13, 40, 110, 175, 0);
       CommStatusManager().writerData(stepControlData(params));
     }
 
-    if(_currentIndex > 13 && _currentIndex <31) {
+    if(_currentIndex > 12 && _currentIndex <31) {
       TennisMachineParams params =
       TennisMachineParams.fromState(0, 0, (_currentIndex % 2 == 0) ? -13 : 13, 14, 14, 40, 110, 175, 1);
       CommStatusManager().writerData(stepControlData(params));
     }
 
-    /// 往前移动一米
+    /// 往前移动两米
     if(_currentIndex == 31 ) {
       TennisMachineParams params =
       TennisMachineParams.fromState(200, 0, 0, 12, 12, 40, 110, 175, 0);
       CommStatusManager().writerData(stepControlData(params));
     }
 
-    if(_currentIndex > 31  &&_currentIndex < 51) {
+    if(_currentIndex > 31  &&_currentIndex < 50) {
       TennisMachineParams params =
       TennisMachineParams.fromState(0, 0, (_currentIndex % 2 == 0) ? -13 : 13, 13, 13, 40, 100, 175, 1);
       CommStatusManager().writerData(stepControlData(params));
     }
 
-    if (_currentIndex == 51) {
+    if (_currentIndex == 50) {
       TennisMachineParams params =
       TennisMachineParams.fromState(0, 0,0, 0, 0, 40, 100, 175, 0);
       CommStatusManager().writerData(stepControlData(params));

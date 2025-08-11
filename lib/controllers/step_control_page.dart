@@ -87,6 +87,28 @@ class TennisMachineParams {
     );
   }
 
+  // 通用步伐参数
+  factory TennisMachineParams.fromNewState(
+      double xPosition, double yPosition, double zRotation,
+      int ballCount,
+      double topWheelSpeed, double bottomWheelSpeed, double turntableSpeed,
+      double ballAngle, double ballInterval
+      ) {
+    return TennisMachineParams(
+      xPosition: xPosition.round(),
+      yPosition: yPosition.round(),
+      zRotation: zRotation.round(),
+      ballCount: ballCount,
+      topWheelSpeed: topWheelSpeed.round(),
+      bottomWheelSpeed: bottomWheelSpeed.round(),
+      turntableSpeed: turntableSpeed.round(),
+      ballAngle: ballAngle.round(),
+      ballInterval: ballInterval,
+    );
+  }
+
+
+
   // 用于调试的toString方法
   @override
   String toString() {

@@ -83,6 +83,7 @@ class _NewBattleTargetEndPageState extends State<NewBattleTargetEndPage> {
                   child: GestureDetector(onTap: (){
                     Navigator.pop(context);
                     Navigator.pop(context);
+                    print("退出结算界面");
                     /// 机器人位置校准回到原点
                     CommStatusManager().writerData(positionCheckData());
                     },

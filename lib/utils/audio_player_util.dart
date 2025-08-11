@@ -1,8 +1,68 @@
 import 'package:audioplayers/audioplayers.dart';
 import 'package:flutter_tts/flutter_tts.dart';
 
+import '../constants.dart';
+import '../controllers/step_control_page.dart';
+import 'comm_statu_manager.dart';
+import 'ota_data.dart';
+
 final FlutterTts flutterTts = FlutterTts();
 final player = AudioPlayer();
+
+
+///布云朝克特步伐
+final taskMap = {
+  1: () => controlRobotMove(0, (150), -12, 1, 15, 15, 40, 120, 125),
+  2: () =>
+      controlRobotMove(0, -robotDistanceAdaptation(150), 0, 1, 15, 15, 40, 120, 125),
+  3: () => controlRobotMove(
+      0, -robotDistanceAdaptation(150), 12, 3, 15, 15, 40, 120, 125),
+  4: () =>
+      controlRobotMove(0, robotDistanceAdaptation(150), -8, 1, 15, 15, 40, 120, 125),
+  5: () => controlRobotMove(0, 0, 12, 1, 15, 15, 40, 120, 125),
+  6: () => controlRobotMove(0, 0, 8, 2, 15, 15, 40, 120, 125),
+  7: () =>
+      controlRobotMove(0, robotDistanceAdaptation(150), -8, 3, 15, 15, 40, 120, 125),
+  8: () => controlRobotMove(
+      200, -robotDistanceAdaptation(150), 8, 1, 15, 15, 40, 120, 125),
+  9: () => controlRobotMove(0, 0, -8, 1, 15, 15, 40, 120, 125),
+  10: () => controlRobotMove(
+      -200, -robotDistanceAdaptation(150), 8, 1, 15, 15, 40, 120, 125),
+  11: () =>
+      controlRobotMove(0, robotDistanceAdaptation(150), 8, 1, 15, 15, 40, 120, 125),
+  12: () => controlRobotMove(
+      0, -robotDistanceAdaptation(150), 10, 1, 13, 13, 40, 110, 125),
+  13: () => controlRobotMove(0, 0, 8, 2, 15, 15, 40, 120, 125),
+  14: () =>
+      controlRobotMove(0, robotDistanceAdaptation(150), -8, 1, 14, 14, 40, 120, 125),
+  15: () =>
+      controlRobotMove(0, robotDistanceAdaptation(150), -8, 1, 14, 14, 40, 120, 125),
+  16: () => controlRobotMove(0, 0, 12, 1, 15, 15, 40, 120, 125),
+  17: () => controlRobotMove(200, 0, 0, 1, 13, 13, 40, 115, 125),
+  18: () => controlRobotMove(200, 0, 0, 1, 12, 12, 40, 100, 125),
+  19: () => controlRobotMove(0, 0, 10, 1, 12, 12, 40, 100, 125),
+  20: () => controlRobotMove(0, 0, -10, 1, 12, 12, 40, 100, 125),
+  21: () => controlRobotMove(
+      0, -robotDistanceAdaptation(150), 32, 1, 12, 12, 40, 100, 125),
+  22: () => controlRobotMove(-400, 0, -12, 1, 15, 15, 40, 120, 125),
+  23: () => controlRobotMove(0, 0, 12, 1, 15, 15, 40, 120, 125),
+  24: () => controlRobotMove(0, 0, 0, 0, 0, 0, 40, 110, 325),
+};
+/// jarmikSinnerRoma 步伐
+final jarmikSinnerRomaTask = {
+  1: () => controlRobotMove(0,    100,  -7,  1, 15, 15, 40, 130, 125),
+  2: () =>
+      controlRobotMove(0,   -300,  12,  1, 15, 15, 40, 130, 125),
+  3: () => controlRobotMove(0,    400, -12,  3, 15, 15, 40, 130, 125),
+  4: () => controlRobotMove(0,    200, -15,  1, 15, 15, 40, 130, 125),
+  5: () =>
+      controlRobotMove(0,   -300,   15,  1, 15, 15, 40, 130, 125),
+  6: () =>
+      controlRobotMove(0,   300,   -15,  1, 14, 14, 40, 130, 125),
+  7: () => controlRobotMove(0,      0, 0,  1, 14, 14, 40, 130, 125),
+  8: () => controlRobotMove(0,   -200,  -13,  1, 12, 12, 40, 113, 125),
+  9: () => controlRobotMove(0,   0  , 0,  0, 0, 0, 40, 110, 125),
+};
 
 void playLocalAudio(String sourceName,{double volume = 1.0,isAlwaysplay = false}) async {
   // if (isAlwaysplay) {
@@ -38,4 +98,26 @@ Future<void> _speakNumber(int number) async {
   await flutterTts.setPitch(1.0); // 设置语调
   await flutterTts.setSpeechRate(0.5); // 设置语速
   await flutterTts.speak(number.toString()); // 播放数字
+}
+
+/// 控制机器人发球移动等
+void controlRobotMove( double xPosition, double yPosition, double zRotation,
+    int ballCount,
+    double topWheelSpeed, double bottomWheelSpeed, double turntableSpeed,
+    double ballAngle, double ballInterval) {
+  TennisMachineParams params =
+  TennisMachineParams.fromNewState(xPosition, yPosition, zRotation, ballCount, topWheelSpeed,
+      bottomWheelSpeed, turntableSpeed, ballAngle, ballInterval);
+  CommStatusManager().writerData(stepControlData(params));
+}
+
+/// 移动距离适配
+double robotDistanceAdaptation(int distance) {
+  var type =  CommStatusManager().siteType.toInt();
+  if (type == 1) {
+    print("场地类型${type}");
+
+    return (distance + kModeDistance).toDouble();
+  }
+  return distance.toDouble();
 }
