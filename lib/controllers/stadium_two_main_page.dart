@@ -122,9 +122,9 @@ class _StadiumTwoMainPageState extends State<StadiumTwoMainPage> {
                    width:  Constants.screenHeight(context) / 2 * 160 /200,
                    height: Constants.screenHeight(context) / 2,
                    color: Colors.transparent,
-                   child:StadiumModeChooseView(title: "P3 Mode",
-                     subTitle: "Footwork Drills",
-                     imagePath: "assets/images/p3_mode.png",
+                   child:StadiumModeChooseView(title: "NTRP Test",
+                     subTitle: "Level Test",
+                     imagePath: "assets/images/ntrp_test.png",
                    ),
 
                  ),
