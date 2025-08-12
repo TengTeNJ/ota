@@ -30,23 +30,35 @@ class _NtrpResultDataViewState extends State<NtrpResultDataView> {
             crossAxisAlignment: CrossAxisAlignment.center,
             children: [
               SizedBox(width: 30,),
-              new CircularPercentIndicator(
-                radius: 60.0,
-                lineWidth: 4.0,
-                percent: widget.rightUserModel.isWinner == true ? 1.0 : 0.0,
-                center:
-                Text(
-                  widget.rightUserModel.isWinner == true ? '2.5' : "<2.5",
-                  style: TextStyle(
-                      fontWeight: FontWeight.bold,
-                      fontSize: 32,
-                      fontFamily: 'tengxun',
-                      color: widget.rightUserModel.isWinner == true ? Color.fromRGBO(21, 233, 120, 1.0) :
-                      Color.fromRGBO(177, 177, 177, 1.0)),
-                ),
-                backgroundColor: Color.fromRGBO(112, 112, 112, 1.0),
-                progressColor: Color.fromRGBO(21, 233, 120, 1.0),
+              Column(
+                mainAxisAlignment: MainAxisAlignment.center,
+                children: [
+                  new CircularPercentIndicator(
+                    radius: 60.0,
+                    lineWidth: 4.0,
+                    percent: widget.rightUserModel.isWinner == true ? 1.0 : 0.0,
+                    center:
+                    Text(
+                      widget.rightUserModel.isWinner == true ? '2.5' : "<2.5",
+                      style: TextStyle(
+                          fontWeight: FontWeight.bold,
+                          fontSize: 32,
+                          fontFamily: 'tengxun',
+                          color: widget.rightUserModel.isWinner == true ? Color.fromRGBO(21, 233, 120, 1.0) :
+                          Color.fromRGBO(177, 177, 177, 1.0)),
+                    ),
+                    backgroundColor: Color.fromRGBO(112, 112, 112, 1.0),
+                    progressColor: Color.fromRGBO(21, 233, 120, 1.0),
+                  ),
+                  SizedBox(height:20,),
+
+                  Constants.regularWhiteTextWidget("NTRP", 10, widget.rightUserModel.isWinner == true ? Color.fromRGBO(21, 233, 120, 1.0) :
+                  Color.fromRGBO(177, 177, 177, 1.0)),
+
+                ],
               ),
+
+
               SizedBox(width:46  *kWidhtScale,),
 
               Column(
@@ -58,6 +70,9 @@ class _NtrpResultDataViewState extends State<NtrpResultDataView> {
                     Constants.mediumWhiteTextWidget("Backhand", 10, Color.fromRGBO(93, 148, 212, 1.0)),
                     SizedBox(height:16 *kHeigthScale,),
                     Constants.mediumWhiteTextWidget("Volley", 10, Color.fromRGBO(93, 148, 212, 1.0)),
+
+                    SizedBox(height:16 *kHeigthScale,),
+                    Constants.mediumWhiteTextWidget("Power Control", 10, Color.fromRGBO(93, 148, 212, 1.0)),
                   ]
               ),
               SizedBox(width:46  *kWidhtScale ,),
@@ -67,13 +82,17 @@ class _NtrpResultDataViewState extends State<NtrpResultDataView> {
                     Constants.tengxunBoldWhiteTextWidget("${widget.rightUserModel.longRally}", 10,
                         isHighlight: true) ,
                     SizedBox(height:16 *kHeigthScale,),
-                    Constants.tengxunBoldWhiteTextWidget("${widget.rightUserModel.forehand} /10", 10,
+                    Constants.tengxunBoldWhiteTextWidget("${widget.rightUserModel.forehand/10*100}%", 10,
                         isHighlight: true)  ,
                     SizedBox(height:16 *kHeigthScale,),
-                    Constants.tengxunBoldWhiteTextWidget("${widget.rightUserModel.backhand} /10", 10,
+                    Constants.tengxunBoldWhiteTextWidget("${widget.rightUserModel.backhand/10.toDouble()*100}%", 10,
                         isHighlight: true),
                     SizedBox(height:16 *kHeigthScale,),
-                    Constants.tengxunBoldWhiteTextWidget("${widget.rightUserModel.volley} /10", 10,
+                    Constants.tengxunBoldWhiteTextWidget("${widget.rightUserModel.volley/10.toDouble()*100}%", 10,
+                        isHighlight: true),
+
+                    SizedBox(height:16 *kHeigthScale,),
+                    Constants.tengxunBoldWhiteTextWidget("${widget.rightUserModel.powerControllerCount}%", 10,
                         isHighlight: true),
                   ]
               ),
