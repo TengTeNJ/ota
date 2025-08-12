@@ -1,4 +1,5 @@
 import 'dart:async';
+import 'dart:math';
 
 import 'package:event_bus/event_bus.dart';
 import 'package:flutter/material.dart';
@@ -61,6 +62,9 @@ class _NtrpTestControllerState extends State<NtrpTestController> {
 
   List<int> middleTargetIndexs = [11,12,13];// 中间三个标靶的索引
 
+
+
+
   final FlutterTts flutterTts = FlutterTts();
 
   Future<void> _speakNumber(int number) async {
@@ -72,41 +76,45 @@ class _NtrpTestControllerState extends State<NtrpTestController> {
   ///布云朝克特步伐
   final NtrpTaskMap = {
     /// 正手
-    1: () => controlRobotMove(200, 0, 13, 1, 13, 13, 40, 120, 175),
-    2: () => controlRobotMove(0, 0, 13, 1, 13, 13, 40, 120, 175),
-    3: () => controlRobotMove(0, 0, 13, 1, 13, 13, 40, 120, 175),
-    4: () => controlRobotMove(0, 0, 13, 1, 13, 13, 40, 120, 175),
-    5: () => controlRobotMove(0, 0, 13, 1, 13, 13, 40, 120, 175),
-    6: () => controlRobotMove(0, 0, 13, 1, 13, 13, 40, 120, 175),
-    7: () => controlRobotMove(0, 0, 13, 1, 13, 13, 40, 120, 175),
-    8: () => controlRobotMove(0, 0, 13, 1, 13, 13, 40, 120, 175),
-    9: () => controlRobotMove(0, 0, 13, 1, 13, 13, 40, 120, 175),
-    10: () => controlRobotMove(0, 0, 13, 1, 13, 13, 40, 120, 175),
+    1: () => controlRobotMove(200, 0, 13, 1, 14, 13, 40, 100, 175),
+    2: () => controlRobotMove(0, 0, 13, 1, 14, 13, 40, 100, 175),
+    3: () => controlRobotMove(0, 0, 13, 1, 14, 13, 40, 100, 175),
+    4: () => controlRobotMove(0, 0, 13, 1, 14, 13, 40, 100, 175),
+    5: () => controlRobotMove(0, 0, 13, 1, 14, 13, 40, 100, 175),
+    6: () => controlRobotMove(0, 0, 13, 1, 14, 13, 40, 100, 175),
+    7: () => controlRobotMove(0, 0, 13, 1, 14, 13, 40, 100, 175),
+    8: () => controlRobotMove(0, 0, 13, 1, 14, 13, 40, 100, 175),
+    9: () => controlRobotMove(0, 0, 13, 1, 14, 13, 40, 100, 175),
+    10: () => controlRobotMove(0, 0, 13, 1, 14, 13, 40, 100, 175),
     /// 反手
-    11: () => controlRobotMove(0, 0, -13, 1, 13, 13, 40, 120, 175),
-    12: () => controlRobotMove(0, 0, -13, 1, 13, 13, 40, 120, 175),
-    13: () => controlRobotMove(0, 0, -13, 1, 13, 13, 40, 120, 175),
-    14: () => controlRobotMove(0, 0, -13, 1, 13, 13, 40, 120, 175),
-    15: () => controlRobotMove(0, 0, -13, 1, 13, 13, 40, 120, 175),
-    16: () => controlRobotMove(0, 0, -13, 1, 13, 13, 40, 120, 175),
-    17: () => controlRobotMove(0, 0, -13, 1, 13, 13, 40, 120, 175),
-    18: () => controlRobotMove(0, 0, -13, 1, 13, 13, 40, 120, 175),
-    19: () => controlRobotMove(0, 0, -13, 1, 13, 13, 40, 120, 175),
-    20: () => controlRobotMove(0, 0, -13, 1, 13, 13, 40, 120, 175),
+    11: () => controlRobotMove(0, 0, -13, 1, 14, 13, 40, 100, 175),
+    12: () => controlRobotMove(0, 0, -13, 1, 14, 13, 40, 100, 175),
+    13: () => controlRobotMove(0, 0, -13, 1, 14, 13, 40, 100, 175),
+    14: () => controlRobotMove(0, 0, -13, 1, 14, 13, 40, 100, 175),
+    15: () => controlRobotMove(0, 0, -13, 1, 14, 13, 40, 100, 175),
+    16: () => controlRobotMove(0, 0, -13, 1, 14, 13, 40, 100, 175),
+    17: () => controlRobotMove(0, 0, -13, 1, 14, 13, 40, 100, 175),
+    18: () => controlRobotMove(0, 0, -13, 1, 14, 13, 40, 100, 175),
+    19: () => controlRobotMove(0, 0, -13, 1, 14, 13, 40, 100, 175),
+    20: () => controlRobotMove(0, 0, -13, 1, 14, 13, 40, 100, 175),
     /// 截击球
-    21: () => controlRobotMove(0, 0, 0, 1, 14, 12, 40, 90, 175),
-    22: () => controlRobotMove(0, 0, 0, 1, 14, 12, 40, 90, 175),
-    23: () => controlRobotMove(0, 0, 0, 1, 14, 12, 40, 90, 175),
-    24: () => controlRobotMove(0, 0, 0, 1, 14, 12, 40, 90, 175),
-    25: () => controlRobotMove(0, 0, 0, 1, 14, 12, 40, 90, 175),
-    26: () => controlRobotMove(0, 0, 0, 1, 14, 12, 40, 90, 175),
-    27: () => controlRobotMove(0, 0, 0, 1, 14, 12, 40, 90, 175),
-    28: () => controlRobotMove(0, 0, 0, 1, 14, 12, 40, 90, 175),
-    29: () => controlRobotMove(0, 0, 0, 1, 14, 12, 40, 90, 175),
-    30: () => controlRobotMove(0, 0, 0, 1, 14, 12, 40, 90, 175),
+    21: () => controlRobotMove(0, 0,  randomRobotAngle[Random().nextInt(5)], 1, randomRobotHeight[Random().nextInt(3)], 12, 40, 90, 175),
+    22: () => controlRobotMove(0, 0,  randomRobotAngle[Random().nextInt(5)], 1, randomRobotHeight[Random().nextInt(3)], 12, 40, 90, 175),
+    23: () => controlRobotMove(-100, 0,  randomRobotAngle[Random().nextInt(5)], 1, randomRobotHeight[Random().nextInt(3)], 12, 40, 90, 175),
+    24: () => controlRobotMove(0, 0,  randomRobotAngle[Random().nextInt(5)], 1, randomRobotHeight[Random().nextInt(3)], 12, 40, 90, 175),
+    25: () => controlRobotMove(0, 0,  randomRobotAngle[Random().nextInt(5)], 1, randomRobotHeight[Random().nextInt(3)], 12, 40, 90, 175),
+    26: () => controlRobotMove(100, 0,  randomRobotAngle[Random().nextInt(5)], 1, randomRobotHeight[Random().nextInt(3)], 12, 40, 90, 175),
+    27: () => controlRobotMove(0, 0,  randomRobotAngle[Random().nextInt(5)], 1, randomRobotHeight[Random().nextInt(3)], 12, 40, 90, 175),
+    28: () => controlRobotMove(0, 0,  randomRobotAngle[Random().nextInt(5)], 1, randomRobotHeight[Random().nextInt(3)], 12, 40, 90, 175),
+    29: () => controlRobotMove(-100, 0,  randomRobotAngle[Random().nextInt(5)], 1, randomRobotHeight[Random().nextInt(3)], 12, 40, 90, 175),
+    30: () => controlRobotMove(100, 0,  randomRobotAngle[Random().nextInt(5)], 1, randomRobotHeight[Random().nextInt(3)], 12, 40, 90, 175),
     // 向前走60 不发球
     // 31: () => controlRobotMove(60, 0, 0, 0, 16, 12, 40, 90, 175),
   };
+
+  int random() {
+    return 1;
+  }
 
   /*开始*/
   void startGame() {
@@ -123,6 +131,7 @@ class _NtrpTestControllerState extends State<NtrpTestController> {
   void initState() {
     // TODO: implement initState
     super.initState();
+    playLocalAudio('blueMonday1.MP3', isAlwaysplay: true);
     startGame();
     CommStatusManager().isDeviceDeail = true;
     EventBus eventBus = EventBusManager().eventBus;
@@ -141,13 +150,13 @@ class _NtrpTestControllerState extends State<NtrpTestController> {
           _speakNumber(CommStatusManager().currentSpeed);
         }
 
-        continuousNumberOfShots ++;
+        // continuousNumberOfShots ++;
 
         if(speedIndexs <=11 ){ // 正手测试
-          forehandNumberOfShots ++;
+          // forehandNumberOfShots ++;
           forehandSpeeds.add(CommStatusManager().currentSpeed);
         } else if(speedIndexs >=12 && speedIndexs <= 21) {  // 反手测试
-          backhandNumberOfShots ++;
+          // backhandNumberOfShots ++;
           backhandSpeeds.add(CommStatusManager().currentSpeed);
         } else if (speedIndexs >=22) { // 截击测试
           // volleyNumberOfShots ++;
@@ -156,14 +165,14 @@ class _NtrpTestControllerState extends State<NtrpTestController> {
         /// 正手反手的力量控制逻辑
         if (speedIndexs >=9 && speedIndexs <= 11) {
           var rate =  (CommStatusManager().currentSpeed / maxSpeed).toDouble();
-          if(rate >= 55.0 && rate <= 65.0) {
+          if(rate >= 0.55 && rate <= 0.65) {
             powerControlCount ++;
           }
         }
 
         if (speedIndexs >=19 && speedIndexs <= 21) {
           var rate =  (CommStatusManager().currentSpeed / backhandMaxSpeed).toDouble();
-          if(rate >= 55.0 && rate <= 65.0) {
+          if(rate >= 0.55 && rate <= 0.65) {
             powerControlCount ++;
           }
         }
@@ -220,9 +229,16 @@ class _NtrpTestControllerState extends State<NtrpTestController> {
           return;
           /// 1s内不处理
         }
-        if (middleTargetIndexs.contains(CommStatusManager().targetIndex[0]) && speedIndexs >=22) {
-          /// 击中了中间的标靶
-          volleyNumberOfShots ++;
+        if (middleTargetIndexs.contains(CommStatusManager().targetIndex[0]) ) {
+          continuousNumberOfShots ++;
+          if (speedIndexs <=11) {
+            forehandNumberOfShots ++;// 正手的有效击中
+          } else if(speedIndexs > 12 && speedIndexs <= 21) {
+            backhandNumberOfShots ++;
+          } else if(speedIndexs >=22) {
+            /// 击中了中间的标靶
+            volleyNumberOfShots ++;
+          }
         }
 
       }
@@ -231,9 +247,12 @@ class _NtrpTestControllerState extends State<NtrpTestController> {
       }
     });
 
+
     // Future.delayed(Duration(milliseconds: 2000), () {
+    //   var powerControlRate = (1 / 6.toDouble() *100).toStringAsFixed(0);
+    //
     //   var model = NtrpDataModel(longRally: 5, forehand: 5, backhand: 8, volley: 9,
-    //       powerControllerCount: 2,
+    //       powerControllerCount: powerControlRate,
     //       isWinner: true);
     //   Navigator.push(
     //     context,
@@ -287,11 +306,12 @@ class _NtrpTestControllerState extends State<NtrpTestController> {
    var isSuccess = forehandRate >= 50 &&  foreaveragSpeed >= 60
                   && backRate >= 40 && backaveragSpeed >= 50
                   && volleyRate >= 30;
+   var powerControlRate = (powerControlCount / 6 *100).toStringAsFixed(0);
 
    var model = NtrpDataModel(longRally: continuousNumberOfShots, forehand: forehandNumberOfShots,
        backhand: backhandNumberOfShots,
        volley: volleyNumberOfShots,
-       powerControllerCount: powerControlCount,
+       powerControllerCount: powerControlRate,
        isWinner: isSuccess);
    Navigator.push(
      context,

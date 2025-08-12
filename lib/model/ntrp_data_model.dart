@@ -3,7 +3,7 @@ class NtrpDataModel {
   int forehand = 0; // Forehand
   int backhand = 0; // Backhand
   int volley = 0; // Volley
-  int powerControllerCount = 0; //
+  String powerControllerCount = "0"; //
   bool isWinner = false; //
 
 

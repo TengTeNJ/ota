@@ -83,6 +83,7 @@ class CommStatusManager {
 
   double siteType = 2; /// 场地类型（1号场 2号场 3 号场）
 
+  double stepType = 1; /// 步伐类型（p1 2 3 4）
 
   int totalDataLength = 0;
   int hasSendDataLength = 0;

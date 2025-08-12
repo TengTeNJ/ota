@@ -64,6 +64,12 @@ final jarmikSinnerRomaTask = {
   9: () => controlRobotMove(0,   0  , 0,  0, 0, 0, 40, 110, 125),
 };
 
+List<double> randomRobotAngle = [12.0,14.0,16.0,-12.0,-14.0,-16.0];
+
+List<double> randomRobotHeight = [14.0,16.0,18.0,20.0];
+
+
+
 void playLocalAudio(String sourceName,{double volume = 1.0,isAlwaysplay = false}) async {
   // if (isAlwaysplay) {
        player.setReleaseMode(ReleaseMode.release);

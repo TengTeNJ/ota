@@ -161,6 +161,34 @@ class _AboutPageState extends State<AboutPage> {
               ],
             ),
 
+            SizedBox(height: 20),
+
+            Row(
+              mainAxisAlignment: MainAxisAlignment.spaceBetween,
+              children: [
+                Text('${languageModel.getText(Constants.keyToString('步伐类型', context))}: ${CommStatusManager().stepType.toInt()}',style: TextStyle(fontSize: 18, fontWeight: FontWeight.bold),),
+                SizedBox(height: 20),
+                NumberPicker(
+                  decoration: BoxDecoration(
+                    border: Border(
+                      top: BorderSide(color: Colors.grey),
+                      bottom: BorderSide(color: Colors.grey),
+                    ),
+                  ),
+                  value: CommStatusManager().stepType.toInt(),
+                  minValue: 1,
+                  maxValue: 3,
+                  step: 1,
+                  onChanged: (value) {
+                    setState(() {
+                      CommStatusManager().stepType = value.toDouble();
+                      _currentValue = value;
+                    });
+                  },
+                ),
+              ],
+            ),
+
 
             GestureDetector(
               behavior: HitTestBehavior.opaque,

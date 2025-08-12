@@ -1,4 +1,5 @@
 import 'dart:async';
+// import 'dart:nativewrappers/_internal/vm/lib/ffi_allocation_patch.dart';
 import 'package:event_bus/event_bus.dart';
 import 'package:flutter/material.dart';
 import 'package:ota/controllers/power_end_page.dart';
@@ -153,7 +154,7 @@ class _PowerPageState extends State<PowerPage> {
 
         if (widget.type == "p1") {
           print("p1路径");
-          modeOneGame();
+          newModeThreeGame();
         } else if (widget.type == "p3") {
           // modeThreeGame();
           newModeThreeGame();
@@ -394,7 +395,18 @@ class _PowerPageState extends State<PowerPage> {
 
   ///.布云朝克特 等相关步伐
   void newModeThreeGame() {
-    jarmikSinnerRomaTask[indexList.length]?.call();
+    var type =  CommStatusManager().stepType.toInt();
+    if (type == 2) {
+      jarmikSinnerRomaTask[indexList.length]?.call();
+      print("步伐2");
+    } else if(type == 3) {
+      taskMap[indexList.length]?.call();
+      print("步伐3");
+    } else if(type == 1) {
+      modeOneGame();
+      print("步伐p1");
+
+    }
   }
 
   void enterEndPage() {
