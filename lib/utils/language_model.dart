@@ -3,7 +3,7 @@ import 'package:flutter/material.dart';
 
 class LanguageModel extends ChangeNotifier {
   // 默认中文
-  Locale _currentLocale = const Locale('en');
+  Locale _currentLocale = const Locale('zh');
 
   // 支持的语言列表
   final Map<String, Map<String, String>> _localizedValues = {
