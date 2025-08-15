@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:ota/controllers/ntrp/ntrp_final_result_view.dart';
 import 'package:ota/controllers/ntrp/ntrp_result_data_view.dart';
 import 'package:ota/model/ntrp_data_model.dart';
 
@@ -8,11 +9,13 @@ import '../../utils/comm_statu_manager.dart';
 import '../../utils/ota_data.dart';
 import '../power_data_view.dart';
 
+
 class NtrpResultController extends StatefulWidget {
   NtrpDataModel rightUserModel;
-
+  resultType type;
   NtrpResultController({
     required this.rightUserModel,
+    this.type = resultType.technicalProficiencyResult,
   });
 
   @override
@@ -25,7 +28,6 @@ class NtrpResultControllerState extends State<NtrpResultController> {
     // TODO: implement initState
     super.initState();
   }
-
 
   @override
   Widget build(BuildContext context) {
@@ -40,7 +42,9 @@ class NtrpResultControllerState extends State<NtrpResultController> {
               width: 312 * kWidhtScale + 100,
               height: 202 * kHeigthScale - 50,
               color: Color.fromRGBO(21, 56, 96, 1.0),
-              child: NtrpResultDataView(rightUserModel: widget.rightUserModel),
+              child:  widget.type == resultType.finalResult ?
+              NtrpFinalResultView() :
+              NtrpResultDataView(rightUserModel: widget.rightUserModel,type: widget.type,),
             ),
             SizedBox(
               height: 20,
@@ -51,7 +55,6 @@ class NtrpResultControllerState extends State<NtrpResultController> {
                 mainAxisAlignment: MainAxisAlignment.center,
                 children: [
                   GestureDetector(onTap: (){
-                    Navigator.pop(context);
                     Navigator.pop(context);
                     /// 机器人位置校准回到原点
                     CommStatusManager().writerData(positionCheckData());
@@ -81,34 +84,6 @@ class NtrpResultControllerState extends State<NtrpResultController> {
                   SizedBox(
                     width: 1024 - 40 - 40 - 127 - 127,
                   ),
-                  Container(
-                      margin: EdgeInsets.only(right: 40, bottom: 40),
-                      width: 127,
-                      height: 55,
-                      color: Color.fromRGBO(100, 100, 100, 0.7),
-                      child: GestureDetector(
-                        onTap: () {
-                          Navigator.pop(context);
-                          Navigator.pop(context);
-
-                          /// 机器人位置校准回到原点
-                          CommStatusManager().writerData(positionCheckData());
-                        },
-                        child: Row(
-                          mainAxisAlignment: MainAxisAlignment.center,
-                          children: [
-                            Image.asset(
-                              'assets/images/stop.png',
-                              width: 26 / 2,
-                              height: 22 / 2,
-                            ),
-                            SizedBox(
-                              width: 11,
-                            ),
-                            Constants.boldWhiteTextWidget("Replay", 20),
-                          ],
-                        ),
-                      ))
                 ],
               ),
             )

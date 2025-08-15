@@ -1,10 +1,12 @@
 import 'package:flutter/material.dart';
 import 'package:ota/constants.dart';
+import 'package:ota/controllers/ntrp/ntrp_guide_page_controller.dart';
 import 'package:ota/controllers/ntrp/ntrp_test_controller.dart';
 import 'package:ota/controllers/power_page.dart';
 import 'package:ota/controllers/stadium_mode_choose_view.dart';
 
 import 'new_battle_target_page.dart';
+import 'ntrp/ntrp_integrate_test_controller.dart';
 
 
 class StadiumTwoMainPage extends StatefulWidget {
@@ -113,11 +115,11 @@ class _StadiumTwoMainPageState extends State<StadiumTwoMainPage> {
                  print('3');
                  Navigator.push(
                    context,
-                   // MaterialPageRoute(builder: (context) =>PowerPage(type: "p3",)), // 力量训练页面
-                   MaterialPageRoute(builder: (context) =>NtrpTestController()), // NTRP测试
+                   MaterialPageRoute(builder: (context) =>NtrpGuidePageController()), // NTRP引导界面
+                   // MaterialPageRoute(builder: (context) =>NtrpIntegrateTestController()), // 综合测试界面
 
                  );
-               },
+                 },
                  child:Container(
                    width:  Constants.screenHeight(context) / 2 * 160 /200,
                    height: Constants.screenHeight(context) / 2,

@@ -15,10 +15,17 @@ class _MiddlePowerViewState extends State<MiddlePowerView> {
   @override
   Widget build(BuildContext context) {
     return Container(
-      width: kJuxingSize * kScale + kSanjiaoWidth * kScale + kYuanSize * kScale - 43,
+      width: kJuxingSize * kScale + kSanjiaoWidth * kScale + kYuanSize * kScale,
       height: max(kJuxingSize * kScale, kYuanSize * kScale) +
           20 +
           kSanjiaoHeight * kScale,
+
+      // width:
+      // (kSanjiaoWidth * kScale + kLiuWidth * kScale + kJuxingSize * kScale)
+      //     .toDouble(),
+      // height: max(kSanjiaoHeight * kScale, kJuxingSize * kScale) +
+      //     20 +
+      //     kSanjiaoHeight * kScale,
       child: Column(
         crossAxisAlignment: CrossAxisAlignment.center,
         children: [
@@ -46,7 +53,7 @@ class _MiddlePowerViewState extends State<MiddlePowerView> {
                       height: kJuxingSize * kScale,
                     ),
               SizedBox(
-                width: 80 - 43,
+                width: 99 ,
               ),
               widget.hideIndex[2]
                   ? Container(

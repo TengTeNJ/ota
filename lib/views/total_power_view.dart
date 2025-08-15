@@ -51,33 +51,32 @@ class _TotalPowerViewState extends State<TotalPowerView> {
     }
     return Container(
       // margin: EdgeInsets.only(left: 32,right: 32),
-      height: max(max(_leftHeight, _rightHeight), _middleHeight),
+      height: max(max(_leftHeight, _rightHeight), _middleHeight) + 100,
       child: Row(
         mainAxisAlignment: MainAxisAlignment.spaceBetween,
         children: [
           Container(
             // color: Colors.red,
-            margin: EdgeInsets.only(left: 100),
+            margin: EdgeInsets.only(left: 100 - 23,top: 100),
             child:LeftPowerView(
               hideIndex: _leftDatas,
             ),
           ),
 
           Container(
-            // color: Colors.red,
+            margin: EdgeInsets.only(top: 100),
+
             child:MiddlePowerView(
               hideIndex: _middleDatas,
             ),
           ),
 
           Container(
-            margin: EdgeInsets.only(right: 100),
-            // color: Colors.red,
-            child:  RightPowerView(
+            margin: EdgeInsets.only(right: 100 -23,top: 100),
+            child: RightPowerView(
               hideIndex: _rightDatas,
             ),
           ),
-
         ],
       ),
     );

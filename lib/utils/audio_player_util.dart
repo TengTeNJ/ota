@@ -1,3 +1,6 @@
+import 'dart:math';
+import 'dart:ui';
+
 import 'package:audioplayers/audioplayers.dart';
 import 'package:flutter_tts/flutter_tts.dart';
 
@@ -9,6 +12,22 @@ import 'ota_data.dart';
 final FlutterTts flutterTts = FlutterTts();
 final player = AudioPlayer();
 
+// 预置工具
+final rnd = Random();
+
+// 一行生成 1-30 的 Map
+// final NtrpTaskMap = Map<int, VoidCallback>.fromIterable(
+//   List.generate(30, (i) => i + 1),
+//   key:   (i) => i,
+//   value: (i) => () => switch (i) {
+//     1  => controlRobotMove(200, 0,  13, 1, 14, 13, 40, 100, 175), // 正手特殊
+//     >= 2 && <= 10 => controlRobotMove(0, 0,  13, 1, 14, 13, 40, 100, 175), // 正手
+//     >= 11 && <= 20 => controlRobotMove(0, 0, -13, 1, 14, 13, 40, 100, 175), // 反手
+//     23 || 29 => controlRobotMove(-100, 0, randomRobotAngle[rnd.nextInt(5)], 1,  randomRobotHeight[rnd.nextInt(3)], 12, 40, 90, 175), // 左截击
+//     26 || 30 => controlRobotMove( 100, 0, randomRobotAngle[rnd.nextInt(5)], 1,  randomRobotHeight[rnd.nextInt(3)], 12, 40, 90, 175), // 右截击
+//     _ => controlRobotMove(0, 0, randomRobotAngle[rnd.nextInt(5)], 1, randomRobotHeight[rnd.nextInt(3)], 12, 40, 90, 175),           // 其余中间截击
+//   },
+// );
 
 ///布云朝克特步伐
 final taskMap = {
@@ -66,7 +85,7 @@ final jarmikSinnerRomaTask = {
 
 List<double> randomRobotAngle = [12.0,14.0,16.0,-12.0,-14.0,-16.0];
 
-List<double> randomRobotHeight = [14.0,16.0,18.0,20.0];
+List<double> randomRobotHeight = [14.0,16.0,17.0,18.0];
 
 
 
@@ -99,7 +118,7 @@ void pause() {
 }
 
 /// TTS 文字转语音
-Future<void> _speakNumber(int number) async {
+Future<void> _commonSpeakNumber(int number) async {
   await flutterTts.setLanguage("en-US"); // 设置语言
   await flutterTts.setPitch(1.0); // 设置语调
   await flutterTts.setSpeechRate(0.5); // 设置语速

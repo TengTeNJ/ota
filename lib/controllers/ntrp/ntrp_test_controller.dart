@@ -5,8 +5,10 @@ import 'package:event_bus/event_bus.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_reactive_ble/flutter_reactive_ble.dart';
 import 'package:flutter_tts/flutter_tts.dart';
+import 'package:ota/controllers/ntrp/ntrp_integrate_test_controller.dart';
 import 'package:ota/controllers/ntrp/ntrp_result_controller.dart';
 import 'package:ota/model/ntrp_data_model.dart';
+import 'package:ota/views/total_power_view.dart';
 
 import '../../constants.dart';
 import '../../utils/audio_player_util.dart';
@@ -28,7 +30,17 @@ class NtrpTestController extends StatefulWidget {
 }
 
 class _NtrpTestControllerState extends State<NtrpTestController> {
-  List<bool> lights = [false, false, false, true, true, true, false, false];
+  List<bool> lights = [
+    true,
+    true,
+    true,
+    false,
+    false,
+    false,
+    true,
+    true,
+    true
+  ];
   int maxSpeed = 0; // 正手的最大速度
   int backhandMaxSpeed = 0; // 反手的最大速度
   int speedIndexs = 0;
@@ -47,7 +59,7 @@ class _NtrpTestControllerState extends State<NtrpTestController> {
   ///
   late StreamSubscription<DataUpdatedEvent> _subscription;
 
-  String rightTypeTitle = "Forehand Test";
+  String rightTypeTitle = "Prepare for Forehand Test";
 
   int continuousNumberOfShots = 0; // 连续拍数
   int forehandNumberOfShots = 0; // 正手的有效拍数
@@ -57,13 +69,7 @@ class _NtrpTestControllerState extends State<NtrpTestController> {
   List<int> backhandSpeeds = []; // 反手的速度值的集合
   List<int> volleySpeeds = []; // 截击的速度值的集合
 
-
-  int powerControlCount = 0; // 力量控制成功的count
-
-  List<int> middleTargetIndexs = [11,12,13];// 中间三个标靶的索引
-
-
-
+  List<int> middleTargetIndexs = [11, 12, 13, 1]; // 中间三个标靶的索引(1为中间的新增的标靶)
 
   final FlutterTts flutterTts = FlutterTts();
 
@@ -73,48 +79,102 @@ class _NtrpTestControllerState extends State<NtrpTestController> {
     await flutterTts.setSpeechRate(0.5); // 设置语速
     await flutterTts.speak(number.toString()); // 播放数字
   }
+
   ///布云朝克特步伐
   final NtrpTaskMap = {
     /// 正手
-    1: () => controlRobotMove(200, 0, 13, 1, 14, 13, 40, 100, 175),
-    2: () => controlRobotMove(0, 0, 13, 1, 14, 13, 40, 100, 175),
-    3: () => controlRobotMove(0, 0, 13, 1, 14, 13, 40, 100, 175),
-    4: () => controlRobotMove(0, 0, 13, 1, 14, 13, 40, 100, 175),
-    5: () => controlRobotMove(0, 0, 13, 1, 14, 13, 40, 100, 175),
-    6: () => controlRobotMove(0, 0, 13, 1, 14, 13, 40, 100, 175),
-    7: () => controlRobotMove(0, 0, 13, 1, 14, 13, 40, 100, 175),
-    8: () => controlRobotMove(0, 0, 13, 1, 14, 13, 40, 100, 175),
-    9: () => controlRobotMove(0, 0, 13, 1, 14, 13, 40, 100, 175),
-    10: () => controlRobotMove(0, 0, 13, 1, 14, 13, 40, 100, 175),
+    1: () => controlRobotMove(300, 0, 13, 1, 12, 13, 40, 100, 175),
+    2: () => controlRobotMove(0, 0, 13, 1, 12, 13, 40, 100, 175),
+    3: () => controlRobotMove(0, 0, 13, 1, 12, 13, 40, 100, 175),
+    4: () => controlRobotMove(0, 0, 13, 1, 12, 13, 40, 100, 175),
+    5: () => controlRobotMove(0, 0, 13, 1, 12, 13, 40, 100, 175),
+    6: () => controlRobotMove(0, 0, 13, 1, 12, 13, 40, 100, 175),
+    7: () => controlRobotMove(0, 0, 13, 1, 12, 13, 40, 100, 175),
+    8: () => controlRobotMove(0, 0, 13, 1, 12, 13, 40, 100, 175),
+    9: () => controlRobotMove(0, 0, 13, 1, 12, 13, 40, 100, 175),
+    10: () => controlRobotMove(0, 0, 13, 1, 12, 13, 40, 100, 175),
+
+    11: () => controlRobotMove(0, 0, 13, 1, 12, 13, 40, 100, 175),
+    12: () => controlRobotMove(0, 0, 13, 1, 12, 13, 40, 100, 175),
+    13: () => controlRobotMove(0, 0, 13, 1, 12, 13, 40, 100, 175),
+    14: () => controlRobotMove(0, 0, 13, 1, 12, 13, 40, 100, 175),
+    15: () => controlRobotMove(0, 0, 13, 1, 12, 13, 40, 100, 175),
+    16: () => controlRobotMove(0, 0, 13, 1, 12, 13, 40, 100, 175),
+    17: () => controlRobotMove(0, 0, 13, 1, 12, 13, 40, 100, 175),
+    18: () => controlRobotMove(0, 0, 13, 1, 12, 13, 40, 100, 175),
+    19: () => controlRobotMove(0, 0, 13, 1, 12, 13, 40, 100, 175),
+    20: () => controlRobotMove(0, 0, 13, 1, 12, 13, 40, 100, 175),
+
+
+
     /// 反手
-    11: () => controlRobotMove(0, 0, -13, 1, 14, 13, 40, 100, 175),
-    12: () => controlRobotMove(0, 0, -13, 1, 14, 13, 40, 100, 175),
-    13: () => controlRobotMove(0, 0, -13, 1, 14, 13, 40, 100, 175),
-    14: () => controlRobotMove(0, 0, -13, 1, 14, 13, 40, 100, 175),
-    15: () => controlRobotMove(0, 0, -13, 1, 14, 13, 40, 100, 175),
-    16: () => controlRobotMove(0, 0, -13, 1, 14, 13, 40, 100, 175),
-    17: () => controlRobotMove(0, 0, -13, 1, 14, 13, 40, 100, 175),
-    18: () => controlRobotMove(0, 0, -13, 1, 14, 13, 40, 100, 175),
-    19: () => controlRobotMove(0, 0, -13, 1, 14, 13, 40, 100, 175),
-    20: () => controlRobotMove(0, 0, -13, 1, 14, 13, 40, 100, 175),
+    21: () => controlRobotMove(0, 0, -13, 1, 12, 13, 40, 100, 175),
+    22: () => controlRobotMove(0, 0, -13, 1, 12, 13, 40, 100, 175),
+    23: () => controlRobotMove(0, 0, -13, 1, 12, 13, 40, 100, 175),
+    24: () => controlRobotMove(0, 0, -13, 1, 12, 13, 40, 100, 175),
+    25: () => controlRobotMove(0, 0, -13, 1, 12, 13, 40, 100, 175),
+    26: () => controlRobotMove(0, 0, -13, 1, 12, 13, 40, 100, 175),
+    27: () => controlRobotMove(0, 0, -13, 1, 12, 13, 40, 100, 175),
+    28: () => controlRobotMove(0, 0, -13, 1, 12, 13, 40, 100, 175),
+    29: () => controlRobotMove(0, 0, -13, 1, 12, 13, 40, 100, 175),
+    30: () => controlRobotMove(0, 0, -13, 1, 12, 13, 40, 100, 175),
+
+    31: () => controlRobotMove(0, 0, -13, 1, 12, 13, 40, 100, 175),
+    32: () => controlRobotMove(0, 0, -13, 1, 12, 13, 40, 100, 175),
+    33: () => controlRobotMove(0, 0, -13, 1, 12, 13, 40, 100, 175),
+    34: () => controlRobotMove(0, 0, -13, 1, 12, 13, 40, 100, 175),
+    35: () => controlRobotMove(0, 0, -13, 1, 12, 13, 40, 100, 175),
+    36: () => controlRobotMove(0, 0, -13, 1, 12, 13, 40, 100, 175),
+    37: () => controlRobotMove(0, 0, -13, 1, 12, 13, 40, 100, 175),
+    38: () => controlRobotMove(0, 0, -13, 1, 12, 13, 40, 100, 175),
+    39: () => controlRobotMove(0, 0, -13, 1, 12, 13, 40, 100, 175),
+    40: () => controlRobotMove(0, 0, -13, 1, 12, 13, 40, 100, 175),
+
     /// 截击球
-    21: () => controlRobotMove(0, 0,  randomRobotAngle[Random().nextInt(5)], 1, randomRobotHeight[Random().nextInt(3)], 12, 40, 90, 175),
-    22: () => controlRobotMove(0, 0,  randomRobotAngle[Random().nextInt(5)], 1, randomRobotHeight[Random().nextInt(3)], 12, 40, 90, 175),
-    23: () => controlRobotMove(-100, 0,  randomRobotAngle[Random().nextInt(5)], 1, randomRobotHeight[Random().nextInt(3)], 12, 40, 90, 175),
-    24: () => controlRobotMove(0, 0,  randomRobotAngle[Random().nextInt(5)], 1, randomRobotHeight[Random().nextInt(3)], 12, 40, 90, 175),
-    25: () => controlRobotMove(0, 0,  randomRobotAngle[Random().nextInt(5)], 1, randomRobotHeight[Random().nextInt(3)], 12, 40, 90, 175),
-    26: () => controlRobotMove(100, 0,  randomRobotAngle[Random().nextInt(5)], 1, randomRobotHeight[Random().nextInt(3)], 12, 40, 90, 175),
-    27: () => controlRobotMove(0, 0,  randomRobotAngle[Random().nextInt(5)], 1, randomRobotHeight[Random().nextInt(3)], 12, 40, 90, 175),
-    28: () => controlRobotMove(0, 0,  randomRobotAngle[Random().nextInt(5)], 1, randomRobotHeight[Random().nextInt(3)], 12, 40, 90, 175),
-    29: () => controlRobotMove(-100, 0,  randomRobotAngle[Random().nextInt(5)], 1, randomRobotHeight[Random().nextInt(3)], 12, 40, 90, 175),
-    30: () => controlRobotMove(100, 0,  randomRobotAngle[Random().nextInt(5)], 1, randomRobotHeight[Random().nextInt(3)], 12, 40, 90, 175),
+    41: () => controlRobotMove(0, 0, randomRobotAngle[Random().nextInt(5)], 1,
+        randomRobotHeight[Random().nextInt(3)], 12, 40, 90, 175),
+    42: () => controlRobotMove(0, 0, randomRobotAngle[Random().nextInt(5)], 1,
+        randomRobotHeight[Random().nextInt(3)], 12, 40, 90, 175),
+    43: () => controlRobotMove(-100, 0, randomRobotAngle[Random().nextInt(5)],
+        1, randomRobotHeight[Random().nextInt(3)], 12, 40, 90, 175),
+    44: () => controlRobotMove(0, 0, randomRobotAngle[Random().nextInt(5)], 1,
+        randomRobotHeight[Random().nextInt(3)], 12, 40, 90, 175),
+    45: () => controlRobotMove(0, 0, randomRobotAngle[Random().nextInt(5)], 1,
+        randomRobotHeight[Random().nextInt(3)], 12, 40, 90, 175),
+    46: () => controlRobotMove(100, 0, randomRobotAngle[Random().nextInt(5)], 1,
+        randomRobotHeight[Random().nextInt(3)], 12, 40, 90, 175),
+    47: () => controlRobotMove(0, 0, randomRobotAngle[Random().nextInt(5)], 1,
+        randomRobotHeight[Random().nextInt(3)], 12, 40, 90, 175),
+    48: () => controlRobotMove(0, 0, randomRobotAngle[Random().nextInt(5)], 1,
+        randomRobotHeight[Random().nextInt(3)], 12, 40, 90, 175),
+    49: () => controlRobotMove(-100, 0, randomRobotAngle[Random().nextInt(5)],
+        1, randomRobotHeight[Random().nextInt(3)], 12, 40, 90, 175),
+    50: () => controlRobotMove(100, 0, randomRobotAngle[Random().nextInt(5)], 1,
+        randomRobotHeight[Random().nextInt(3)], 12, 40, 90, 175),
+
+    51: () => controlRobotMove(0, 0, randomRobotAngle[Random().nextInt(5)], 1,
+        randomRobotHeight[Random().nextInt(3)], 12, 40, 90, 175),
+    52: () => controlRobotMove(0, 0, randomRobotAngle[Random().nextInt(5)], 1,
+        randomRobotHeight[Random().nextInt(3)], 12, 40, 90, 175),
+    53: () => controlRobotMove(-100, 0, randomRobotAngle[Random().nextInt(5)],
+        1, randomRobotHeight[Random().nextInt(3)], 12, 40, 90, 175),
+    54: () => controlRobotMove(0, 0, randomRobotAngle[Random().nextInt(5)], 1,
+        randomRobotHeight[Random().nextInt(3)], 12, 40, 90, 175),
+    55: () => controlRobotMove(0, 0, randomRobotAngle[Random().nextInt(5)], 1,
+        randomRobotHeight[Random().nextInt(3)], 12, 40, 90, 175),
+    56: () => controlRobotMove(100, 0, randomRobotAngle[Random().nextInt(5)], 1,
+        randomRobotHeight[Random().nextInt(3)], 12, 40, 90, 175),
+    57: () => controlRobotMove(0, 0, randomRobotAngle[Random().nextInt(5)], 1,
+        randomRobotHeight[Random().nextInt(3)], 12, 40, 90, 175),
+    58: () => controlRobotMove(0, 0, randomRobotAngle[Random().nextInt(5)], 1,
+        randomRobotHeight[Random().nextInt(3)], 12, 40, 90, 175),
+    59: () => controlRobotMove(-100, 0, randomRobotAngle[Random().nextInt(5)],
+        1, randomRobotHeight[Random().nextInt(3)], 12, 40, 90, 175),
+    60: () => controlRobotMove(100, 0, randomRobotAngle[Random().nextInt(5)], 1,
+        randomRobotHeight[Random().nextInt(3)], 12, 40, 90, 175),
     // 向前走60 不发球
     // 31: () => controlRobotMove(60, 0, 0, 0, 16, 12, 40, 90, 175),
   };
-
-  int random() {
-    return 1;
-  }
 
   /*开始*/
   void startGame() {
@@ -122,8 +182,8 @@ class _NtrpTestControllerState extends State<NtrpTestController> {
     //   print('测速器未连接---');
     //   return;
     // }
-    TennisMachineParams params = TennisMachineParams.fromState(
-        0, 310, 0, 14, 14, 40, 120, 125, 0);
+    TennisMachineParams params =
+        TennisMachineParams.fromState(0, 310, 0, 14, 14, 40, 120, 125, 0);
     CommStatusManager().writerData(stepControlData(params));
   }
 
@@ -131,7 +191,7 @@ class _NtrpTestControllerState extends State<NtrpTestController> {
   void initState() {
     // TODO: implement initState
     super.initState();
-    playLocalAudio('blueMonday1.MP3', isAlwaysplay: true);
+    // playLocalAudio('blueMonday1.MP3', isAlwaysplay: true);
     startGame();
     CommStatusManager().isDeviceDeail = true;
     EventBus eventBus = EventBusManager().eventBus;
@@ -152,69 +212,49 @@ class _NtrpTestControllerState extends State<NtrpTestController> {
 
         // continuousNumberOfShots ++;
 
-        if(speedIndexs <=11 ){ // 正手测试
+        if (speedIndexs <= 11 +10) {
+          // 正手测试
           // forehandNumberOfShots ++;
           forehandSpeeds.add(CommStatusManager().currentSpeed);
-        } else if(speedIndexs >=12 && speedIndexs <= 21) {  // 反手测试
+        } else if (speedIndexs >= 12 + 10 && speedIndexs <= 21 + 20) {
+          // 反手测试
           // backhandNumberOfShots ++;
           backhandSpeeds.add(CommStatusManager().currentSpeed);
-        } else if (speedIndexs >=22) { // 截击测试
+        } else if (speedIndexs >= 22 + 10) {
+          // 截击测试
           // volleyNumberOfShots ++;
           volleySpeeds.add(CommStatusManager().currentSpeed);
         }
-        /// 正手反手的力量控制逻辑
-        if (speedIndexs >=9 && speedIndexs <= 11) {
-          var rate =  (CommStatusManager().currentSpeed / maxSpeed).toDouble();
-          if(rate >= 0.55 && rate <= 0.65) {
-            powerControlCount ++;
-          }
-        }
 
-        if (speedIndexs >=19 && speedIndexs <= 21) {
-          var rate =  (CommStatusManager().currentSpeed / backhandMaxSpeed).toDouble();
-          if(rate >= 0.55 && rate <= 0.65) {
-            powerControlCount ++;
-          }
-        }
         print('kSpeedValue--speedIndexs=${speedIndexs}');
       } else if (event.data == kStepControlFinishResponse) {
         indexList.add(0);
         speedIndexs++;
         NtrpTestGame();
-        if (speedIndexs <= 11) {
-          // 正手控制力量测试
-           if (speedIndexs >= 9) {
-             rightTypeTitle = 'Please Use 60% power';
-           } else {
-             // 正手最大速度获取
-             maxSpeed = maxSpeed > CommStatusManager().currentSpeed
-                 ? maxSpeed
-                 : CommStatusManager().currentSpeed;
-           }
-        } else if (speedIndexs > 12 && speedIndexs <= 21) {
+        if (speedIndexs <= 11 + 10) {
+          // 正手最大速度获取
+          maxSpeed = maxSpeed > CommStatusManager().currentSpeed
+              ? maxSpeed
+              : CommStatusManager().currentSpeed;
+        } else if (speedIndexs > 12  + 10 && speedIndexs <= 21 + 20) {
           if (speedIndexs == 11) {
             gameIndex++;
             // 进入到反手训练
           }
           // 反手控制力量测试
-          if (speedIndexs >= 19) {
-            rightTypeTitle = 'Please Use 60% power';
-          } else {
-            // 反手最大速度测试
-            backhandMaxSpeed = backhandMaxSpeed > CommStatusManager().currentSpeed
-                ? backhandMaxSpeed
-                : CommStatusManager().currentSpeed;
-            rightTypeTitle = 'Backhand Test';
-          }
-
+          // 反手最大速度测试
+          backhandMaxSpeed = backhandMaxSpeed > CommStatusManager().currentSpeed
+              ? backhandMaxSpeed
+              : CommStatusManager().currentSpeed;
+          rightTypeTitle = 'Backhand Test';
         } else {
-          if (speedIndexs == 22) {
+          if (speedIndexs == 22 + 20) {
             rightTypeTitle = 'Volley Test';
             gameIndex++;
             // 进入到截击训练
           }
         }
-        if (speedIndexs == 31) {
+        if (speedIndexs == 31 + 30) {
           /// 测评结束
           print("${forehandSpeeds}");
           print("${backhandSpeeds}");
@@ -227,41 +267,44 @@ class _NtrpTestControllerState extends State<NtrpTestController> {
         /// 击中标靶的索引
         if (_updateTime(1) < 1000) {
           return;
+
           /// 1s内不处理
         }
-        if (middleTargetIndexs.contains(CommStatusManager().targetIndex[0]) ) {
-          continuousNumberOfShots ++;
-          if (speedIndexs <=11) {
-            forehandNumberOfShots ++;// 正手的有效击中
-          } else if(speedIndexs > 12 && speedIndexs <= 21) {
-            backhandNumberOfShots ++;
-          } else if(speedIndexs >=22) {
+        if (middleTargetIndexs.contains(CommStatusManager().targetIndex[0])) {
+          continuousNumberOfShots++;
+          if (speedIndexs <= 11 + 10) {
+            forehandNumberOfShots++; // 正手的有效击中
+          } else if (speedIndexs > 12 + 10 && speedIndexs <= 21 + 20) {
+            backhandNumberOfShots++;// 反手手的有效击中
+          } else if (speedIndexs >= 22 + 20) {
             /// 击中了中间的标靶
-            volleyNumberOfShots ++;
+            volleyNumberOfShots++;
           }
         }
-
       }
       if (mounted) {
         setState(() {});
       }
     });
 
-
     // Future.delayed(Duration(milliseconds: 2000), () {
     //   var powerControlRate = (1 / 6.toDouble() *100).toStringAsFixed(0);
     //
-    //   var model = NtrpDataModel(longRally: 5, forehand: 5, backhand: 8, volley: 9,
-    //       powerControllerCount: powerControlRate,
-    //       isWinner: true);
+    //   var model = NtrpDataModel(forehand: 2,
+    //       forehandAvgSpeed: 100,
+    //       backhand: 5,
+    //       backhandAvgSpeed: 90,
+    //       volley: 6);
     //   Navigator.push(
     //     context,
-    //     MaterialPageRoute(builder: (context) =>NtrpResultController(rightUserModel: model,
+    //     MaterialPageRoute(builder: (context) =>NtrpResultController(
+    //       rightUserModel: model,type: resultType.technicalProficiencyResult,
     //     )), // 结算页面
     //   );
     //   setState(() {});
     // });
   }
+
   int _updateTime(double timeStamp) {
     // 如果这是第一次调用，记录当前时间
     if (_lastShotInTime == null) {
@@ -281,45 +324,37 @@ class _NtrpTestControllerState extends State<NtrpTestController> {
     return timeDifference;
   }
 
+  void gotoEndPage() {
+    /// 判断绩点 是否达到2.5的标准
 
- void gotoEndPage() {
-   /// 判断绩点 是否达到2.5的标准
-   //  正手击球成功率 > 50%  平均球速 >60km/h
-   var forehandRate = (forehandNumberOfShots / 10).toDouble() * 100;
+    double rightSum = forehandSpeeds.fold(
+        0.0, (previousValue, element) => previousValue + element);
+    int rightcount = forehandSpeeds.length;
+    double foreaveragSpeed = rightSum / rightcount;
 
-   double rightSum = forehandSpeeds.fold(
-       0.0, (previousValue, element) => previousValue + element);
-   int rightcount = forehandSpeeds.length;
-   double foreaveragSpeed = rightSum / rightcount;
+    double backSum = backhandSpeeds.fold(
+        0.0, (previousValue, element) => previousValue + element);
+    int backcount = backhandSpeeds.length;
+    double backaveragSpeed = backSum / backcount;
 
-   //  反手击球成功率 > 40%  平均球速 >50km/h
-   var  backRate = (backhandNumberOfShots / 10).toDouble() * 100;
+    var model = NtrpDataModel(
+        forehand: forehandNumberOfShots,
+        forehandAvgSpeed: foreaveragSpeed.toInt(),
+        backhand: backhandNumberOfShots,
+        backhandAvgSpeed: backaveragSpeed.toInt(),
+        volley: volleyNumberOfShots);
+    Navigator.push(
+      context,
+      MaterialPageRoute(
+          builder: (context) => NtrpResultController(
+                rightUserModel: model,
+              )), // 结算页面
+    );
+    setState(() {});
 
-   double backSum = backhandSpeeds.fold(
-       0.0, (previousValue, element) => previousValue + element);
-   int backcount = backhandSpeeds.length;
-   double backaveragSpeed = backSum / backcount;
-
-   //  网前击球成功率 > 30%
-   var  volleyRate = (volleyNumberOfShots / 10).toDouble() * 100;
-
-   var isSuccess = forehandRate >= 50 &&  foreaveragSpeed >= 60
-                  && backRate >= 40 && backaveragSpeed >= 50
-                  && volleyRate >= 30;
-   var powerControlRate = (powerControlCount / 6 *100).toStringAsFixed(0);
-
-   var model = NtrpDataModel(longRally: continuousNumberOfShots, forehand: forehandNumberOfShots,
-       backhand: backhandNumberOfShots,
-       volley: volleyNumberOfShots,
-       powerControllerCount: powerControlRate,
-       isWinner: isSuccess);
-   Navigator.push(
-     context,
-     MaterialPageRoute(builder: (context) =>NtrpResultController(rightUserModel: model,
-     )), // 结算页面
-   );
-   setState(() {});
- }
+    /// 机器人回到原点，为下一阶段做准备
+    CommStatusManager().writerData(positionCheckData());
+  }
 
   ///NtrpTest 步伐
   void NtrpTestGame() {
@@ -333,59 +368,12 @@ class _NtrpTestControllerState extends State<NtrpTestController> {
       body: Stack(
         children: [
           Positioned(
-            child: Row(
-              mainAxisAlignment: MainAxisAlignment.center,
-              children: [
-                Column(
-                  children: [
-                    Text(
-                      'NTRP TEST',
-                          style: TextStyle(
-                          fontWeight: FontWeight.bold,
-                          fontFamily: "tengxun",
-                          fontSize: 16,
-                          color: Colors.white),
-                    ),
-                  ],
-                )
-              ],
-            ),
-            left: 16,
-            right: 16,
-            top: 40,
-          ),
-          Positioned(
               left: 32,
               top: 40,
               child: Column(
                 crossAxisAlignment: CrossAxisAlignment.start,
                 children: [
-                  /// Long Rally
-                  Column(
-                    crossAxisAlignment: CrossAxisAlignment.start,
-                    children: [
-                      Text(
-                        'Long Rally',
-                        style: TextStyle(
-                            fontWeight: FontWeight.bold,
-                            fontSize: 14,
-                            fontFamily: "SanFranciscoDisplay",
-                            color: Colors.white),
-                      ),
-                      Text(
-                        '${continuousNumberOfShots}',
-                        style: TextStyle(
-                            fontWeight: FontWeight.bold,
-                            fontSize: 18,
-                            fontFamily: "tengxun",
-                            color: Color.fromRGBO(21, 233, 120, 1.0)),
-                      ),
-                    ],
-                  ),
-                  SizedBox(
-                    height: 26,
-                  ),
-                 /// Forehand
+                  /// Forehand
                   Column(
                     crossAxisAlignment: CrossAxisAlignment.start,
                     children: [
@@ -398,31 +386,30 @@ class _NtrpTestControllerState extends State<NtrpTestController> {
                             color: Colors.white),
                       ),
                       Text(
-                        "${forehandNumberOfShots}/10",
+                        "${forehandNumberOfShots}/20",
                         style: TextStyle(
                             fontWeight: FontWeight.bold,
                             fontSize: 18,
                             fontFamily: "tengxun",
                             color: Color.fromRGBO(21, 233, 120, 1.0)),
                       ),
-
                       Text(
-                        forehandSpeeds.length > 0 ?
-                        "${forehandSpeeds.last}km/h":
-                        "0km/h",
+                        forehandSpeeds.length > 0
+                            ? "${forehandSpeeds.last}km/h"
+                            : "0km/h",
                         style: TextStyle(
                             fontWeight: FontWeight.bold,
                             fontSize: 18,
                             fontFamily: "tengxun",
                             color: Color.fromRGBO(21, 233, 120, 1.0)),
                       ),
-
                     ],
                   ),
                   SizedBox(
                     height: 26,
                   ),
-                 /// Backhand
+
+                  /// Backhand
                   Column(
                     crossAxisAlignment: CrossAxisAlignment.start,
                     children: [
@@ -435,9 +422,9 @@ class _NtrpTestControllerState extends State<NtrpTestController> {
                             color: Colors.white),
                       ),
                       Text(
-                        speedIndexs >= 10 ?
-                        '${backhandNumberOfShots}/10' :
-                        '${0}/10'    ,
+                        speedIndexs >= 20
+                            ? '${backhandNumberOfShots}/20'
+                            : '${0}/20',
                         style: TextStyle(
                             fontWeight: FontWeight.bold,
                             fontSize: 18,
@@ -445,9 +432,9 @@ class _NtrpTestControllerState extends State<NtrpTestController> {
                             color: Color.fromRGBO(21, 233, 120, 1.0)),
                       ),
                       Text(
-                        backhandSpeeds.length > 0 ?
-                        "${backhandSpeeds.last}km/h":
-                        "0km/h",
+                        backhandSpeeds.length > 0
+                            ? "${backhandSpeeds.last}km/h"
+                            : "0km/h",
                         style: TextStyle(
                             fontWeight: FontWeight.bold,
                             fontSize: 18,
@@ -459,6 +446,7 @@ class _NtrpTestControllerState extends State<NtrpTestController> {
                   SizedBox(
                     height: 26,
                   ),
+
                   /// Volley
                   Column(
                     crossAxisAlignment: CrossAxisAlignment.start,
@@ -472,7 +460,7 @@ class _NtrpTestControllerState extends State<NtrpTestController> {
                             color: Colors.white),
                       ),
                       Text(
-                        '${volleyNumberOfShots}/10',
+                        '${volleyNumberOfShots}/20',
                         style: TextStyle(
                             fontWeight: FontWeight.bold,
                             fontSize: 18,
@@ -486,24 +474,35 @@ class _NtrpTestControllerState extends State<NtrpTestController> {
                   ),
                 ],
               )),
-          /// 右上角测试标题
+
+          /// 中间测试标题
           Positioned(
-                right: 32,
-                top: 40,
-                child: Row(
+            child: Row(
+              mainAxisAlignment: MainAxisAlignment.center,
+              children: [
+                Column(
                   children: [
                     Text(
                       '${rightTypeTitle}',
                       style: TextStyle(
                           fontWeight: FontWeight.bold,
-                          fontSize: 18,
                           fontFamily: "tengxun",
+                          fontSize: 18,
                           color: Colors.orange),
                     ),
                   ],
-                )),
+                )
+              ],
+            ),
+            left: 16,
+            right: 16,
+            top: 200,
+          ),
+
           Center(
-            child: PowerView(),
+            child: TotalPowerView(
+              hideIndex: lights,
+            ),
           ),
 
           /// stop 暂停按钮
@@ -513,20 +512,35 @@ class _NtrpTestControllerState extends State<NtrpTestController> {
             child: GestureDetector(
                 onTap: () {
                   print("123");
-                  },
+                },
                 child: Padding(
                   padding: EdgeInsets.all(10),
-                  child: Image.asset(
-                    'assets/images/stop.png',
-                    width: 16.44,
-                    height: 14,
+                  child: Row(
+                    mainAxisAlignment: MainAxisAlignment.center,
+                    children: [
+                      Image.asset(
+                        'assets/images/stop.png',
+                        width: 16.44,
+                        height: 14,
+                      ),
+                      SizedBox(
+                        width: 20,
+                      ),
+                      Text(
+                        'NTRP TEST',
+                        style: TextStyle(
+                            fontWeight: FontWeight.bold,
+                            fontFamily: "tengxun",
+                            fontSize: 16,
+                            color: Colors.white),
+                      ),
+                    ],
                   ),
                 )),
           ),
         ],
       ),
     );
-
   }
 
   void dispose() {
@@ -539,4 +553,3 @@ class _NtrpTestControllerState extends State<NtrpTestController> {
     super.dispose();
   }
 }
-

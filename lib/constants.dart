@@ -30,7 +30,9 @@ const kBLE_270_CHARACTERISTIC_WRITER_UUID = "fff2";
 
 
 /// 2 号场设备名字
-const kBLEDeviceName = "Tv511u-403F0109";
+// const kBLEDeviceName = "Tv511u-403F0109";
+const kBLEDeviceName = "Tennis_2";
+
 const kBLENewDeviceName = "Roboti10";
 const kBLEMySpeedzName = "Myspeedz_2";
 
@@ -47,9 +49,10 @@ const kYuanSize =  66;
 const kJuxingSize = 58;
 
 const kLiuWidth = 66;
-const kLiuHeight = 56;
+const kLiuHeight = 58;
 
 const kScale = 1.5;
+
 
 const kHeigthScale = 768.0/375.0;
 
@@ -91,6 +94,14 @@ const kSpeedValue= 'speed_value';
 const kTargetIndex = 'target_index';
 
 const kModeDistance = 150;
+
+/// ntrp 结果类型
+enum resultType{
+  technicalProficiencyResult,
+  multiDimensionalResult,
+  finalResult,
+}
+
 
 class Constants{
   //  屏幕宽度

@@ -23,7 +23,7 @@ class _BleLogShowState extends State<BleLogShow> {
     super.initState();
     EventBus eventBus = EventBusManager().eventBus;
     _subscription = eventBus.on<DataUpdatedEvent>().listen((event) {
-      if (event.data == kBLElog) {
+      if (event.data == kBLElog && mounted) {
         setState(() {});
       }
     });

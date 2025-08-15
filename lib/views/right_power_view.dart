@@ -31,19 +31,16 @@ class _RightPowerViewState extends State<RightPowerView> {
               : Row(
                   mainAxisAlignment: MainAxisAlignment.center,
                   children: [
-
                     GestureDetector(onTap: (){
                        print("点击右侧六边形");
                        CommStatusManager().targetIndex = [9];
-
-                    },
+                       },
                     child: Image.asset(
                       'assets/images/liu.png',
                       width: kLiuWidth * kScale,
                       height: kLiuHeight * kScale,
                     ),
                     ),
-
                     SizedBox(
                       width: 26,
                     )
