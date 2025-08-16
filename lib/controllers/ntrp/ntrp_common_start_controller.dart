@@ -5,6 +5,7 @@ import 'package:ttntrp/ttntrp.dart';
 
 import '../../constants.dart';
 import '../../model/ntrp_data_model.dart';
+import '../../utils/comm_statu_manager.dart';
 import 'ntrp_result_controller.dart';
 import 'ntrp_test_controller.dart';
 
@@ -36,9 +37,8 @@ class _NtrpCommonStartControllerState extends State<NtrpCommonStartController> {
   void initState() {
     // TODO: implement initState
     super.initState();
-    Future.delayed(Duration(milliseconds: 1000), () async {
+    Future.delayed(Duration(milliseconds: 3000), () async {
       switch (widget.pageType) {
-
         case StartPageType.oneStage:
           // TODO: Handle this case.
 
@@ -49,9 +49,12 @@ class _NtrpCommonStartControllerState extends State<NtrpCommonStartController> {
 
           );
           case StartPageType.twoStage:
-            final result = await NtrpAssessmentPlugin.startAssessment(context,indexes: [0,1,2,3,4,5,6,7,8,9]);
+            final result = (await NtrpAssessmentPlugin.startAssessment(context,indexes: [0,1,2,3,4,5,6,7,8,9]));
             if (result != null) {
               print('result=${result}',);
+              CommStatusManager().ntrpCorrectCount += result.correctAnswers ;
+
+              print("1阶段对了${result.correctAnswers}道题");
               Navigator.push(
                 context,
                 MaterialPageRoute(builder: (context) =>
@@ -65,10 +68,13 @@ class _NtrpCommonStartControllerState extends State<NtrpCommonStartController> {
             MaterialPageRoute(builder: (context) =>NtrpIntegrateTestController()),
           );
         case StartPageType.fourStage:
-          final result = await NtrpAssessmentPlugin.startAssessment(context,
-              indexes: [10,11,12,13,14,15,16,17,18,19]);
+          final result = (await NtrpAssessmentPlugin.startAssessment(context,
+              indexes: [10,11,12,13,14,15,16,17,18,19]));
           if (result != null) {
             print('result=${result}',);
+            var correct = result.score;
+            CommStatusManager().ntrpCorrectCount += result.correctAnswers ;
+            print("2阶段对了${result.correctAnswers}道题");
             Navigator.push(
               context,
               MaterialPageRoute(builder: (context) =>
@@ -83,20 +89,38 @@ class _NtrpCommonStartControllerState extends State<NtrpCommonStartController> {
               indexes: [20,21,22,23,24,25,26,27,28,29]);
           if (result != null) {
             print('result=${result}',);
-            var model = NtrpDataModel(forehand: 2,
+            CommStatusManager().ntrpCorrectCount += result.correctAnswers;
+            print("3阶段对了${result.correctAnswers}道题");
+
+            /// 理论题60分(30道题答对18道题)
+            var score = CommStatusManager().ntrpCorrectCount;
+            print("一共答对了多少道题${score}");
+            var isWinner = false;
+            if ( CommStatusManager().ntrpTechnicalProficiencyResult
+                && CommStatusManager().ntrpMultiDimensionalResult
+                && score >=18) {
+              isWinner = true;
+            }
+
+            var model = NtrpDataModel(forehand: 3,
                 forehandAvgSpeed: 100,
                 backhand: 5,
                 backhandAvgSpeed: 90,
-                volley: 6);
+                volley: 6,
+                isWinner:isWinner
+            );
 
+            /// // 最终的结算页面
             Navigator.push(
               context,
               MaterialPageRoute(builder: (context) =>NtrpResultController(
                 rightUserModel: model,type: resultType.finalResult,
-              )), // 结算页面
+              )),
             );
-          }
 
+            /// 得分清0
+            CommStatusManager().ntrpCorrectCount = 0;
+          }
       }
 
 

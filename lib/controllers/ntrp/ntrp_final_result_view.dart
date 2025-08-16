@@ -3,13 +3,17 @@ import 'package:flutter/material.dart';
 import '../../constants.dart';
 
 class NtrpFinalResultView extends StatefulWidget {
-  const NtrpFinalResultView({super.key});
+  bool isWinner = false;
+
+   NtrpFinalResultView({required this.isWinner});
 
   @override
   State<NtrpFinalResultView> createState() => _NtrpFinalResultViewState();
 }
 
 class _NtrpFinalResultViewState extends State<NtrpFinalResultView> {
+
+
   @override
   Widget build(BuildContext context) {
     return Stack(children: [
@@ -38,18 +42,29 @@ class _NtrpFinalResultViewState extends State<NtrpFinalResultView> {
               SizedBox(
                 height: 33 * kHeigthScale,
               ),
+
+              widget.isWinner == true ?
               Constants.tengxunBoldWhiteTextWidget(">2.5", 36,
-                  isHighlight: true),
+                  isHighlight: true) :
+              Constants.NewtengxunBoldWhiteTextWidget("<2.5", 36,
+                  isHighlight: false),
+
               SizedBox(
                 height: 20,
               ),
               Constants.regularWhiteTextWidget(
                   "NEXT", 10, Color.fromRGBO(21, 233, 120, 1.0)),
               SizedBox(
-                height: 100,
+                height: 80,
               ),
-              Constants.mediumWhiteTextWidget(
-                  "Advancing beginner Level", 20, Colors.white),
+
+              widget.isWinner == true ?
+               Constants.mediumWhiteTextWidget(
+                  "Advancing beginner Level", 15, Colors.white):
+               Constants.mediumWhiteTextWidget(
+               "Beginner level", 15, Colors.white),
+
+
             ],
           )),
     ]);

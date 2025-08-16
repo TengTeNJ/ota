@@ -13,7 +13,8 @@ class NtrpDataModel {
   int moveShotsInAvgSpeed = 0; // moveShotsIn
 
 
-
+  /// 是否>2.5；
+  bool isWinner = false;
 
   // NtrpDataModel({
   //   this.forehand = 0,
@@ -32,5 +33,7 @@ class NtrpDataModel {
     this.powerControlAvgSpeed = 0,
     this.moveShotsIn = 0,
     this.moveShotsInAvgSpeed = 0,
+
+    this.isWinner = false,
   });
 }

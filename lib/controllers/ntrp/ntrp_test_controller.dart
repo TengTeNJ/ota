@@ -290,7 +290,7 @@ class _NtrpTestControllerState extends State<NtrpTestController> {
     // Future.delayed(Duration(milliseconds: 2000), () {
     //   var powerControlRate = (1 / 6.toDouble() *100).toStringAsFixed(0);
     //
-    //   var model = NtrpDataModel(forehand: 2,
+    //   var model = NtrpDataModel(forehand: 3,
     //       forehandAvgSpeed: 100,
     //       backhand: 5,
     //       backhandAvgSpeed: 90,
@@ -352,6 +352,20 @@ class _NtrpTestControllerState extends State<NtrpTestController> {
     );
     setState(() {});
 
+    /// 正手 反手击中率 加一起 >=100%
+    /// 第一阶段
+    // 正手反手的击中率 >= 100%
+    // 正手的平均速度>= 50Km/h
+    // 反手手的平均速度>= 40Km/h
+    // 截击球的击中率 >=30%.
+    var shotRate = forehandNumberOfShots + backhandNumberOfShots;
+    if (shotRate >= 20
+        && volleyNumberOfShots >= 6
+        && foreaveragSpeed >= 50
+        && backaveragSpeed >= 40 ) {
+      CommStatusManager().ntrpTechnicalProficiencyResult = true;
+    }
+    print("第一阶段测评结果为${CommStatusManager().ntrpTechnicalProficiencyResult}");
     /// 机器人回到原点，为下一阶段做准备
     CommStatusManager().writerData(positionCheckData());
   }

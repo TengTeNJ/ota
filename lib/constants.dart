@@ -141,7 +141,8 @@ class Constants{
       {int? maxLines,
         TextAlign textAlign = TextAlign.center,
         double height = 1.0,
-        bool isHighlight = false }) {
+        bool isHighlight = false ,
+      }) {
     return Text(
       textAlign: textAlign,
       maxLines: maxLines,
@@ -151,6 +152,26 @@ class Constants{
         fontFamily: 'tengxun',
         fontWeight: FontWeight.bold,
         color: isHighlight == true ? Color.fromRGBO(21, 233, 120, 1.0) :  Colors.white,
+        fontSize: fontSize,
+      ),
+    );
+  }
+
+  static Text NewtengxunBoldWhiteTextWidget(String text, double fontSize,
+      {int? maxLines,
+        TextAlign textAlign = TextAlign.center,
+        double height = 1.0,
+        bool isHighlight = false ,
+      }) {
+    return Text(
+      textAlign: textAlign,
+      maxLines: maxLines,
+      text,
+      style: TextStyle(
+        height: height,
+        fontFamily: 'tengxun',
+        fontWeight: FontWeight.bold,
+        color: Color.fromRGBO(177, 177, 177, 1.0),
         fontSize: fontSize,
       ),
     );

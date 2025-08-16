@@ -33,7 +33,7 @@ class _NtrpGuidePageControllerState extends State<NtrpGuidePageController> {
     playLocalAudio('ntrp_remind.mp3', isAlwaysplay: true);
 
 
-    Future.delayed(Duration(milliseconds: 8500), () {
+    Future.delayed(Duration(milliseconds: 10000), () {
       Navigator.push(
         context,
         MaterialPageRoute(builder: (context) =>NtrpStageDescriptionController()),

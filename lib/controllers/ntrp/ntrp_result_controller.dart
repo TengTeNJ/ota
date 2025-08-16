@@ -43,7 +43,7 @@ class NtrpResultControllerState extends State<NtrpResultController> {
               height: 202 * kHeigthScale - 50,
               color: Color.fromRGBO(21, 56, 96, 1.0),
               child:  widget.type == resultType.finalResult ?
-              NtrpFinalResultView() :
+              NtrpFinalResultView(isWinner: widget.rightUserModel.isWinner,) :
               NtrpResultDataView(rightUserModel: widget.rightUserModel,type: widget.type,),
             ),
             SizedBox(

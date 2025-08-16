@@ -273,7 +273,7 @@ class _NtrpIntegrateTestControllerState
     //   var model = NtrpDataModel(
     //       powerControlCount: 10,
     //       powerControlAvgSpeed: 45,
-    //       moveShotsIn: 3,
+    //       moveShotsIn: 1,
     //       moveShotsInAvgSpeed: 59);
     //   Navigator.push(
     //     context,
@@ -303,6 +303,21 @@ class _NtrpIntegrateTestControllerState
                   type: resultType.multiDimensionalResult,
                 )), // 结算页面
       );
+
+
+      // 第二阶段
+      // powerControl的击中率 >= 50%
+      // 正手的平均速度>= 50Km/h
+      // 反手手的平均速度>= 40Km/h
+      // 移动靶的击中率 >=30%.
+      if (powerControlShots >= 10
+          && moveShots >= 9
+          && powerControlAvgSpeed >= 50
+          && moveAvgSpeed >= 40 ) {
+        CommStatusManager().ntrpMultiDimensionalResult = true;
+      }
+      print("第二阶段测评结果为${CommStatusManager().ntrpMultiDimensionalResult}");
+
       setState(() {});
     });
   }

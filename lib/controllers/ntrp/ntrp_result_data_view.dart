@@ -179,7 +179,7 @@ class _NtrpResultDataViewState extends State<NtrpResultDataView> {
                     Constants.tengxunBoldWhiteTextWidget("${widget.rightUserModel.powerControlAvgSpeed}km/h", 10,
                         isHighlight: true),
                     SizedBox(height:16 *kHeigthScale,),
-                    Constants.tengxunBoldWhiteTextWidget("${widget.rightUserModel.moveShotsIn/30.toDouble()*100}%", 10,
+                    Constants.tengxunBoldWhiteTextWidget("${(widget.rightUserModel.moveShotsIn/30.toDouble()*100).round()}%", 10,
                         isHighlight: true),
                     SizedBox(height:16 *kHeigthScale,),
                     Constants.tengxunBoldWhiteTextWidget("${widget.rightUserModel.moveShotsInAvgSpeed}km/h", 10,
