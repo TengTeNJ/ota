@@ -239,11 +239,11 @@ class CommStatusManager {
                 '${data.map((toElement) => toElement.toRadixString(16)).toList()}');
             EventBusManager().eventBus.fire(DataUpdatedEvent(kBLElog));
             OTAServiceDataParse.parseCameraData(data);
-            // 解析270
           });
           EventBusManager().eventBus.fire(DataUpdatedEvent(kBLEConneted));
           return;
         }
+
         notifyChar = QualifiedCharacteristic(
             serviceId: Uuid.parse(kBLE_SERVICE_NOTIFY_UUID),
             characteristicId: Uuid.parse(kBLE_CHARACTERISTIC_NOTIFY_UUID),
@@ -401,7 +401,7 @@ class CommStatusManager {
   void writerData(List<int> data) {
     // 发送数据
     if (CommStatusManager().currentConnectedDevice != null) {
-      CommStatusManager().ble.writeCharacteristicWithoutResponse(
+     CommStatusManager().ble.writeCharacteristicWithoutResponse(
           CommStatusManager().currentConnectedDevice!.writerCharacteristic!,
           value: data);
     } else {

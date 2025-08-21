@@ -558,9 +558,10 @@ static  handleData(List<int> element){
         bleNotAllData.clear();
       }
       // 暂且只校验前四位
-      if (bleNotAllData.length >= 4) {
+      if (bleNotAllData.length >= 6) {
         if (areListsEqual(
-            bleNotAllData.sublist(0, 4), _begainWriteResponse2.sublist(0, 4))) {
+            bleNotAllData.sublist(0, 4), _begainWriteResponse2.sublist(0, 4)) || areListsEqual(
+            bleNotAllData.sublist(2, 6), _begainWriteResponse2.sublist(0, 4))) {
           // 收到Generic Response
           print('收到开始写的的回复2');
           /**111*/
@@ -586,6 +587,7 @@ static  handleData(List<int> element){
             insertTexts();
           });
         }
+
       }
     } else if (CommStatusManager().progress == CommProgress.sendingData) {
       // 每发一包数据 都会受到一次ACK确认0x5a a1
@@ -599,7 +601,7 @@ static  handleData(List<int> element){
           CommStatusManager().writerData(realBuildWirterCommand(
               CommStatusManager().packetBinDatas[_dataIndex]));
         } else {}
-      } else if (areListsEqual(bleNotAllData, _realWriteResponse)) {
+      } else if (areListsEqual(bleNotAllData, _realWriteResponse) || areListsEqual(bleNotAllData, _ackResponse + _realWriteResponse)) {
         CommStatusManager().timer?.cancel();
         bleNotAllData.clear();
         // 发送ACK 并进入到下一个reset阶段
@@ -611,7 +613,6 @@ static  handleData(List<int> element){
         CommStatusManager().progress = CommProgress.reset;
 
         EventBusManager().eventBus.fire(DataUpdatedEvent(kOTAProgress));
-
 
         Future.delayed(Duration(milliseconds: 100), () {
           CommStatusManager().hasSendDataLength = 0; // 重置
@@ -628,8 +629,6 @@ static  handleData(List<int> element){
       // });
 
       handleTimeOut('Reset-2');
-
-
       bleNotAllData.addAll(data);
       if (areListsEqual(bleNotAllData, _ackResponse)) {
         // ACK
@@ -639,9 +638,9 @@ static  handleData(List<int> element){
         print('收到reset回复1');
         bleNotAllData.clear();
         CommStatusManager().timer?.cancel();
-      } else if (bleNotAllData.length >= 4 &&
-          areListsEqual(
-              bleNotAllData.sublist(0, 4), _resetResponse.sublist(0, 4))) {
+      } else if (bleNotAllData.length >= 6 &&(areListsEqual(
+          bleNotAllData.sublist(0, 4), _resetResponse.sublist(0, 4)) || areListsEqual(
+          bleNotAllData.sublist(2, 6), _resetResponse.sublist(0, 4))) ) {
         // GenericResponse:
         print('收到reset回复2');
         /**111*/
