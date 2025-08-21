@@ -269,7 +269,7 @@ class _NewBattleTargetPageState extends State<NewBattleTargetPage> {
       return;
     }
     TennisMachineParams params =
-    TennisMachineParams.fromState(0, 310, 0, 8, 8, 40, 110, 125, 0);
+    TennisMachineParams.fromState(0, 310, 0, 8, 8, 40, 120, 125, 0);
     CommStatusManager().writerData(stepControlData(params));
     _currentIndex --;
 
@@ -280,38 +280,38 @@ class _NewBattleTargetPageState extends State<NewBattleTargetPage> {
     /// 步伐控制指令发球  12  18  20
     if (_currentIndex <=11) {
       TennisMachineParams params =
-      TennisMachineParams.fromState(0, 0, (_currentIndex % 2 == 0) ? -13 : 13, 9, 9, 40, 110, 175, 1);
+      TennisMachineParams.fromState(0, 0, (_currentIndex % 2 == 0) ? -13 : 13, 8, 8, 40, 120, 175, 1);
       CommStatusManager().writerData(stepControlData(params));
     }
     /// 往前移动两米
     if(_currentIndex == 12 ) {
       TennisMachineParams params =
-      TennisMachineParams.fromState(200, 0, 0, 8, 8, 40, 110, 175, 0);
+      TennisMachineParams.fromState(200, 0, 0, 8, 8, 40, 120, 175, 0);
       CommStatusManager().writerData(stepControlData(params));
     }
 
     if(_currentIndex > 12 && _currentIndex <31) {
       TennisMachineParams params =
-      TennisMachineParams.fromState(0, 0, (_currentIndex % 2 == 0) ? -13 : 13, 9, 9, 40, 110, 175, 1);
+      TennisMachineParams.fromState(0, 0, (_currentIndex % 2 == 0) ? -13 : 13, 9, 8, 40, 110, 175, 1);
       CommStatusManager().writerData(stepControlData(params));
     }
 
     /// 往前移动两米
     if(_currentIndex == 31 ) {
       TennisMachineParams params =
-      TennisMachineParams.fromState(200, 0, 0, 8, 8, 40, 110, 175, 0);
+      TennisMachineParams.fromState(200, 0, 0, 8, 8, 40, 120, 175, 0);
       CommStatusManager().writerData(stepControlData(params));
     }
 
     if(_currentIndex > 31  &&_currentIndex < 50) {
       TennisMachineParams params =
-      TennisMachineParams.fromState(0, 0, (_currentIndex % 2 == 0) ? -13 : 13, 8, 8, 40, 100, 175, 1);
+      TennisMachineParams.fromState(0, 0, (_currentIndex % 2 == 0) ? -13 : 13, 8, 8, 40, 110, 175, 1);
       CommStatusManager().writerData(stepControlData(params));
     }
 
     if (_currentIndex == 50) {
       TennisMachineParams params =
-      TennisMachineParams.fromState(0, 0,0, 0, 0, 40, 100, 175, 0);
+      TennisMachineParams.fromState(0, 0,0, 0, 0, 40, 120, 175, 0);
       CommStatusManager().writerData(stepControlData(params));
     }
     print("发球索引${_currentIndex}");

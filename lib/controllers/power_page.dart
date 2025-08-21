@@ -275,7 +275,7 @@ class _PowerPageState extends State<PowerPage> {
       return;
     }
     TennisMachineParams params = TennisMachineParams.fromState(
-        0, 310, 0, 8, 8, 40, 110, 125, 0);
+        0, 310, 0, 8, 8, 40, 120, 125, 0);
     CommStatusManager().writerData(stepControlData(params));
     isMove = true;
   }
@@ -296,25 +296,25 @@ class _PowerPageState extends State<PowerPage> {
       speedIndexs++;
     } else if (13 < speedIndexs && speedIndexs < 31) {
       TennisMachineParams params =
-          TennisMachineParams.fromState(0, 0, 0, 8, 9, 40, 120, 125, 1);
+          TennisMachineParams.fromState(0, 0, 0, 7, 8, 40, 120, 125, 1);
       CommStatusManager().writerData(stepControlData(params));
       isMove = false;
     } else if (speedIndexs == 31) {
       /// 往前移动两米
       TennisMachineParams params =
-          TennisMachineParams.fromState(200, 0, 0, 8, 8, 40, 110, 125, 0);
+          TennisMachineParams.fromState(200, 0, 0, 7, 8, 40, 120, 125, 0);
       CommStatusManager().writerData(stepControlData(params));
       isMove = true;
       speedIndexs++;
     } else if (speedIndexs > 31 && speedIndexs < 50) {
       TennisMachineParams params =
-          TennisMachineParams.fromState(0, 0, 0, 8, 8, 40, 110, 125, 1);
+          TennisMachineParams.fromState(0, 0, 0, 7, 8, 40, 120, 125, 1);
       CommStatusManager().writerData(stepControlData(params));
       isMove = false;
     } else if (speedIndexs == 50) {
       print('50个球发送完毕');
       TennisMachineParams params =
-          TennisMachineParams.fromState(0, 0, 0, 0, 0, 40, 110, 125, 0);
+          TennisMachineParams.fromState(0, 0, 0, 0, 0, 40, 120, 125, 0);
       CommStatusManager().writerData(stepControlData(params));
       isMove = false;
 

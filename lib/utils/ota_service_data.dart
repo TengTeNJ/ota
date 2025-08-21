@@ -395,7 +395,7 @@ static  handleData(List<int> element){
             }
           }else if(cmd == 0x14){
             print('步伐控制步伐的回复${bleNotAllData[3]}');
-            if(bleNotAllData.length >= 3 &&  bleNotAllData[3] == 2){
+            if(bleNotAllData.length >= 3 &&  bleNotAllData[3] == 2 && bleNotAllData[2] == 0x14){
               CommStatusManager().isStepControlling = false;
               EventBusManager().eventBus.fire(DataUpdatedEvent(kStepControlFinishResponse));
             }
