@@ -193,7 +193,7 @@ class _AboutPageState extends State<AboutPage> {
             GestureDetector(
               behavior: HitTestBehavior.opaque,
               onTap: (){
-                SystemUtil.lockScreenHorizontalDirection();
+                // SystemUtil.lockScreenHorizontalDirection();
                 Future.delayed(Duration(milliseconds: 500),(){
                   Navigator.push(
                     context,

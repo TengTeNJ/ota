@@ -56,7 +56,7 @@ class _NtrpTestControllerState extends State<NtrpTestController> {
 
   List<int> indexList = [];
 
-  ///
+  bool isPlayingGreatJob = false; /// 是否在播放Great Job 音效
   late StreamSubscription<DataUpdatedEvent> _subscription;
 
   String rightTypeTitle = "Prepare for Forehand Test";
@@ -69,7 +69,7 @@ class _NtrpTestControllerState extends State<NtrpTestController> {
   List<int> backhandSpeeds = []; // 反手的速度值的集合
   List<int> volleySpeeds = []; // 截击的速度值的集合
 
-  List<int> middleTargetIndexs = [11, 12, 13, 1]; // 中间三个标靶的索引(1为中间的新增的标靶)
+  List<int> middleTargetIndexs = [11, 12, 13,1]; // 中间三个标靶的索引(1为中间的新增的标靶)
 
   final FlutterTts flutterTts = FlutterTts();
 
@@ -83,109 +83,136 @@ class _NtrpTestControllerState extends State<NtrpTestController> {
   ///布云朝克特步伐
   final NtrpTaskMap = {
     /// 正手
-    1: () => controlRobotMove(300, 0, 13, 1, 12, 13, 40, 100, 175),
-    2: () => controlRobotMove(0, 0, 13, 1, 12, 13, 40, 100, 175),
-    3: () => controlRobotMove(0, 0, 13, 1, 12, 13, 40, 100, 175),
-    4: () => controlRobotMove(0, 0, 13, 1, 12, 13, 40, 100, 175),
-    5: () => controlRobotMove(0, 0, 13, 1, 12, 13, 40, 100, 175),
-    6: () => controlRobotMove(0, 0, 13, 1, 12, 13, 40, 100, 175),
-    7: () => controlRobotMove(0, 0, 13, 1, 12, 13, 40, 100, 175),
-    8: () => controlRobotMove(0, 0, 13, 1, 12, 13, 40, 100, 175),
-    9: () => controlRobotMove(0, 0, 13, 1, 12, 13, 40, 100, 175),
-    10: () => controlRobotMove(0, 0, 13, 1, 12, 13, 40, 100, 175),
+    1: () => controlRobotMove(300, 0, 13, 1,7, 8,40, 100, 175),
+    2: () => controlRobotMove(0, 0, 13, 1,7, 8,40, 100, 175),
+    3: () => controlRobotMove(0, 0, 13, 1,7, 8,40, 100, 175),
+    4: () => controlRobotMove(0, 0, 13, 1,7, 8,40, 100, 175),
+    5: () => controlRobotMove(0, 0, 13, 1,7, 8,40, 100, 175),
+    6: () => controlRobotMove(0, 0, 13, 1,7, 8,40, 100, 175),
+    7: () => controlRobotMove(0, 0, 13, 1,7, 8,40, 100, 175),
+    8: () => controlRobotMove(0, 0, 13, 1,7, 8,40, 100, 175),
+    9: () => controlRobotMove(0, 0, 13, 1,7, 8,40, 100, 175),
+    10: () => controlRobotMove(0, 0, 13, 1,7, 8,40, 100, 175),
 
-    11: () => controlRobotMove(0, 0, 13, 1, 12, 13, 40, 100, 175),
-    12: () => controlRobotMove(0, 0, 13, 1, 12, 13, 40, 100, 175),
-    13: () => controlRobotMove(0, 0, 13, 1, 12, 13, 40, 100, 175),
-    14: () => controlRobotMove(0, 0, 13, 1, 12, 13, 40, 100, 175),
-    15: () => controlRobotMove(0, 0, 13, 1, 12, 13, 40, 100, 175),
-    16: () => controlRobotMove(0, 0, 13, 1, 12, 13, 40, 100, 175),
-    17: () => controlRobotMove(0, 0, 13, 1, 12, 13, 40, 100, 175),
-    18: () => controlRobotMove(0, 0, 13, 1, 12, 13, 40, 100, 175),
-    19: () => controlRobotMove(0, 0, 13, 1, 12, 13, 40, 100, 175),
-    20: () => controlRobotMove(0, 0, 13, 1, 12, 13, 40, 100, 175),
+    11: () => controlRobotMove(0, 0, 13, 1,7, 8,40, 100, 175),
+    12: () => controlRobotMove(0, 0, 13, 1,7, 8,40, 100, 175),
+    13: () => controlRobotMove(0, 0, 13, 1,7, 8,40, 100, 175),
+    14: () => controlRobotMove(0, 0, 13, 1,7, 8,40, 100, 175),
+    15: () => controlRobotMove(0, 0, 13, 1,7, 8,40, 100, 175),
+    16: () => controlRobotMove(0, 0, 13, 1,7, 8,40, 100, 175),
+    17: () => controlRobotMove(0, 0, 13, 1,7, 8,40, 100, 175),
+    18: () => controlRobotMove(0, 0, 13, 1,7, 8,40, 100, 175),
+    19: () => controlRobotMove(0, 0, 13, 1,7, 8,40, 100, 175),
+    20: () => controlRobotMove(0, 0, 13, 1,7, 8,40, 100, 175),
 
 
 
     /// 反手
-    21: () => controlRobotMove(0, 0, -13, 1, 12, 13, 40, 100, 175),
-    22: () => controlRobotMove(0, 0, -13, 1, 12, 13, 40, 100, 175),
-    23: () => controlRobotMove(0, 0, -13, 1, 12, 13, 40, 100, 175),
-    24: () => controlRobotMove(0, 0, -13, 1, 12, 13, 40, 100, 175),
-    25: () => controlRobotMove(0, 0, -13, 1, 12, 13, 40, 100, 175),
-    26: () => controlRobotMove(0, 0, -13, 1, 12, 13, 40, 100, 175),
-    27: () => controlRobotMove(0, 0, -13, 1, 12, 13, 40, 100, 175),
-    28: () => controlRobotMove(0, 0, -13, 1, 12, 13, 40, 100, 175),
-    29: () => controlRobotMove(0, 0, -13, 1, 12, 13, 40, 100, 175),
-    30: () => controlRobotMove(0, 0, -13, 1, 12, 13, 40, 100, 175),
+    21: () => controlRobotMove(0, 0, -13, 1,7, 8,40, 100, 175),
+    22: () => controlRobotMove(0, 0, -13, 1,7, 8,40, 100, 175),
+    23: () => controlRobotMove(0, 0, -13, 1,7, 8,40, 100, 175),
+    24: () => controlRobotMove(0, 0, -13, 1,7, 8,40, 100, 175),
+    25: () => controlRobotMove(0, 0, -13, 1,7, 8,40, 100, 175),
+    26: () => controlRobotMove(0, 0, -13, 1,7, 8,40, 100, 175),
+    27: () => controlRobotMove(0, 0, -13, 1,7, 8,40, 100, 175),
+    28: () => controlRobotMove(0, 0, -13, 1,7, 8,40, 100, 175),
+    29: () => controlRobotMove(0, 0, -13, 1,7, 8,40, 100, 175),
+    30: () => controlRobotMove(0, 0, -13, 1,7, 8,40, 100, 175),
 
-    31: () => controlRobotMove(0, 0, -13, 1, 12, 13, 40, 100, 175),
-    32: () => controlRobotMove(0, 0, -13, 1, 12, 13, 40, 100, 175),
-    33: () => controlRobotMove(0, 0, -13, 1, 12, 13, 40, 100, 175),
-    34: () => controlRobotMove(0, 0, -13, 1, 12, 13, 40, 100, 175),
-    35: () => controlRobotMove(0, 0, -13, 1, 12, 13, 40, 100, 175),
-    36: () => controlRobotMove(0, 0, -13, 1, 12, 13, 40, 100, 175),
-    37: () => controlRobotMove(0, 0, -13, 1, 12, 13, 40, 100, 175),
-    38: () => controlRobotMove(0, 0, -13, 1, 12, 13, 40, 100, 175),
-    39: () => controlRobotMove(0, 0, -13, 1, 12, 13, 40, 100, 175),
-    40: () => controlRobotMove(0, 0, -13, 1, 12, 13, 40, 100, 175),
+    31: () => controlRobotMove(0, 0, -13, 1,7, 8,40, 100, 175),
+    32: () => controlRobotMove(0, 0, -13, 1,7, 8,40, 100, 175),
+    33: () => controlRobotMove(0, 0, -13, 1,7, 8,40, 100, 175),
+    34: () => controlRobotMove(0, 0, -13, 1,7, 8,40, 100, 175),
+    35: () => controlRobotMove(0, 0, -13, 1,7, 8,40, 100, 175),
+    36: () => controlRobotMove(0, 0, -13, 1,7, 8,40, 100, 175),
+    37: () => controlRobotMove(0, 0, -13, 1,7, 8,40, 100, 175),
+    38: () => controlRobotMove(0, 0, -13, 1,7, 8,40, 100, 175),
+    39: () => controlRobotMove(0, 0, -13, 1,7, 8,40, 100, 175),
+    40: () => controlRobotMove(0, 0, -13, 1,7, 8,40, 100, 175),
 
     /// 截击球
     41: () => controlRobotMove(0, 0, randomRobotAngle[Random().nextInt(5)], 1,
-        randomRobotHeight[Random().nextInt(3)], 12, 40, 90, 175),
+        randomRobotHeight[Random().nextInt(3)], 8, 40, 90, 175),
     42: () => controlRobotMove(0, 0, randomRobotAngle[Random().nextInt(5)], 1,
-        randomRobotHeight[Random().nextInt(3)], 12, 40, 90, 175),
+        randomRobotHeight[Random().nextInt(3)], 8, 40, 90, 175),
     43: () => controlRobotMove(-100, 0, randomRobotAngle[Random().nextInt(5)],
-        1, randomRobotHeight[Random().nextInt(3)], 12, 40, 90, 175),
+        1, randomRobotHeight[Random().nextInt(3)], 8, 40, 90, 175),
     44: () => controlRobotMove(0, 0, randomRobotAngle[Random().nextInt(5)], 1,
-        randomRobotHeight[Random().nextInt(3)], 12, 40, 90, 175),
+        randomRobotHeight[Random().nextInt(3)], 8, 40, 90, 175),
     45: () => controlRobotMove(0, 0, randomRobotAngle[Random().nextInt(5)], 1,
-        randomRobotHeight[Random().nextInt(3)], 12, 40, 90, 175),
+        randomRobotHeight[Random().nextInt(3)], 8, 40, 90, 175),
     46: () => controlRobotMove(100, 0, randomRobotAngle[Random().nextInt(5)], 1,
-        randomRobotHeight[Random().nextInt(3)], 12, 40, 90, 175),
+        randomRobotHeight[Random().nextInt(3)], 8, 40, 90, 175),
     47: () => controlRobotMove(0, 0, randomRobotAngle[Random().nextInt(5)], 1,
-        randomRobotHeight[Random().nextInt(3)], 12, 40, 90, 175),
+        randomRobotHeight[Random().nextInt(3)], 8, 40, 90, 175),
     48: () => controlRobotMove(0, 0, randomRobotAngle[Random().nextInt(5)], 1,
-        randomRobotHeight[Random().nextInt(3)], 12, 40, 90, 175),
+        randomRobotHeight[Random().nextInt(3)], 8, 40, 90, 175),
     49: () => controlRobotMove(-100, 0, randomRobotAngle[Random().nextInt(5)],
-        1, randomRobotHeight[Random().nextInt(3)], 12, 40, 90, 175),
+        1, randomRobotHeight[Random().nextInt(3)], 8, 40, 90, 175),
     50: () => controlRobotMove(100, 0, randomRobotAngle[Random().nextInt(5)], 1,
-        randomRobotHeight[Random().nextInt(3)], 12, 40, 90, 175),
+        randomRobotHeight[Random().nextInt(3)], 8, 40, 90, 175),
 
     51: () => controlRobotMove(0, 0, randomRobotAngle[Random().nextInt(5)], 1,
-        randomRobotHeight[Random().nextInt(3)], 12, 40, 90, 175),
+        randomRobotHeight[Random().nextInt(3)], 9, 40, 90, 175),
     52: () => controlRobotMove(0, 0, randomRobotAngle[Random().nextInt(5)], 1,
-        randomRobotHeight[Random().nextInt(3)], 12, 40, 90, 175),
+        randomRobotHeight[Random().nextInt(3)], 9, 40, 90, 175),
     53: () => controlRobotMove(-100, 0, randomRobotAngle[Random().nextInt(5)],
-        1, randomRobotHeight[Random().nextInt(3)], 12, 40, 90, 175),
+        1, randomRobotHeight[Random().nextInt(3)], 9, 40, 90, 175),
     54: () => controlRobotMove(0, 0, randomRobotAngle[Random().nextInt(5)], 1,
-        randomRobotHeight[Random().nextInt(3)], 12, 40, 90, 175),
+        randomRobotHeight[Random().nextInt(3)], 9, 40, 90, 175),
     55: () => controlRobotMove(0, 0, randomRobotAngle[Random().nextInt(5)], 1,
-        randomRobotHeight[Random().nextInt(3)], 12, 40, 90, 175),
+        randomRobotHeight[Random().nextInt(3)], 9, 40, 90, 175),
     56: () => controlRobotMove(100, 0, randomRobotAngle[Random().nextInt(5)], 1,
-        randomRobotHeight[Random().nextInt(3)], 12, 40, 90, 175),
+        randomRobotHeight[Random().nextInt(3)], 9, 40, 90, 175),
     57: () => controlRobotMove(0, 0, randomRobotAngle[Random().nextInt(5)], 1,
-        randomRobotHeight[Random().nextInt(3)], 12, 40, 90, 175),
+        randomRobotHeight[Random().nextInt(3)], 9, 40, 90, 175),
     58: () => controlRobotMove(0, 0, randomRobotAngle[Random().nextInt(5)], 1,
-        randomRobotHeight[Random().nextInt(3)], 12, 40, 90, 175),
+        randomRobotHeight[Random().nextInt(3)], 9, 40, 90, 175),
     59: () => controlRobotMove(-100, 0, randomRobotAngle[Random().nextInt(5)],
-        1, randomRobotHeight[Random().nextInt(3)], 12, 40, 90, 175),
+        1, randomRobotHeight[Random().nextInt(3)], 9, 40, 90, 175),
     60: () => controlRobotMove(100, 0, randomRobotAngle[Random().nextInt(5)], 1,
-        randomRobotHeight[Random().nextInt(3)], 12, 40, 90, 175),
+        randomRobotHeight[Random().nextInt(3)], 9, 40, 90, 175),
     // 向前走60 不发球
     // 31: () => controlRobotMove(60, 0, 0, 0, 16, 12, 40, 90, 175),
   };
 
   /*开始*/
   void startGame() {
-    // if(CommStatusManager().currentConnectedDevice == null){
-    //   print('测速器未连接---');
-    //   return;
-    // }
+    if(CommStatusManager().currentConnectedDevice == null){
+      print('测速器未连接---');
+      return;
+    }
     TennisMachineParams params =
-        TennisMachineParams.fromState(0, 310, 0, 14, 14, 40, 120, 125, 0);
+        TennisMachineParams.fromState(0, 310, 0, 7, 8, 40, 120, 125, 0);
     CommStatusManager().writerData(stepControlData(params));
   }
+
+  /// 击中某个标靶闪灯（熄灭 在出现）
+  void flashingLight(int targetIndex) {
+    if (targetIndex == 12){  // 顶部三角形
+      lights = [ true, true, true, true, false, false, true, true, true];
+      setState(() {});
+      Future.delayed(Duration(milliseconds: 500),(){
+        lights = [ true, true, true, false, false, false, true, true, true];
+        setState(() {});
+      });
+    } else if(targetIndex == 11) { // 右侧图形
+      lights = [ true, true, true, false, false, true, true, true, true];
+      setState(() {});
+      Future.delayed(Duration(milliseconds: 500),(){
+        lights = [ true, true, true, false, false, false, true, true, true];
+        setState(() {});
+      });
+    } else if(targetIndex == 13) { // 左侧图形
+      lights = [ true, true, true, false, true, false, true, true, true];
+      setState(() {});
+      Future.delayed(Duration(milliseconds: 500),(){
+        lights = [ true, true, true, false, false, false, true, true, true];
+        setState(() {});
+      });
+    }
+  }
+
 
   @override
   void initState() {
@@ -200,15 +227,21 @@ class _NtrpTestControllerState extends State<NtrpTestController> {
         _TotalSpeeds.add(CommStatusManager().currentSpeed);
         // 显示速度
         SpeedPopup.show(context, speed: CommStatusManager().currentSpeed);
-        if (CommStatusManager().currentSpeed > 70) {
+        if (CommStatusManager().currentSpeed > 70  && isPlayingGreatJob == false) {
           greatJobPrompt = "Great Job !";
           setState(() {});
           playOnceLocalAudio("greatjob.mp3");
+          isPlayingGreatJob = true;
+          Future.delayed(Duration(milliseconds: 3000),(){
+            isPlayingGreatJob == false;
+          });
         }
 
-        if (CommStatusManager().currentSpeed < 70) {
+
+        if (CommStatusManager().currentSpeed <= 70) {
           _speakNumber(CommStatusManager().currentSpeed);
         }
+
 
         // continuousNumberOfShots ++;
 
@@ -266,9 +299,7 @@ class _NtrpTestControllerState extends State<NtrpTestController> {
       } else if (event.data == kTargetIndex) {
         /// 击中标靶的索引
         if (_updateTime(1) < 1000) {
-          return;
-
-          /// 1s内不处理
+          return;/// 1s内不处理
         }
         if (middleTargetIndexs.contains(CommStatusManager().targetIndex[0])) {
           continuousNumberOfShots++;
@@ -280,12 +311,25 @@ class _NtrpTestControllerState extends State<NtrpTestController> {
             /// 击中了中间的标靶
             volleyNumberOfShots++;
           }
+          flashingLight(CommStatusManager().targetIndex[0]);
         }
       }
       if (mounted) {
         setState(() {});
       }
     });
+
+   // Future.delayed(Duration(milliseconds: 5000),(){
+   //   flashingLight(12);
+   //   Future.delayed(Duration(milliseconds: 3000),(){
+   //     flashingLight(11);
+   //     Future.delayed(Duration(milliseconds: 3000),(){
+   //       flashingLight(13);
+   //     });
+   //   });
+   // });
+
+
 
     // Future.delayed(Duration(milliseconds: 2000), () {
     //   var powerControlRate = (1 / 6.toDouble() *100).toStringAsFixed(0);

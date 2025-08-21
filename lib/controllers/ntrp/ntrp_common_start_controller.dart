@@ -96,9 +96,10 @@ class _NtrpCommonStartControllerState extends State<NtrpCommonStartController> {
             var score = CommStatusManager().ntrpCorrectCount;
             print("一共答对了多少道题${score}");
             var isWinner = false;
-            if ( CommStatusManager().ntrpTechnicalProficiencyResult
-                && CommStatusManager().ntrpMultiDimensionalResult
-                && score >=18) {
+
+            var testIsWinner = CommStatusManager().ntrpTechnicalProficiencyResult
+                || CommStatusManager().ntrpMultiDimensionalResult;
+            if (testIsWinner && score >=18) {
               isWinner = true;
             }
 

@@ -85,8 +85,9 @@ final jarmikSinnerRomaTask = {
 
 List<double> randomRobotAngle = [12.0,14.0,16.0,-12.0,-14.0,-16.0];
 
-List<double> randomRobotHeight = [14.0,16.0,17.0,18.0];
+// List<double> randomRobotHeight = [14.0,16.0,17.0,18.0];
 
+List<double> randomRobotHeight = [9.0,11.0 - 3,12.0 - 3,13.0 - 3];
 
 
 void playLocalAudio(String sourceName,{double volume = 1.0,isAlwaysplay = false}) async {
