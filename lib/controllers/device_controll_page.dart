@@ -184,7 +184,7 @@ class _DeviceControlPageState extends State<DeviceControlPage> {
 
   Widget _buildModeButton(BuildContext context, String text, String data) {
     return ElevatedButton(
-      onPressed: () {
+      onPressed: () async{
         if (data == '1') {
           demoControl();
           return;
@@ -209,7 +209,9 @@ class _DeviceControlPageState extends State<DeviceControlPage> {
           Navigator.push(
             context,
             MaterialPageRoute(builder: (context) => Sped()), // 目标页面
-          );
+          ).then((_){
+            CommStatusManager().isDeviceDeail= true;
+          });
           return;
         }
 
@@ -258,7 +260,11 @@ class _DeviceControlPageState extends State<DeviceControlPage> {
             context,
             MaterialPageRoute(
                 builder: (context) => TennisBallMachineControl()), // 目标页面
-          );
+          ).then((onValue){
+            Future.delayed(Duration(milliseconds: 500),(){
+              CommStatusManager().isDeviceDeail  = true;
+            });
+          });
           return;
         }
 
@@ -288,14 +294,16 @@ class _DeviceControlPageState extends State<DeviceControlPage> {
           CommStatusManager().writerData(stepControlData(params));
           return;
         }
-        if (data == 'adjust') {
-          Navigator.push(
-            context,
-            MaterialPageRoute(
-                builder: (context) => TennisBallMachineControl()), // 目标页面
-          );
-          return;
-        }
+        // if (data == 'adjust') {
+        //   Navigator.push(
+        //     context,
+        //     MaterialPageRoute(
+        //         builder: (context) => TennisBallMachineControl()), // 目标页面
+        //   ).then((onValue){
+        //     print('----');
+        //   });
+        //   return;
+        // }
 
         if (data == 'leftmove') {
           TennisMachineParams params =
