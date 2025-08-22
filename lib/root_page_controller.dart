@@ -66,6 +66,7 @@ class _RootPageControllerState extends State<RootPageController> {
   }
 
   void dataRequest() async {
+    CommStatusManager().loadBinFile();
     final response =
         await http.get(Uri.parse('http://3.236.189.174:91/api/upgrade/getUrl'));
     print('Response data: ${response.body}');
