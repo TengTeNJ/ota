@@ -25,15 +25,9 @@ class _NtrpGuidePageControllerState extends State<NtrpGuidePageController> {
   void initState() {
     // TODO: implement initState
     super.initState();
-    // _speakString("Welcome to the NTRP Test Mode. "
-    //     "You will complete a 20-minute test consisting of 4 modules. "
-    //     "Are you ready? "
-    //     "Let's begin!");
-
     playLocalAudio('ntrp_remind.mp3', isAlwaysplay: true);
-
-
     Future.delayed(Duration(milliseconds: 10000), () {
+      if (!mounted) return;
       Navigator.push(
         context,
         MaterialPageRoute(builder: (context) =>NtrpStageDescriptionController()),
@@ -103,5 +97,14 @@ class _NtrpGuidePageControllerState extends State<NtrpGuidePageController> {
         ],
       ),
     );
+  }
+
+  @override
+  void dispose() {
+    // TODO: implement dispose
+    pause();
+    release();
+    playerDispose();
+    super.dispose();
   }
 }

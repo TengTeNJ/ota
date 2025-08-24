@@ -5,18 +5,18 @@ import 'package:audioplayers/audioplayers.dart';
 import 'package:event_bus/event_bus.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_tts/flutter_tts.dart';
-import 'package:ota/controllers/new_battle_target_end_page.dart';
+import 'package:ota/controllers/battle/new_battle_target_end_page.dart';
 import 'package:ota/controllers/step_control_page.dart';
 import 'package:ota/model/Battle_user_model.dart';
 import 'package:ota/views/total_power_view.dart';
 
-import '../constants.dart';
-import '../utils/audio_player_util.dart';
-import '../utils/comm_statu_manager.dart';
-import '../utils/event_manager.dart';
-import '../utils/ota_data.dart';
-import '../utils/system_util.dart';
-import '../views/show_speed_view.dart';
+import '../../constants.dart';
+import '../../utils/audio_player_util.dart';
+import '../../utils/comm_statu_manager.dart';
+import '../../utils/event_manager.dart';
+import '../../utils/ota_data.dart';
+import '../../utils/system_util.dart';
+import '../../views/show_speed_view.dart';
 
 class NewBattleTargetPage extends StatefulWidget {
   const NewBattleTargetPage({super.key});
@@ -73,7 +73,7 @@ class _NewBattleTargetPageState extends State<NewBattleTargetPage> {
     super.initState();
     print("进入到battle 界面");
 
-
+    print("对战的索引${_currentIndex}");
     playLocalAudio('yangBG2.MP3',isAlwaysplay: true);
     calculateTime(1);
     CommStatusManager().isDeviceDeail = true;
@@ -316,9 +316,6 @@ class _NewBattleTargetPageState extends State<NewBattleTargetPage> {
     }
     print("发球索引${_currentIndex}");
   }
-
-
-
 
   /*左右循环发球*/
   void leftRightLoopGame() {
@@ -614,6 +611,8 @@ class _NewBattleTargetPageState extends State<NewBattleTargetPage> {
     _subscription.cancel();
     CommStatusManager().currentSpeed = 0;
     pause();
+    release();
+    playerDispose();
     super.dispose();
   }
 }

@@ -10,7 +10,7 @@ import 'comm_statu_manager.dart';
 import 'ota_data.dart';
 
 final FlutterTts flutterTts = FlutterTts();
-final player = AudioPlayer();
+var globalPlayer = AudioPlayer();
 
 // 预置工具
 final rnd = Random();
@@ -91,9 +91,9 @@ List<double> randomRobotHeight = [9.0,11.0 - 3,12.0 - 3,13.0 - 3];
 
 
 void playLocalAudio(String sourceName,{double volume = 1.0,isAlwaysplay = false}) async {
-  // if (isAlwaysplay) {
-       player.setReleaseMode(ReleaseMode.release);
-  // }
+  var player = AudioPlayer();
+  globalPlayer = player;
+  player.setReleaseMode(ReleaseMode.release);
 
   // player.setSource(AssetSource('audio/${sourceName}'));
   await player.play(AssetSource('audio/${sourceName}'),volume: volume);
@@ -115,7 +115,15 @@ void playOnceLocalAudio(String sourceName,{double volume = 1.0,isAlwaysplay = fa
 }
 
 void pause() {
-   player.pause();
+  globalPlayer.pause();
+}
+
+void release() {
+  globalPlayer.release();
+}
+
+void playerDispose() {
+  globalPlayer.dispose();
 }
 
 /// TTS 文字转语音
