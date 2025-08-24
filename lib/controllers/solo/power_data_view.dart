@@ -1,8 +1,8 @@
 import 'package:flutter/material.dart';
 import 'package:percent_indicator/circular_percent_indicator.dart';
 
-import '../constants.dart';
-import '../model/Battle_user_model.dart';
+import '../../constants.dart';
+import '../../model/Battle_user_model.dart';
 
 
 class PowerDataView extends StatefulWidget {

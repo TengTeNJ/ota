@@ -7,7 +7,7 @@ import '../../constants.dart';
 import '../../model/Battle_user_model.dart';
 import '../../utils/comm_statu_manager.dart';
 import '../../utils/ota_data.dart';
-import '../power_data_view.dart';
+import '../solo/power_data_view.dart';
 
 
 class NtrpResultController extends StatefulWidget {

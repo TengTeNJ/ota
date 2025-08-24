@@ -1,10 +1,11 @@
 import 'package:flutter/material.dart';
-import 'package:ota/controllers/power_data_view.dart';
+import 'package:ota/controllers/solo/power_data_view.dart';
+import 'package:ota/controllers/solo/power_page.dart';
 
-import '../constants.dart';
-import '../model/Battle_user_model.dart';
-import '../utils/comm_statu_manager.dart';
-import '../utils/ota_data.dart';
+import '../../constants.dart';
+import '../../model/Battle_user_model.dart';
+import '../../utils/comm_statu_manager.dart';
+import '../../utils/ota_data.dart';
 
 /// 单人 力量训练结算界面
 class PowerEndPage extends StatefulWidget {
@@ -44,8 +45,7 @@ class _PowerEndPageState extends State<PowerEndPage> {
               mainAxisAlignment: MainAxisAlignment.center,
               children: [
                 GestureDetector(onTap: (){
-                  Navigator.pop(context);
-                  Navigator.pop(context);
+                  Navigator.of(context).popUntil((route) =>route.isFirst);// 回到跟视图
                   /// 机器人位置校准回到原点
                   CommStatusManager().writerData(positionCheckData());
                   },
@@ -81,11 +81,9 @@ class _PowerEndPageState extends State<PowerEndPage> {
                     color: Color.fromRGBO(100, 100, 100, 0.7),
                     child: GestureDetector(
                       onTap: () {
-                        Navigator.pop(context);
-                        Navigator.pop(context);
+                            Navigator.pop(context);
+                            Navigator.pop(context);
 
-                        /// 机器人位置校准回到原点
-                        CommStatusManager().writerData(positionCheckData());
                       },
                       child: Row(
                         mainAxisAlignment: MainAxisAlignment.center,

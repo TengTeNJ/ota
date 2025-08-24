@@ -2,7 +2,7 @@ import 'dart:async';
 
 import 'package:flutter/material.dart';
 import 'package:ota/constants.dart';
-import 'package:ota/controllers/power_page.dart';
+import 'package:ota/controllers/solo/power_page.dart';
 import 'package:percent_indicator/circular_percent_indicator.dart';
 
 //// 倒计时

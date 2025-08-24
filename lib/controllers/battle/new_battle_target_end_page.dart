@@ -4,9 +4,9 @@ import 'package:ota/views/battle_data_view.dart';
 import 'package:ota/views/battle_settlement_view.dart';
 import 'package:percent_indicator/circular_percent_indicator.dart';
 
-import '../constants.dart';
-import '../utils/comm_statu_manager.dart';
-import '../utils/ota_data.dart';
+import '../../constants.dart';
+import '../../utils/comm_statu_manager.dart';
+import '../../utils/ota_data.dart';
 
 /// 双人对战结算界面
 
@@ -132,9 +132,6 @@ class _NewBattleTargetEndPageState extends State<NewBattleTargetEndPage> {
               ],
             ),
           )
-
-
-
         ],
       ),
     );

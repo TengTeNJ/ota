@@ -2,7 +2,7 @@ import 'dart:async';
 // import 'dart:nativewrappers/_internal/vm/lib/ffi_allocation_patch.dart';
 import 'package:event_bus/event_bus.dart';
 import 'package:flutter/material.dart';
-import 'package:ota/controllers/power_end_page.dart';
+import 'package:ota/controllers/solo/power_end_page.dart';
 import 'package:ota/controllers/step_control_page.dart';
 import 'package:ota/utils/comm_statu_manager.dart';
 import 'package:ota/utils/dialog.dart';
@@ -10,12 +10,12 @@ import 'package:ota/utils/service_util.dart';
 import 'package:ota/utils/system_util.dart';
 import 'package:ota/views/power_view.dart';
 import 'package:percent_indicator/circular_percent_indicator.dart';
-import '../constants.dart';
-import '../model/Battle_user_model.dart';
-import '../utils/audio_player_util.dart';
-import '../utils/event_manager.dart';
-import '../utils/ota_data.dart';
-import '../views/show_speed_view.dart';
+import '../../constants.dart';
+import '../../model/Battle_user_model.dart';
+import '../../utils/audio_player_util.dart';
+import '../../utils/event_manager.dart';
+import '../../utils/ota_data.dart';
+import '../../views/show_speed_view.dart';
 
 import 'package:flutter_tts/flutter_tts.dart';
 
@@ -71,7 +71,9 @@ class _PowerPageState extends State<PowerPage> {
     playLocalAudio('blueMonday1.MP3', isAlwaysplay: true);
     startCountdown();
 
-    // Future.delayed(Duration(milliseconds: 2000), () {
+    print("索引为${speedIndexs}");
+
+    // Future.delayed(Duration(milliseconds: 10000), () {
     //   double rightSum = _TotalSpeeds.fold(0.0, (previousValue, element) => previousValue + element);
     //   int rightcount = _TotalSpeeds.length;
     //   double averagSpeed = rightSum / rightcount;
@@ -320,6 +322,8 @@ class _PowerPageState extends State<PowerPage> {
 
       /// 延迟1s 进到结算界面，防止最后一个球的数据记不进去
       Future.delayed(Duration(milliseconds: 1000), () {
+        /// 机器人位置校准回到原点
+        CommStatusManager().writerData(positionCheckData());
         enterEndPage();
       });
     }
@@ -742,6 +746,8 @@ class _PowerPageState extends State<PowerPage> {
     CommStatusManager().isDeviceDeail = false;
     CommStatusManager().currentSpeed = 0;
     pause();
+    release();
+    playerDispose();
     super.dispose();
   }
 }

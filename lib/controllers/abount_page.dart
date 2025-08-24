@@ -1,10 +1,10 @@
 import 'package:flutter/material.dart';
 import 'package:ota/constants.dart';
 import 'package:ota/controllers/count_down_page.dart';
-import 'package:ota/controllers/new_battle_target_page.dart';
+import 'package:ota/controllers/battle/new_battle_target_page.dart';
 import 'package:ota/controllers/new_target_single_ppage.dart';
-import 'package:ota/controllers/power_page.dart';
-import 'package:ota/controllers/stadium_two_main_page.dart';
+import 'package:ota/controllers/solo/power_page.dart';
+import 'package:ota/controllers/gamehome/stadium_two_main_page.dart';
 import 'package:ota/controllers/target_page.dart';
 import 'package:ota/utils/comm_statu_manager.dart';
 import 'package:package_info_plus/package_info_plus.dart';

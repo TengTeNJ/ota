@@ -31,6 +31,7 @@ class _NtrpStageDescriptionControllerState
       beginCountDown = true;
       /// 3s 倒计时
       var timer = Timer.periodic(Duration(milliseconds: 1000),(timer){
+        if (!mounted) return;
         if(count == 1) {
           Navigator.push(
             context,

@@ -41,19 +41,16 @@ class _NtrpCommonStartControllerState extends State<NtrpCommonStartController> {
       switch (widget.pageType) {
         case StartPageType.oneStage:
           // TODO: Handle this case.
-
           Navigator.push(
             context,
             MaterialPageRoute(builder: (context) =>NtrpTestController()), // 第一阶段
             // MaterialPageRoute(builder: (context) =>NtrpIntegrateTestController()), // 第二阶段
-
           );
           case StartPageType.twoStage:
             final result = (await NtrpAssessmentPlugin.startAssessment(context,indexes: [0,1,2,3,4,5,6,7,8,9]));
             if (result != null) {
               print('result=${result}',);
               CommStatusManager().ntrpCorrectCount += result.correctAnswers ;
-
               print("1阶段对了${result.correctAnswers}道题");
               Navigator.push(
                 context,

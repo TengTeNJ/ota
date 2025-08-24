@@ -1,12 +1,10 @@
 import 'package:flutter/material.dart';
 import 'package:ota/constants.dart';
 import 'package:ota/controllers/ntrp/ntrp_guide_page_controller.dart';
-import 'package:ota/controllers/ntrp/ntrp_test_controller.dart';
-import 'package:ota/controllers/power_page.dart';
-import 'package:ota/controllers/stadium_mode_choose_view.dart';
+import 'package:ota/controllers/solo/power_page.dart';
+import 'package:ota/controllers/gamehome/stadium_mode_choose_view.dart';
 
-import 'new_battle_target_page.dart';
-import 'ntrp/ntrp_integrate_test_controller.dart';
+import '../battle/new_battle_target_page.dart';
 
 
 class StadiumTwoMainPage extends StatefulWidget {
@@ -115,8 +113,8 @@ class _StadiumTwoMainPageState extends State<StadiumTwoMainPage> {
                  print('3');
                  Navigator.push(
                    context,
-                   MaterialPageRoute(builder: (context) =>NtrpGuidePageController()), // NTRP引导界面
-                   // MaterialPageRoute(builder: (context) =>NtrpIntegrateTestController()), // 综合测试界面
+                  MaterialPageRoute(builder: (context) =>NtrpGuidePageController()), // NTRP引导界面
+                   // MaterialPageRoute(builder: (context) =>NtrpPressureTestController()), // 压力测试界面
 
                  );
                  },
