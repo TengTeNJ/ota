@@ -148,7 +148,7 @@ class CommStatusManager {
         }
         // print('event.name=${event.name}====${event.name.length}');
         if (event.name.contains(kBLEDeviceName) ||
-            event.name.contains(kBLENewDeviceName) ||  event.name.contains('NB')) {
+            event.name.contains(kBLENewDeviceName) || event.name.contains(kCamera1)  || event.name.contains(kCamera2) ||  event.name.contains('NB')) {
           // 如果设备列表数组中无，则添加
           if (!hasDevice(event.id)) {
             print('添加新设备--${event.id}----${event.name}');
@@ -157,7 +157,7 @@ class CommStatusManager {
                 .add(BLEModel(deviceName: event.name, device: event));
             EventBusManager().eventBus.fire(DataUpdatedEvent(kFindNewDevice));
           }
-        } else if (event.name.contains(kBLEMySpeedzName)) {
+        } else if ((event.name.contains(kBLEMySpeedzName) &&  CommStatusManager().siteType == 2) || (event.name.contains(kBLEMySpeedz1Name) &&  CommStatusManager().siteType == 1) ) {
           if(this.myspeedzConnectedDevice  != null){
             print('已发现测速器---${event.name}');
             return;
@@ -211,7 +211,7 @@ class CommStatusManager {
             connectionTimeout: const Duration(seconds: 10))
         .listen((event) async {
       if (event.connectionState == DeviceConnectionState.connected) {
-        if(model.deviceName.toString().contains(kBLEDeviceName)){
+        if(model.deviceName.toString().contains(kBLEDeviceName) || model.deviceName.toString().contains(kCamera1) || model.deviceName.toString().contains(kCamera2)){
            // 摄像头主机
           notifyChar = QualifiedCharacteristic(
               serviceId: Uuid.parse(kBLE_CAMERA_SERVICE_NOTIFY_UUID),
@@ -223,8 +223,6 @@ class CommStatusManager {
               deviceId: model.device!.id);
           print("摄像头主机连接成功，并获取到特征");
           AnyLoading.showSuccess("Camera connection successful");
-
-
           CommStatusManager()
               .ble
               .subscribeToCharacteristic(notifyChar!)
@@ -332,8 +330,6 @@ class CommStatusManager {
         EventBusManager().eventBus.fire(DataUpdatedEvent(kBLEConneted));
         print("连接测速器成功，并获取到特征");
         AnyLoading.showSuccess("My Speedz connection successful");
-
-
         CommStatusManager()
             .ble
             .subscribeToCharacteristic(notifyChar!)

@@ -35,11 +35,15 @@ const kBLE_270_CHARACTERISTIC_WRITER_UUID = "fff2";
 
 
 /// 2 号场设备名字
-// const kBLEDeviceName = "Tv511u-403F0109";
+// const kBLEDeviceName = "Tv511u-403F0109";Tennis_2  Stickhandling
 const kBLEDeviceName = "Tennis_2";
+
+const kCamera1 = "Stickhandling";
+const kCamera2 = "Tennis_2";
 
 const kBLENewDeviceName = "Roboti10";
 const kBLEMySpeedzName = "Myspeedz_2";
+const kBLEMySpeedz1Name = "Myspeedz";
 
 /// 3 号场设备名字
 

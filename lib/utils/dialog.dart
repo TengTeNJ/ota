@@ -84,6 +84,7 @@ class GamePauseTaskDialog extends StatelessWidget {
                 GestureDetector(
                   onTap: () {
                     print("退出游戏11");
+                    exchange();
                     Navigator.pop(context);
                     Navigator.pop(context);
                   },

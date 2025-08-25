@@ -140,11 +140,12 @@ class _PowerPageState extends State<PowerPage> {
         print('kSpeedValue--speedIndexs=${speedIndexs}');
       } else if (event.data == kStepControlFinishResponse) {
         indexList.add(0);
+
         ///
-        var type =  CommStatusManager().siteType.toInt();
+        var type = CommStatusManager().siteType.toInt();
         if (speedIndexs == 0 && type == 1) {
-          TennisMachineParams params = TennisMachineParams.fromState(
-              0, 150, 0, 14, 14, 40, 110, 125, 0);
+          TennisMachineParams params =
+              TennisMachineParams.fromState(0, 150, 0, 14, 14, 40, 110, 125, 0);
           CommStatusManager().writerData(stepControlData(params));
           speedIndexs++;
           return;
@@ -234,30 +235,30 @@ class _PowerPageState extends State<PowerPage> {
   ///布云朝克特步伐
   final taskMap = {
     1: () => controlRobotMove(0, (150), -12, 1, 15, 15, 40, 120, 125),
-    2: () =>
-        controlRobotMove(0, -robotDistanceAdaptation(150), 0, 1, 15, 15, 40, 120, 125),
+    2: () => controlRobotMove(
+        0, -robotDistanceAdaptation(150), 0, 1, 15, 15, 40, 120, 125),
     3: () => controlRobotMove(
         0, -robotDistanceAdaptation(150), 12, 3, 15, 15, 40, 120, 125),
-    4: () =>
-        controlRobotMove(0, robotDistanceAdaptation(150), -8, 1, 15, 15, 40, 120, 125),
+    4: () => controlRobotMove(
+        0, robotDistanceAdaptation(150), -8, 1, 15, 15, 40, 120, 125),
     5: () => controlRobotMove(0, 0, 12, 1, 15, 15, 40, 120, 125),
     6: () => controlRobotMove(0, 0, 8, 2, 15, 15, 40, 120, 125),
-    7: () =>
-        controlRobotMove(0, robotDistanceAdaptation(150), -8, 3, 15, 15, 40, 120, 125),
+    7: () => controlRobotMove(
+        0, robotDistanceAdaptation(150), -8, 3, 15, 15, 40, 120, 125),
     8: () => controlRobotMove(
         200, -robotDistanceAdaptation(150), 8, 1, 15, 15, 40, 120, 125),
     9: () => controlRobotMove(0, 0, -8, 1, 15, 15, 40, 120, 125),
     10: () => controlRobotMove(
         -200, -robotDistanceAdaptation(150), 8, 1, 15, 15, 40, 120, 125),
-    11: () =>
-        controlRobotMove(0, robotDistanceAdaptation(150), 8, 1, 15, 15, 40, 120, 125),
+    11: () => controlRobotMove(
+        0, robotDistanceAdaptation(150), 8, 1, 15, 15, 40, 120, 125),
     12: () => controlRobotMove(
         0, -robotDistanceAdaptation(150), 10, 1, 13, 13, 40, 110, 125),
     13: () => controlRobotMove(0, 0, 8, 2, 15, 15, 40, 120, 125),
-    14: () =>
-        controlRobotMove(0, robotDistanceAdaptation(150), -8, 1, 14, 14, 40, 120, 125),
-    15: () =>
-        controlRobotMove(0, robotDistanceAdaptation(150), -8, 1, 14, 14, 40, 120, 125),
+    14: () => controlRobotMove(
+        0, robotDistanceAdaptation(150), -8, 1, 14, 14, 40, 120, 125),
+    15: () => controlRobotMove(
+        0, robotDistanceAdaptation(150), -8, 1, 14, 14, 40, 120, 125),
     16: () => controlRobotMove(0, 0, 12, 1, 15, 15, 40, 120, 125),
     17: () => controlRobotMove(200, 0, 0, 1, 13, 13, 40, 115, 125),
     18: () => controlRobotMove(200, 0, 0, 1, 12, 12, 40, 100, 125),
@@ -272,15 +273,16 @@ class _PowerPageState extends State<PowerPage> {
 
   /*开始*/
   void startGame() {
-    if(CommStatusManager().currentConnectedDevice == null){
+    if (CommStatusManager().currentConnectedDevice == null) {
       print('测速器未连接---');
       return;
     }
-    TennisMachineParams params = TennisMachineParams.fromState(
-        0, 310, 0, 8, 8, 40, 120, 125, 0);
+    TennisMachineParams params =
+        TennisMachineParams.fromState(0, 310, 0, 8, 8, 40, 120, 125, 0);
     CommStatusManager().writerData(stepControlData(params));
     isMove = true;
   }
+
   /// P1发球模式
   void modeOneGame() {
     /// 步伐控制指令发球  12  18  20
@@ -399,17 +401,16 @@ class _PowerPageState extends State<PowerPage> {
 
   ///.布云朝克特 等相关步伐
   void newModeThreeGame() {
-    var type =  CommStatusManager().stepType.toInt();
+    var type = CommStatusManager().stepType.toInt();
     if (type == 2) {
       jarmikSinnerRomaTask[indexList.length]?.call();
       print("步伐2");
-    } else if(type == 3) {
+    } else if (type == 3) {
       taskMap[indexList.length]?.call();
       print("步伐3");
-    } else if(type == 1) {
+    } else if (type == 1) {
       modeOneGame();
       print("步伐p1");
-
     }
   }
 
@@ -417,7 +418,7 @@ class _PowerPageState extends State<PowerPage> {
     double rightSum = _TotalSpeeds.fold(
         0.0, (previousValue, element) => previousValue + element);
     int rightcount = _TotalSpeeds.length;
-    double averagSpeed = rightSum / rightcount;
+    double  averagSpeed =   rightcount == 0 ? 0 :rightSum / rightcount;
     var rightUserModel = BattleUserModel(
         score: 10,
         shotInCount: _ShotInCount,
@@ -447,9 +448,11 @@ class _PowerPageState extends State<PowerPage> {
   void startCountdown() {
     _timer = Timer.periodic(Duration(seconds: 1), (Timer timer) {
       setState(() {
+        print('123------');
         if (_counter > 0) {
           _counter--;
         } else {
+          print('456------');
           timer.cancel();
           _opacity = 0.0;
           startGame();
@@ -672,6 +675,7 @@ class _PowerPageState extends State<PowerPage> {
                   print("123");
                   TTDialog.gamePauseTaskDialog(context, () {
                     print("弹窗点击");
+                    CommStatusManager().writerData(changeModeData(0xff));
                   });
                 },
                 child: Padding(
@@ -743,6 +747,7 @@ class _PowerPageState extends State<PowerPage> {
     // TODO: implement dispose
     SystemUtil.lockScreenDirection();
     _subscription.cancel();
+    _timer?.cancel();
     CommStatusManager().isDeviceDeail = false;
     CommStatusManager().currentSpeed = 0;
     pause();
