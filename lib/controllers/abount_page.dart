@@ -157,6 +157,18 @@ class _AboutPageState extends State<AboutPage> {
                       _currentValue = value;
                     });
                   },
+                  textMapper: (numberText) {
+                    switch (numberText) {
+                      case '1':
+                        return '草地场';
+                      case '2':
+                        return '硬底场';
+                      case '3':
+                        return '少儿场';
+                      default:
+                        return numberText;
+                    }
+                  },
                 ),
               ],
             ),

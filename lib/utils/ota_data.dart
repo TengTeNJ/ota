@@ -181,12 +181,15 @@ List<int>changeModeData(int mode){
 
 List<int> setSpeedData(double x,double y){
   // 保留一位小数并乘以10，但不四舍五入
-  print('x---${x},y---${y}');
+  //print('x---${x},y---${y}');
   int xSpeed = (x * 10).truncate();
   int ySpeed = (y * 10).truncate();
-  print('设置速度--${xSpeed}---${ySpeed}');
+  //print('设置速度--${xSpeed}---${ySpeed}');
   List<int> data = [kBLEDataFrameHeader,8,0x03,xSpeed,ySpeed,0,0xff,0xaa];
-  print('data=${data}');
+ // print('data=${data}');
+  print(
+      "设置速度  = ${data.map((toElement) => toElement.toRadixString(16)).toList()}");
+
   return data;
 }
 
