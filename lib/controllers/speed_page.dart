@@ -42,7 +42,7 @@ class _SpedState extends State<Sped> {
               Duration difference = endTime.difference(_currentTimer);
               int milliseconds = difference.inMilliseconds;
               if(milliseconds >= 100){
-                print('发送数据');
+                //print('发送数据');
                 _currentTimer = endTime;
                 CommStatusManager().writerData(setSpeedData(x, y));
               }else{
