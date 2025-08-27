@@ -5,7 +5,7 @@ import 'package:ota/controllers/solo/power_page.dart';
 import 'package:ota/controllers/gamehome/stadium_mode_choose_view.dart';
 
 import '../battle/new_battle_target_page.dart';
-
+import '../ntrp/pressure/ntrp_pressure_test_controller.dart';
 
 class StadiumTwoMainPage extends StatefulWidget {
   const StadiumTwoMainPage({super.key});
@@ -15,7 +15,20 @@ class StadiumTwoMainPage extends StatefulWidget {
 }
 
 class _StadiumTwoMainPageState extends State<StadiumTwoMainPage> {
+  List titles = ["Solo Mode", "2 Player Mode", "NTRP Test"];
+  List subTitles = [
+    "Precision Control Drills",
+    "Battle Training",
+    "Level Test"
+  ];
+  List imagePaths = [
+    "assets/images/solo_mode.png",
+    "assets/images/battle_mode.png",
+    "assets/images/ntrp_test.png"
+  ];
+
   int _clickCount = 0;
+
   @override
   void dispose() {
     // TODO: implement dispose
@@ -24,9 +37,51 @@ class _StadiumTwoMainPageState extends State<StadiumTwoMainPage> {
     super.dispose();
   }
 
+  Widget _buildCard(int i) => Container(
+      width: (Constants.screenWidth(context) - 20 * 5) / 3,
+      height: Constants.screenHeight(context) / 2,
+      margin: const EdgeInsets.all(8),
+      decoration: BoxDecoration(
+        borderRadius: BorderRadius.circular(12),
+        color: Colors.transparent,
+        // color:Colors.amber[100 * (i % 8 + 1)],
+      ),
+      child: GestureDetector(
+        onTap: () {
+          if (i == 0) {
+            Navigator.push(
+              context,
+              MaterialPageRoute(
+                  builder: (context) => PowerPage(
+                        type: "p1",
+                      )), // 力量训练页面
+            );
+          } else if (i == 1) {
+            Navigator.push(
+              context,
+              MaterialPageRoute(
+                  builder: (context) => NewBattleTargetPage()), // 双人对战页面
+            );
+          } else if (i == 2) {
+            Navigator.push(
+              context,
+              MaterialPageRoute(
+                  builder: (context) => NtrpGuidePageController()), // NTRP引导界面
+              // MaterialPageRoute(builder: (context) =>NtrpPressureTestController()), // 压力测试界面
+            );
+          }
+        },
+        child: StadiumModeChooseView(
+          title: titles[i],
+          subTitle: subTitles[i],
+          imagePath: imagePaths[i],
+        ),
+      ));
+
   @override
   Widget build(BuildContext context) {
-    return  GestureDetector(onTap: (){
+    return GestureDetector(
+      onTap: () {
         print("点击啦");
         setState(() {
           _clickCount++;
@@ -37,111 +92,44 @@ class _StadiumTwoMainPageState extends State<StadiumTwoMainPage> {
             Navigator.pop(context);
           }
         });
-        },
-     child: Scaffold(
-       body: WillPopScope(child: Stack(
-         children: [
-           /// 全屏背景图片
-           Positioned(
-             left: 0,
-             top: 0,
-             right: 0,
-             bottom: 0,
-             child: FullScreenImage(),
-           ),
+      },
+      child: Scaffold(
+        body: WillPopScope(
+            child: Stack(
+              children: [
+                /// 全屏背景图片
+                Positioned(
+                  left: 0,
+                  top: 0,
+                  right: 0,
+                  bottom: 0,
+                  child: FullScreenImage(),
+                ),
 
-           Positioned(
-               top: 160,
-               left: 1024/2 -100,
-               child: Center(
-                 child: Constants.boldWhiteTextWidget("Wall Practice", 24),
-               )),
+                Positioned(
+                  top: 160,
+                  left: 0,
+                  right: 0,
+                  child: Center(
+                    child: Constants.boldWhiteTextWidget("Wall Practice", 30),
+                  ),
+                ),
 
-
-           // solo mode
-           Positioned(
-             bottom: 150,
-             left: 40,
-             child: GestureDetector(onTap: (){
-               print("1");
-               Navigator.push(
-                 context,
-                 MaterialPageRoute(builder: (context) =>PowerPage(type: "p1",)), // 力量训练页面
-               );
-             },
-               child: Container(
-                 width:  Constants.screenHeight(context) / 2 * 160 /200,
-                 height: Constants.screenHeight(context) / 2,
-                 color: Colors.transparent,
-                 child:StadiumModeChooseView(title: "Solo Mode",
-                   subTitle: "Precision Control Drills",
-                   imagePath: "assets/images/solo_mode.png",
-                 ),
-               ),
-             ),
-           ),
-
-           // 2 player mode
-           Positioned(
-               bottom: 150,
-               left: 1026/2 - 194/2 - 50,
-               child: GestureDetector(onTap: (){
-                 print("2");
-                 Navigator.push(
-                   context,
-                   MaterialPageRoute(builder: (context) =>NewBattleTargetPage()), // 目标页面
-                 );
-               },
-                 child: Container(
-                   width:  Constants.screenHeight(context) / 2 * 160 /200,
-                   height: Constants.screenHeight(context) / 2,
-                   color: Colors.transparent,
-                   child:StadiumModeChooseView(title: "2 Player Mode",
-                     subTitle: "Precision Control Drills",
-                     imagePath: "assets/images/battle_mode.png",
-                   ),
-                 ),
-               )
-           ),
-
-           // p3 mode
-           Positioned(
-               bottom: 150,
-               left: 1026/2 - 194/2 - 50 + Constants.screenHeight(context) / 2 * 160 /200,
-               child:GestureDetector(onTap: (){
-
-                 print('3');
-                 Navigator.push(
-                   context,
-                  MaterialPageRoute(builder: (context) =>NtrpGuidePageController()), // NTRP引导界面
-                   // MaterialPageRoute(builder: (context) =>NtrpPressureTestController()), // 压力测试界面
-
-                 );
-                 },
-                 child:Container(
-                   width:  Constants.screenHeight(context) / 2 * 160 /200,
-                   height: Constants.screenHeight(context) / 2,
-                   color: Colors.transparent,
-                   child:StadiumModeChooseView(title: "NTRP Test",
-                     subTitle: "Level Test",
-                     imagePath: "assets/images/ntrp_test.png",
-                   ),
-
-                 ),
-
-               )
-           ),
-
-
-         ],
-       ),
-           onWillPop: (){
-             return Future.value(false);
-           }),
-     ),
+                Center(
+                  child: SingleChildScrollView(
+                    scrollDirection: Axis.horizontal,
+                    child: Row(
+                      children: List.generate(3, (i) => _buildCard(i)),
+                    ),
+                  ),
+                )
+              ],
+            ),
+            onWillPop: () {
+              return Future.value(false);
+            }),
+      ),
     );
-
-
   }
 }
 

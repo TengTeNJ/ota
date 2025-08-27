@@ -126,6 +126,14 @@ void playerDispose() {
   globalPlayer.dispose();
 }
 
+void stop() {
+  globalPlayer.stop();
+}
+
+void resumeContinue() {
+  globalPlayer.resume();
+}
+
 /// TTS 文字转语音
 Future<void> _commonSpeakNumber(int number) async {
   await flutterTts.setLanguage("en-US"); // 设置语言

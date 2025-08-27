@@ -9,6 +9,8 @@ import '../../utils/comm_statu_manager.dart';
 import 'ntrp_result_controller.dart';
 import 'ntrp_test_controller.dart';
 
+import 'package:ota/controllers/ntrp/pressure/ntrp_pressure_test_controller.dart';
+
 /// ntrp 结果类型
 enum StartPageType{
   oneStage,
@@ -80,7 +82,11 @@ class _NtrpCommonStartControllerState extends State<NtrpCommonStartController> {
           }
         case StartPageType.fiveStage:
           // TODO: Handle this case.
-          throw UnimplementedError();
+         /// 压力测评
+          Navigator.push(
+            context,
+              MaterialPageRoute(builder: (context) =>NtrpPressureTestController()),
+          );
         case StartPageType.sixStage:
           final result = await NtrpAssessmentPlugin.startAssessment(context,
               indexes: [20,21,22,23,24,25,26,27,28,29]);

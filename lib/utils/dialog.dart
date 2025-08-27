@@ -4,7 +4,7 @@ import '../constants.dart';
 
 class TTDialog {
   //*游戏暂停弹窗*/
-  static gamePauseTaskDialog(BuildContext context, Function exchange) {
+  static gamePauseTaskDialog(BuildContext context, Function exchange,Function consume) {
     showDialog(
         context: context,
         barrierColor: Color.fromRGBO(18, 83, 157, 1.0),
@@ -14,7 +14,7 @@ class TTDialog {
             child: Container(
               width: MediaQuery.of(context).size.width,
               height: MediaQuery.of(context).size.height,
-              child: GamePauseTaskDialog(exchange: exchange),
+              child: GamePauseTaskDialog(exchange: exchange,consume: consume,),
             ),
           );
         });
@@ -24,8 +24,10 @@ class TTDialog {
 //*游戏暂停弹窗*/
 class GamePauseTaskDialog extends StatelessWidget {
   Function exchange;
+  Function consume;
 
-  GamePauseTaskDialog({required this.exchange});
+
+  GamePauseTaskDialog({required this.exchange,required this.consume});
 
   @override
   Widget build(BuildContext context) {
@@ -50,7 +52,10 @@ class GamePauseTaskDialog extends StatelessWidget {
                 SizedBox(
                   height: 6,
                 ),
-                Container(
+                GestureDetector(onTap: (){
+                  consume();
+                },
+                child: Container(
                   width: 65,
                   height: 27,
                   color: Color.fromRGBO(12, 51, 109, 1.0),
@@ -70,6 +75,9 @@ class GamePauseTaskDialog extends StatelessWidget {
                     ],
                   ),
                 ),
+                )
+
+
               ],
             ),
           ),
@@ -85,8 +93,8 @@ class GamePauseTaskDialog extends StatelessWidget {
                   onTap: () {
                     print("退出游戏11");
                     exchange();
-                    Navigator.pop(context);
-                    Navigator.pop(context);
+                    // Navigator.pop(context);
+                    // Navigator.pop(context);
                   },
                   child: Container(
                     width: 127,
@@ -111,7 +119,7 @@ class GamePauseTaskDialog extends StatelessWidget {
                 GestureDetector(
                     onTap: () {
                       print("退出游戏2");
-                      Navigator.pop(context);
+                      // Navigator.pop(context);
                     },
                     child: Container(
                       width: 127,

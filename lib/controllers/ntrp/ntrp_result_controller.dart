@@ -55,7 +55,8 @@ class NtrpResultControllerState extends State<NtrpResultController> {
                 mainAxisAlignment: MainAxisAlignment.center,
                 children: [
                   GestureDetector(onTap: (){
-                    Navigator.pop(context);
+                    Navigator.of(context).popUntil((route) =>route.isFirst);// 回到跟视图
+
                     /// 机器人位置校准回到原点
                     CommStatusManager().writerData(positionCheckData());
                   },

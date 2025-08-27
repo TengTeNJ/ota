@@ -13,6 +13,7 @@ import 'package:ota/views/total_power_view.dart';
 import '../../constants.dart';
 import '../../utils/audio_player_util.dart';
 import '../../utils/comm_statu_manager.dart';
+import '../../utils/dialog.dart';
 import '../../utils/event_manager.dart';
 import '../../utils/ota_data.dart';
 import '../../utils/service_util.dart';
@@ -219,6 +220,7 @@ class _NtrpTestControllerState extends State<NtrpTestController> {
     // TODO: implement initState
     super.initState();
     // playLocalAudio('blueMonday1.MP3', isAlwaysplay: true);
+    print("NTRP 测评开始了");
     startGame();
     CommStatusManager().isDeviceDeail = true;
     EventBus eventBus = EventBusManager().eventBus;
@@ -292,6 +294,8 @@ class _NtrpTestControllerState extends State<NtrpTestController> {
           print("${forehandSpeeds}");
           print("${backhandSpeeds}");
           print("${volleySpeeds}");
+          /// 机器人位置校准回到原点
+          CommStatusManager().writerData(positionCheckData());
           gotoEndPage();
         }
         _startFlag = true;
@@ -328,8 +332,6 @@ class _NtrpTestControllerState extends State<NtrpTestController> {
    //     });
    //   });
    // });
-
-
 
     // Future.delayed(Duration(milliseconds: 2000), () {
     //   var powerControlRate = (1 / 6.toDouble() *100).toStringAsFixed(0);
@@ -569,7 +571,17 @@ class _NtrpTestControllerState extends State<NtrpTestController> {
             left: 40,
             child: GestureDetector(
                 onTap: () {
-                  print("123");
+                  TTDialog.gamePauseTaskDialog(context, () {
+                    print("弹窗点击");
+                    CommStatusManager().writerData(changeModeData(0xff));
+                    Navigator.of(context).popUntil((route) =>route.isFirst);// 回到根视图
+
+                  },() {
+                    print("继续播放");
+                    Navigator.pop(context);
+                    // playLocalAudio('blueMonday1.MP3', isAlwaysplay: true);
+                    resumeContinue();
+                  });
                 },
                 child: Padding(
                   padding: EdgeInsets.all(10),

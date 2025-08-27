@@ -2,8 +2,6 @@ import 'dart:async';
 
 import 'package:event_bus/event_bus.dart';
 import 'package:flutter/material.dart';
-import 'package:ota/controllers/pressure/ntrp_pressure_end_controller.dart';
-import 'package:ota/controllers/pressure/ntrp_pressure_progress_view.dart';
 
 import '../../../constants.dart';
 import '../../../utils/audio_player_util.dart';
@@ -12,6 +10,12 @@ import '../../../utils/event_manager.dart';
 import '../../../utils/ota_data.dart';
 import '../../../utils/system_util.dart';
 import '../../../views/total_power_view.dart';
+// import '../../pressure/ntrp_pressure_end_controller.dart';
+// import '../../pressure/ntrp_pressure_progress_view.dart';
+import 'ntrp_pressure_end_controller.dart';
+import 'ntrp_pressure_progress_view.dart';
+
+
 import '../../step_control_page.dart';
 
 
@@ -169,6 +173,7 @@ class _NtrpPressureTestControllerState extends State<NtrpPressureTestController>
     _remainingMs = _totalDurationMs;
     _timer?.cancel();
     _timer = Timer.periodic(Duration(milliseconds: 10), (timer) async{
+      if (!mounted) return;  // 1️⃣ 保险丝
       if (_remainingMs <= 0) {
         timer.cancel();
         setState(() {});
@@ -186,7 +191,6 @@ class _NtrpPressureTestControllerState extends State<NtrpPressureTestController>
         controlRobotMove(0, 0, 0, 0, 7, 8, 40, 120, 150);
       }
       _remainingMs -= 10;
-      // print("剩余显示时间为${getDisplayTime()}");
       setState(() {});
     });
   }

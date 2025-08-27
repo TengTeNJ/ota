@@ -1,6 +1,5 @@
 import 'package:flutter/material.dart';
-import 'package:ota/controllers/pressure/ntrp_pressure_end_view.dart';
-
+import 'ntrp_pressure_end_view.dart';
 import '../../../constants.dart';
 
 class NtrpPressureEndController extends StatefulWidget {

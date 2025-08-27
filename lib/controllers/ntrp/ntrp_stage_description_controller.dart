@@ -28,6 +28,7 @@ class _NtrpStageDescriptionControllerState
   void initState() {
     // TODO: implement initState
     super.initState();
+      print("NTRp 阶段说明界面");
       beginCountDown = true;
       /// 3s 倒计时
       var timer = Timer.periodic(Duration(milliseconds: 1000),(timer){

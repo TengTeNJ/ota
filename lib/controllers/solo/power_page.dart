@@ -19,6 +19,8 @@ import '../../views/show_speed_view.dart';
 
 import 'package:flutter_tts/flutter_tts.dart';
 
+import '../../views/total_power_view.dart';
+
 class PowerPage extends StatefulWidget {
   String type = "p1";
 
@@ -29,7 +31,7 @@ class PowerPage extends StatefulWidget {
 }
 
 class _PowerPageState extends State<PowerPage> {
-  List<bool> lights = [false, false, false, true, true, true, false, false];
+  List<bool> lights = [true, true, true, false, false, false, true, true,true];
   int maxSpeed = 0;
   int speedIndexs = 0;
   int numbersOfHit = 0; // 击中中间三个图形标靶的次数
@@ -63,6 +65,9 @@ class _PowerPageState extends State<PowerPage> {
   Timer? _timer;
   double _opacity = 1.0;
 
+  List<int> middleTargetIndexs = [11, 12, 13,1]; // 中间三个标靶的索引(1为中间的新增的标靶)
+
+
   @override
   void initState() {
     // TODO: implement initState
@@ -72,6 +77,7 @@ class _PowerPageState extends State<PowerPage> {
     startCountdown();
 
     print("索引为${speedIndexs}");
+
 
     // Future.delayed(Duration(milliseconds: 10000), () {
     //   double rightSum = _TotalSpeeds.fold(0.0, (previousValue, element) => previousValue + element);
@@ -185,22 +191,13 @@ class _PowerPageState extends State<PowerPage> {
       } else if (event.data == kTargetIndex) {
         /// 击中标靶的索引
         if (_updateTime(1) < 1000) {
-          return;
-
-          /// 1s内不处理
+          return;/// 1s内不处理
         }
         print('power界面 击中标靶的索引为${CommStatusManager().targetIndex}');
-        if (CommStatusManager().targetIndex[0] == 12) {
-          numbersOfHit += 1;
-          _ShotInCount += 1; // 顶部  三角形 12
-        } else if (CommStatusManager().targetIndex[0] == 11) {
-          //  右侧矩形11
-          print("右侧  矩形");
+        if (middleTargetIndexs.contains(CommStatusManager().targetIndex[0])){
           numbersOfHit += 1;
           _ShotInCount += 1;
-        } else if (CommStatusManager().targetIndex[0] == 13) {
-          numbersOfHit += 1;
-          _ShotInCount += 1; // 圆行 13
+          flashingLight(CommStatusManager().targetIndex[0]);
         }
       }
       if (mounted) {
@@ -462,6 +459,32 @@ class _PowerPageState extends State<PowerPage> {
     });
   }
 
+  /// 击中某个标靶闪灯（熄灭 在出现）
+  void flashingLight(int targetIndex) {
+    if (targetIndex == 12){  // 顶部三角形
+      lights = [ true, true, true, true, false, false, true, true, true];
+      setState(() {});
+      Future.delayed(Duration(milliseconds: 500),(){
+        lights = [ true, true, true, false, false, false, true, true, true];
+        setState(() {});
+      });
+    } else if(targetIndex == 11) { // 右侧图形
+      lights = [ true, true, true, false, false, true, true, true, true];
+      setState(() {});
+      Future.delayed(Duration(milliseconds: 500),(){
+        lights = [ true, true, true, false, false, false, true, true, true];
+        setState(() {});
+      });
+    } else if(targetIndex == 13) { // 左侧图形
+      lights = [ true, true, true, false, true, false, true, true, true];
+      setState(() {});
+      Future.delayed(Duration(milliseconds: 500),(){
+        lights = [ true, true, true, false, false, false, true, true, true];
+        setState(() {});
+      });
+    }
+  }
+
   @override
   Widget build(BuildContext context) {
     double _width = (Constants.screenWidth(context) - 98 - 28 * 7) / 8;
@@ -630,8 +653,14 @@ class _PowerPageState extends State<PowerPage> {
                     ),
                   ],
                 )),
+          // Center(
+          //   child: PowerView(),
+          // ),
+
           Center(
-            child: PowerView(),
+            child: TotalPowerView(
+              hideIndex: lights,
+            ),
           ),
 
           /// 一轮结束的提示语
@@ -672,11 +701,16 @@ class _PowerPageState extends State<PowerPage> {
             left: 40,
             child: GestureDetector(
                 onTap: () {
-                  print("123");
-                  TTDialog.gamePauseTaskDialog(context, () {
+                   stop();
+                   TTDialog.gamePauseTaskDialog(context, () {
                     print("弹窗点击");
                     CommStatusManager().writerData(changeModeData(0xff));
-                  });
+                  },() {
+                     print("继续播放");
+                     Navigator.pop(context);
+                     playLocalAudio('blueMonday1.MP3', isAlwaysplay: true);
+                     resumeContinue();
+                   });
                 },
                 child: Padding(
                   padding: EdgeInsets.all(10),

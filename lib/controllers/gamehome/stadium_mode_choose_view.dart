@@ -31,26 +31,29 @@ class _StadiumModeChooseViewState extends State<StadiumModeChooseView> {
 
           Positioned(
               top: 35 * 2,
-              left:  widget.title == "P3 Mode" ? 194/ 2 + 4: 194/ 2 - 25,
-              child: Column(
-                crossAxisAlignment: CrossAxisAlignment.center,
-                mainAxisAlignment: MainAxisAlignment.center,
-                children: [
-                  Image.asset(
-                    '${widget.imagePath}',
-                    width: 65 * 1.5,
-                    height: 65 * 1.5,
-                  ),
-                  SizedBox(height: 13*2,),
-                  Constants.boldWhiteTextWidget("${widget.title}", 20),
-                  SizedBox(height: 5*2,),
-                  Constants.regularWhiteTextWidget("${widget.subTitle}", 13,
+              left: 0,
+              right: 0,
+              child:  Center(
+                child: Column(
+                  crossAxisAlignment: CrossAxisAlignment.center,
+                  mainAxisAlignment: MainAxisAlignment.center,
+                  children: [
+                    SizedBox(height: 13*2,),
+                    Image.asset(
+                      '${widget.imagePath}',
+                      width: Constants.screenHeight(context) / 2 / 3.5,
+                      height: Constants.screenHeight(context) / 2 / 3.5,
+                    ),
+                    SizedBox(height: 13*2,),
+                    Constants.boldWhiteTextWidget("${widget.title}", 24),
+                    SizedBox(height: 5*2,),
+                    Constants.regularWhiteTextWidget("${widget.subTitle}", 16,
                       Color.fromRGBO(233, 100, 21, 1.0),
-                  ),
-                ],
+                    ),
+                  ],
 
-              )
-
+                )
+              ),
           )
 
         ],

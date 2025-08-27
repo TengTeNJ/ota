@@ -1,11 +1,12 @@
 import 'dart:async';
 
 import 'package:flutter/material.dart';
-import 'package:ota/controllers/pressure/ntrp_pressure_progress_view.dart';
-import 'package:ota/controllers/pressure/pressure_end_progress_view.dart';
 import 'package:percent_indicator/circular_percent_indicator.dart';
 
 import '../../../constants.dart';
+// import '../../../views/pressure/pressure_end_progress_view.dart';
+import '../ntrp_common_start_controller.dart';
+import 'pressure_end_progress_view.dart';
 
 class NtrpPressureEndView extends StatefulWidget {
   int count = 0;
@@ -25,10 +26,14 @@ class _NtrpPressureEndViewState extends State<NtrpPressureEndView> {
     // TODO: implement initState
     super.initState();
     countDownTimer = Timer.periodic(Duration(milliseconds: 1000), (timer) async{
-      if (countDownSecond == 1 ) { /// 倒计时结束，进入理论测试
+      if (countDownSecond == 1 ) {
         countDownTimer?.cancel();
-
-
+        /// 倒计时结束，进入理论测试
+        Navigator.push(
+          context,
+          MaterialPageRoute(builder: (context) =>
+              NtrpCommonStartController(pageType: StartPageType.sixStage)), //
+        );
         return;
       }
       countDownSecond --;
@@ -105,7 +110,7 @@ class _NtrpPressureEndViewState extends State<NtrpPressureEndView> {
                 children: [
                   PressureEndProgressView(count: widget.count),
                   SizedBox(height: 18,),
-                  PressureEndProgressView(count: 0),
+                  PressureEndProgressView(count: widget.count <= 4 ? 0 : widget.count -4),
                   SizedBox(height: 18,),
                   Text(
                     "${widget.count}/8",

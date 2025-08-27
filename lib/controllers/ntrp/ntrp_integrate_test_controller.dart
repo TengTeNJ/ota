@@ -136,22 +136,6 @@ class _NtrpIntegrateTestControllerState
   void initState() {
     // TODO: implement initState
     super.initState();
-    // Future.delayed(Duration(milliseconds: 2000), () {
-    //     lights = [true, true, true, true, true, true, false, false, false];
-    //     setState(() {});
-    //     Future.delayed(Duration(milliseconds: 2000),(){
-    //       lights = [true, true, true, false, false, false, true, true, true];
-    //       setState(() {});
-    //
-    //         Future.delayed(Duration(milliseconds: 2000),() {
-    //           lights = [false, false, false, true, true, true, true, true, true];
-    //           setState(() {});
-    //
-    //         });
-    //     });
-    // });
-
-
     startGame();
     CommStatusManager().isDeviceDeail = true;
     EventBus eventBus = EventBusManager().eventBus;
@@ -214,6 +198,8 @@ class _NtrpIntegrateTestControllerState
         }
 
         if (speedIndexs == 51) {
+          /// 机器人位置校准回到原点
+          CommStatusManager().writerData(positionCheckData());
           gotoEndPage();
         }
         _startFlag = true;
@@ -288,6 +274,7 @@ class _NtrpIntegrateTestControllerState
   }
 
   void gotoEndPage() {
+
     Future.delayed(Duration(milliseconds: 2000), () {
       var powerControlRate = (1 / 6.toDouble() * 100).toStringAsFixed(0);
         var model = NtrpDataModel(
@@ -348,7 +335,7 @@ class _NtrpIntegrateTestControllerState
       return;
     }
     TennisMachineParams params =
-        TennisMachineParams.fromState(0, 310, 0, 8, 9, 40, 120, 125, 0);
+        TennisMachineParams.fromState(0, 310, 0, 8, 9, 40, 100, 125, 0);
     CommStatusManager().writerData(stepControlData(params));
   }
 
