@@ -93,8 +93,8 @@ class GamePauseTaskDialog extends StatelessWidget {
                   onTap: () {
                     print("退出游戏11");
                     exchange();
-                    // Navigator.pop(context);
-                    // Navigator.pop(context);
+                    Navigator.pop(context);
+                    Navigator.pop(context);
                   },
                   child: Container(
                     width: 127,
@@ -119,7 +119,7 @@ class GamePauseTaskDialog extends StatelessWidget {
                 GestureDetector(
                     onTap: () {
                       print("退出游戏2");
-                      // Navigator.pop(context);
+                      Navigator.pop(context);
                     },
                     child: Container(
                       width: 127,

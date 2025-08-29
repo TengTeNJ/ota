@@ -220,6 +220,13 @@ List<int> stepControlData(TennisMachineParams params){
   data.addAll([0xff,0xaa]);
   print("步伐控制data = ${data.map((toElement) => toElement.toRadixString(16)).toList()}");
   CommStatusManager().isStepControlling = true;
+  final stackTrace = StackTrace.current.toString().split("\n");
+
+
+  CommStatusManager().logDatas.add(
+      'APP 发送步伐控制${stackTrace[1]} ${data.map((toElement) => toElement.toRadixString(16)).toList()}');
+
+  EventBusManager().eventBus.fire(DataUpdatedEvent(kBLElog));
   return data;
 }
 

@@ -114,13 +114,7 @@ class _NewBattleTargetPageState extends State<NewBattleTargetPage> {
       } else if (event.data == kStepControlFinishResponse) {
         // 步伐控制结束回复
         _currentIndex ++;
-        // 延迟1秒后开始,防止测速器测速反应不过来（3s以内只能测一次速度）
-        // Future.delayed(Duration(milliseconds: 1000), () {
-        //   if(_currentIndex <=50) {
-        //     leftRightLoopGame();
-        //   }
-        // });
-         modeTwoGame();
+        modeTwoGame();
 
          /// 50轮 一局结束  跳转到结算界面
         if (_currentIndex == 50) {
@@ -292,7 +286,7 @@ class _NewBattleTargetPageState extends State<NewBattleTargetPage> {
 
     if(_currentIndex > 12 && _currentIndex <31) {
       TennisMachineParams params =
-      TennisMachineParams.fromState(0, 0, (_currentIndex % 2 == 0) ? -13 : 13, 9, 8, 40, 110, 175, 1);
+      TennisMachineParams.fromState(0, 0, (_currentIndex % 2 == 0) ? -13 : 13, 7, 7, 40, 120, 175, 1);
       CommStatusManager().writerData(stepControlData(params));
     }
 
@@ -305,7 +299,7 @@ class _NewBattleTargetPageState extends State<NewBattleTargetPage> {
 
     if(_currentIndex > 31  &&_currentIndex < 50) {
       TennisMachineParams params =
-      TennisMachineParams.fromState(0, 0, (_currentIndex % 2 == 0) ? -13 : 13, 8, 8, 40, 110, 175, 1);
+      TennisMachineParams.fromState(0, 0, (_currentIndex % 2 == 0) ? -13 : 13, 7, 7, 40, 120, 175, 1);
       CommStatusManager().writerData(stepControlData(params));
     }
 
@@ -315,17 +309,6 @@ class _NewBattleTargetPageState extends State<NewBattleTargetPage> {
       CommStatusManager().writerData(stepControlData(params));
     }
     print("发球索引${_currentIndex}");
-  }
-
-  /*左右循环发球*/
-  void leftRightLoopGame() {
-    TennisMachineParams params =
-    TennisMachineParams.fromState(0, 0, (_currentIndex % 2 == 0) ? -13 : 13, 8, 8, 40, 115, 125, 0);
-    CommStatusManager().writerData(stepControlData(params));
-  }
-
-  void secondProgressGame(){
-
   }
 
   @override

@@ -398,17 +398,17 @@ class _PowerPageState extends State<PowerPage> {
 
   ///.布云朝克特 等相关步伐
   void newModeThreeGame() {
-    var type = CommStatusManager().stepType.toInt();
-    if (type == 2) {
-      jarmikSinnerRomaTask[indexList.length]?.call();
-      print("步伐2");
-    } else if (type == 3) {
-      taskMap[indexList.length]?.call();
-      print("步伐3");
-    } else if (type == 1) {
+    // var type = CommStatusManager().stepType.toInt();
+    // if (type == 2) {
+    //   jarmikSinnerRomaTask[indexList.length]?.call();
+    //   print("步伐2");
+    // } else if (type == 3) {
+    //   taskMap[indexList.length]?.call();
+    //   print("步伐3");
+    // } else if (type == 1) {
       modeOneGame();
       print("步伐p1");
-    }
+    // }
   }
 
   void enterEndPage() {
@@ -429,17 +429,6 @@ class _PowerPageState extends State<PowerPage> {
                 rightUserModel: rightUserModel,
               )), // 结算页面
     );
-  }
-
-  /*力量训练第二阶段*/
-  void secondProgressGame() {
-    // if(speedIndexs < 10){
-    //   print('未进入第二阶段，不处理--${speedIndexs}');
-    //   return;
-    // }
-    // TennisMachineParams params =
-    // TennisMachineParams.fromState(0, 0, (speedIndexs % 2 == 0) ? -13 : 13, 12, 12, 40, 115, 125, 1);
-    // CommStatusManager().writerData(stepControlData(params));
   }
 
   void startCountdown() {

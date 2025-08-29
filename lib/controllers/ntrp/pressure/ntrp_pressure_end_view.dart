@@ -41,7 +41,6 @@ class _NtrpPressureEndViewState extends State<NtrpPressureEndView> {
       if (mounted) {
         setState(() {});
       }
-      setState(() {});
     });
 
   }
