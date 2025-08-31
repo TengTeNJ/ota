@@ -5,6 +5,7 @@ import 'package:ota/utils/language_model.dart';
 import 'package:ota/utils/theme_provider.dart';
 import 'package:provider/provider.dart';
 import 'package:any_loading/any_loading.dart';
+import 'package:get/get.dart';
 void main() {
   runApp(
     ChangeNotifierProvider(
@@ -25,7 +26,7 @@ class MyApp extends StatelessWidget {
   Widget build(BuildContext context) {
     final themeProvider = Provider.of<ThemeProvider>(context);
     return Consumer<LanguageModel>(builder: (context,language,child){
-      return MaterialApp(
+      return GetMaterialApp(
         debugShowCheckedModeBanner: false,
         title: 'Flutter Demo',
         theme: ThemeData.light(), // 亮色主题
