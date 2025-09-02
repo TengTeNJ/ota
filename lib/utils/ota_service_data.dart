@@ -437,6 +437,12 @@ class OTAServiceDataParse {
             '${bleNotAllData[7]}.${bleNotAllData[8]}.${bleNotAllData[9]}.${bleNotAllData[10]}';
         print('版本号:${version}');
         CommStatusManager().versionName = version;
+        // 角度值
+        int hightAngle = bleNotAllData[11];
+        int lowAngle = bleNotAllData[12];
+        print('hightAngle=${hightAngle}lowAngle=${lowAngle}');
+        String _angelValue = (((hightAngle << 8) | lowAngle)/10.0).toStringAsFixed(1);
+        CommStatusManager().angleValue = _angelValue;
 
         EventBusManager().eventBus.fire(DataUpdatedEvent(kPowerValue));
       } else if (cmd == 0x18) {

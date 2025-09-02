@@ -117,6 +117,7 @@ class CommStatusManager {
   List<List<int>> packetBinDatas = []; // 分包过的bin文件数据
 
   String versionName = '1.0.0.0';
+  String angleValue = '0.0'; // 角度值
   int statu = 0;
 
   Timer? stepTimeOutTimer; // 步伐超时定时器
@@ -173,10 +174,10 @@ class CommStatusManager {
                 .deviceList
                 .add(BLEModel(deviceName: event.name, device: event));
             EventBusManager().eventBus.fire(DataUpdatedEvent(kFindNewDevice));
-            // 发球机根据场地类型自动连接
-            if (event.name.contains(kBLENewDeviceName) &&
-                event.name.contains(
-                    CommStatusManager().siteType.toStringAsFixed(0))) {
+            // 发球机根据场地类型自动连接  event.name.contains(
+            //                     CommStatusManager().siteType.toStringAsFixed(0))
+            // 因为有时候发球机会被调到非对应场地，所以自动连接满足的机器人设备，但是如果有已经连接的就不要自动连接
+            if (event.name.contains(kBLENewDeviceName) && CommStatusManager().currentConnectedDevice == null) {
               connectToDevice(BLEModel(deviceName: event.name, device: event));
             }
           }
