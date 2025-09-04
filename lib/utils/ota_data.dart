@@ -1,12 +1,13 @@
+import 'dart:async';
 import 'dart:typed_data';
+import 'package:flutter/material.dart';
 import 'package:ota/controllers/step_control_page.dart';
 import 'package:ota/utils/comm_statu_manager.dart';
 import 'package:ota/utils/service_util.dart';
-
 import '../constants.dart';
 import 'event_manager.dart';
 import 'ota_service_data.dart';
-
+import 'package:get/get.dart';
 int crc16Update(List<int> src) {
   int crc = 0;
   for (int byte in src) {
@@ -227,6 +228,17 @@ List<int> stepControlData(TennisMachineParams params){
       'APP 发送步伐控制${stackTrace[1]} ${data.map((toElement) => toElement.toRadixString(16)).toList()}');
 
   EventBusManager().eventBus.fire(DataUpdatedEvent(kBLElog));
+  CommStatusManager().stepTimeOutTimer = Timer(const Duration(milliseconds: 500), () {
+    print('500毫秒后执行一次，超时重发');
+    CommStatusManager().stepTimeOutCount ++;
+    if(CommStatusManager().stepTimeOutCount >= 2){
+      CommStatusManager().stepTimeOutCount = 0;
+      Get.snackbar("提示", "蓝牙通讯异常，请重启机器人设备重试"); // 不需要 context
+      return;
+    }
+    CommStatusManager().writerData(stepControlData(params));
+  }); // 一次性延迟执行
+
   return data;
 }
 

@@ -301,6 +301,7 @@ class OTAServiceDataParse {
   /*解析摄像头的数据*/
   static handleData(List<int> element) {
     print('----element==$element}');
+
     /// 虚拟标靶击中的索引
     if (element[2] == 0x10) {
       List<int> targets = [
@@ -314,6 +315,7 @@ class OTAServiceDataParse {
       print('targets=${temp}');
     }
   }
+
   static handleNotFullData(List<int> data) {
     bleCameraNotAllData.addAll(data);
     if (isNewCamera) {
@@ -350,6 +352,7 @@ class OTAServiceDataParse {
       }
     }
   }
+
   static parseCameraData(List<int> data) {
     if (data.isEmpty) {
       return;
@@ -378,13 +381,13 @@ class OTAServiceDataParse {
       handleNotFullData(data);
     }
   }
+
 /*-------------------------------------------------⬆️摄像头--------发球机⬇️----------------------------------------------------------------------------*/
   /*解析发球机的数据*/
   static handleDeviceData(List<int> element) {
     print('----handleDeviceData==$element}');
     bleNotAllData.addAll(element);
-    if (element.length == element[1] &&
-        element.length >= 3) {
+    if (element.length == element[1] && element.length >= 3) {
       int cmd = element[2];
       int value = element[3];
       print('cmd=${cmd}');
@@ -403,13 +406,20 @@ class OTAServiceDataParse {
         }
       } else if (cmd == 0x14) {
         print('步伐控制步伐的回复${bleNotAllData[3]}');
-        if (bleNotAllData.length >= 3 &&
-            bleNotAllData[3] == 2 &&
-            bleNotAllData[2] == 0x14) {
-          CommStatusManager().isStepControlling = false;
-          EventBusManager()
-              .eventBus
-              .fire(DataUpdatedEvent(kStepControlFinishResponse));
+        if (bleNotAllData.length >= 3 && bleNotAllData[2] == 0x14) {
+          if (bleNotAllData[3] == 2) {
+            CommStatusManager().isStepControlling = false;
+            EventBusManager()
+                .eventBus
+                .fire(DataUpdatedEvent(kStepControlFinishResponse));
+          } else if (bleNotAllData[3] == 1) {
+            // 收到1之后 清除超时定时器
+            print('收到1清空定时器');
+            // 清空超时次数
+            CommStatusManager().stepTimeOutCount = 0;
+            // 清空超时定时器
+            CommStatusManager().stepTimeOutTimer?.cancel();
+          }
         }
       } else if (cmd == 0x19) {
         print('系统状态反馈');
@@ -427,6 +437,12 @@ class OTAServiceDataParse {
             '${bleNotAllData[7]}.${bleNotAllData[8]}.${bleNotAllData[9]}.${bleNotAllData[10]}';
         print('版本号:${version}');
         CommStatusManager().versionName = version;
+        // 角度值
+        int hightAngle = bleNotAllData[11];
+        int lowAngle = bleNotAllData[12];
+        print('hightAngle=${hightAngle}lowAngle=${lowAngle}');
+        String _angelValue = (((hightAngle << 8) | lowAngle)/10.0).toStringAsFixed(1);
+        CommStatusManager().angleValue = _angelValue;
 
         EventBusManager().eventBus.fire(DataUpdatedEvent(kPowerValue));
       } else if (cmd == 0x18) {
@@ -435,6 +451,7 @@ class OTAServiceDataParse {
       bleNotAllData.clear();
     }
   }
+
   static parseData(List<int> data) {
     if (data.isEmpty) {
       return;
@@ -448,7 +465,7 @@ class OTAServiceDataParse {
         'CommStatusManager().isDeviceDeail=${CommStatusManager().isDeviceDeail}');
     if (CommStatusManager().isDeviceDeail) {
       // 发球机设备控制相关的
-     // bleNotAllData.addAll(data);
+      // bleNotAllData.addAll(data);
       if (data.length >= 4 && data[0] == kBLEDataFrameHeader) {
         // 取出来数据的长度标识位
         int length = data[1];
@@ -769,6 +786,7 @@ class OTAServiceDataParse {
       }
     }
   }
+
   static handleDeviceNotFullData(List<int> data) {
     bleNotAllData.addAll(data);
     if (isNew) {

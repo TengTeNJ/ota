@@ -107,7 +107,9 @@ class _DeviceControlPageState extends State<DeviceControlPage> {
             }
           }
         } else if (event.data == kPowerValue) {
-          setState(() {});
+          setState(() {
+
+          });
         }
       });
     });
@@ -420,9 +422,11 @@ class _DeviceControlPageState extends State<DeviceControlPage> {
                                     Text('${CommStatusManager().powerValue}')
                                   ],
                                 ),
-                                SizedBox(width: 32,),
+                                SizedBox(width: 12,),
                                 Row(children: [
-                                  Text('Firmware version：${CommStatusManager().versionName}')
+                                  Text('Version：${CommStatusManager().versionName}'),
+                                  const SizedBox(width: 16,),
+                                  Text('Angle：${CommStatusManager().angleValue}'),
                                 ],),
                               ],
                             ),

@@ -16,7 +16,6 @@ import 'event_manager.dart';
 import 'ota_service_data.dart';
 import 'package:flutter_easyloading/flutter_easyloading.dart';
 
-
 // 1️⃣ 定义ota进度枚举
 enum CommProgress {
   ready, // ready状态 未进行ota的阶段
@@ -62,7 +61,9 @@ class CommStatusManager {
 
   int targetInteral = 6; // 时间间隔
 
-  List<int> targetIndex = [];/// 击中标靶的索引
+  List<int> targetIndex = [];
+
+  /// 击中标靶的索引
   bool isOta = true;
   List<String> otaStrings = ['', '', '', '', '', '', ''];
   List<String> factoryStrings = [
@@ -81,14 +82,23 @@ class CommStatusManager {
   Stream<DiscoveredDevice>? _scanStream;
   double maxSpeed = 2;
 
-  double siteType = 2; /// 场地类型（1号场 2号场 3 号场）
+  double siteType = 2;
 
-  double stepType = 1; /// 步伐类型（p1 2 3 4）
+  /// 场地类型（1号场 2号场 3 号场）
 
-  bool ntrpTechnicalProficiencyResult = false; /// Ntrp 第一轮测评结果
-  bool ntrpMultiDimensionalResult = false; /// Ntrp 第二轮测评结果
-  double ntrpCorrectCount =0.0; /// Ntrp 答对题的数量
+  double stepType = 1;
 
+  /// 步伐类型（p1 2 3 4）
+
+  bool ntrpTechnicalProficiencyResult = false;
+
+  /// Ntrp 第一轮测评结果
+  bool ntrpMultiDimensionalResult = false;
+
+  /// Ntrp 第二轮测评结果
+  double ntrpCorrectCount = 0.0;
+
+  /// Ntrp 答对题的数量
 
   int totalDataLength = 0;
   int hasSendDataLength = 0;
@@ -107,7 +117,12 @@ class CommStatusManager {
   List<List<int>> packetBinDatas = []; // 分包过的bin文件数据
 
   String versionName = '1.0.0.0';
+  String angleValue = '0.0'; // 角度值
   int statu = 0;
+
+  Timer? stepTimeOutTimer; // 步伐超时定时器
+  bool hasSended = false; // 已经发送步伐
+  int stepTimeOutCount = 0; // 超时次数
 
   set progress(CommProgress progress) {
     _progress = progress;
@@ -148,7 +163,10 @@ class CommStatusManager {
         }
         // print('event.name=${event.name}====${event.name.length}');
         if (event.name.contains(kBLEDeviceName) ||
-            event.name.contains(kBLENewDeviceName) || event.name.contains(kCamera1)  || event.name.contains(kCamera2) ||  event.name.contains('NB')) {
+            event.name.contains(kBLENewDeviceName) ||
+            event.name.contains(kCamera1) ||
+            event.name.contains(kCamera2) ||
+            event.name.contains('NB')) {
           // 如果设备列表数组中无，则添加
           if (!hasDevice(event.id)) {
             print('添加新设备--${event.id}----${event.name}');
@@ -156,17 +174,27 @@ class CommStatusManager {
                 .deviceList
                 .add(BLEModel(deviceName: event.name, device: event));
             EventBusManager().eventBus.fire(DataUpdatedEvent(kFindNewDevice));
+            // 发球机根据场地类型自动连接  event.name.contains(
+            //                     CommStatusManager().siteType.toStringAsFixed(0))
+            // 因为有时候发球机会被调到非对应场地，所以自动连接满足的机器人设备，但是如果有已经连接的就不要自动连接
+            if (event.name.contains(kBLENewDeviceName) && CommStatusManager().currentConnectedDevice == null) {
+              connectToDevice(BLEModel(deviceName: event.name, device: event));
+            }
           }
-        } else if ((event.name.contains(kBLEMySpeedzName) &&  CommStatusManager().siteType == 2) || (event.name.contains(kBLEMySpeedz1Name) &&  CommStatusManager().siteType == 1) ) {
-          if(this.myspeedzConnectedDevice  != null){
+        } else if (((event.name.contains(kBLEMySpeedzName) || (event.name.contains(kBLEMySpeedz1Name))) &&
+                CommStatusManager().siteType == 2) ||
+            (event.name.contains(kBLEMySpeedz1Name) &&
+                CommStatusManager().siteType == 1)) {
+          if (this.myspeedzConnectedDevice != null) {
             print('已发现测速器---${event.name}');
             return;
           }
           // 测速器
           // 保存测速器变量
           print('发现测速器---');
-          this.myspeedzConnectedDevice = BLEModel(deviceName: event.name, device: event);
-          Future.delayed(Duration(milliseconds: 1000),(){
+          this.myspeedzConnectedDevice =
+              BLEModel(deviceName: event.name, device: event);
+          Future.delayed(Duration(milliseconds: 1000), () {
             connectToMyspeedzDevice();
           });
         }
@@ -211,15 +239,19 @@ class CommStatusManager {
             connectionTimeout: const Duration(seconds: 10))
         .listen((event) async {
       if (event.connectionState == DeviceConnectionState.connected) {
-        if(model.deviceName.toString().contains(kBLEDeviceName) || model.deviceName.toString().contains(kCamera1) || model.deviceName.toString().contains(kCamera2)){
-           // 摄像头主机
+        if (model.deviceName.toString().contains(kBLEDeviceName) ||
+            model.deviceName.toString().contains(kCamera1) ||
+            model.deviceName.toString().contains(kCamera2)) {
+          // 摄像头主机
           notifyChar = QualifiedCharacteristic(
               serviceId: Uuid.parse(kBLE_CAMERA_SERVICE_NOTIFY_UUID),
-              characteristicId: Uuid.parse(kBLE_CAMERA_CHARACTERISTIC_NOTIFY_UUID),
+              characteristicId:
+                  Uuid.parse(kBLE_CAMERA_CHARACTERISTIC_NOTIFY_UUID),
               deviceId: model.device!.id);
           writeChar = QualifiedCharacteristic(
               serviceId: Uuid.parse(kBLE_CAMERA_SERVICE_WRITER_UUID),
-              characteristicId: Uuid.parse(kBLE_CAMERA_CHARACTERISTIC_WRITER_UUID),
+              characteristicId:
+                  Uuid.parse(kBLE_CAMERA_CHARACTERISTIC_WRITER_UUID),
               deviceId: model.device!.id);
           print("摄像头主机连接成功，并获取到特征");
           AnyLoading.showSuccess("Camera connection successful");
@@ -230,7 +262,7 @@ class CommStatusManager {
             print(
                 "上报来的数据data = ${data.map((toElement) => toElement.toRadixString(16)).toList()}");
             // 解析数据
-            if(logDatas.length == 1 && logDatas.contains('-')){
+            if (logDatas.length == 1 && logDatas.contains('-')) {
               logDatas.remove('-');
             }
             this.logDatas.add(
@@ -272,7 +304,7 @@ class CommStatusManager {
           print(
               "上报来的数据data = ${data.map((toElement) => toElement.toRadixString(16)).toList()}");
           // 解析数据
-          if(logDatas.length == 1 && logDatas.contains('-')){
+          if (logDatas.length == 1 && logDatas.contains('-')) {
             logDatas.remove('-');
           }
           this.logDatas.add(
@@ -299,7 +331,7 @@ class CommStatusManager {
   }
 
   Future<void> connectToMyspeedzDevice() async {
-    if(this.myspeedzConnectedDevice == null){
+    if (this.myspeedzConnectedDevice == null) {
       print('测速器未在线');
       return;
     }
@@ -309,15 +341,17 @@ class CommStatusManager {
     stream = CommStatusManager()
         .ble
         .connectToDevice(
-        id: model.device!.id,
-        connectionTimeout: const Duration(seconds: 10))
+            id: model.device!.id,
+            connectionTimeout: const Duration(seconds: 10))
         .listen((event) async {
       if (event.connectionState == DeviceConnectionState.connected) {
         notifyChar = QualifiedCharacteristic(
             serviceId: Uuid.parse(KBLE_MYSPEEDZ_SERVICE_UUID),
-            characteristicId: Uuid.parse(KBLE_MYSPEEDZ_CHARACTERISTIC_NOTIFY_UUID),
+            characteristicId:
+                Uuid.parse(KBLE_MYSPEEDZ_CHARACTERISTIC_NOTIFY_UUID),
             deviceId: model.device!.id);
-        CommStatusManager().myspeedzConnectedDevice?.notifyCharacteristic = notifyChar;
+        CommStatusManager().myspeedzConnectedDevice?.notifyCharacteristic =
+            notifyChar;
 
         BLEModel currentModel = model;
         currentModel.device = model.device!;
@@ -336,7 +370,7 @@ class CommStatusManager {
             .listen((List<int> data) {
           print(
               "上报来的数据data = ${data.map((toElement) => toElement.toRadixString(16)).toList()}");
-          if(logDatas.length == 1 && logDatas.contains('-')){
+          if (logDatas.length == 1 && logDatas.contains('-')) {
             logDatas.remove('-');
           }
           // 解析数据
@@ -360,7 +394,6 @@ class CommStatusManager {
       }
     });
   }
-
 
   // 设置状态（你也可以加入日志打印）
   void updateProgress(CommProgress newProgress) {
@@ -397,7 +430,7 @@ class CommStatusManager {
   void writerData(List<int> data) {
     // 发送数据
     if (CommStatusManager().currentConnectedDevice != null) {
-     CommStatusManager().ble.writeCharacteristicWithoutResponse(
+      CommStatusManager().ble.writeCharacteristicWithoutResponse(
           CommStatusManager().currentConnectedDevice!.writerCharacteristic!,
           value: data);
     } else {
