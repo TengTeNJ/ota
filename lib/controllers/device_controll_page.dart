@@ -242,6 +242,7 @@ class _DeviceControlPageState extends State<DeviceControlPage> {
         // 结束
         if (data == 'mode7') {
           CommStatusManager().writerData(changeModeData(0xff));
+          print("机器人end");
           return;
         }
 

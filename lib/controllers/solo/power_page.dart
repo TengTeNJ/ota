@@ -1,7 +1,10 @@
 import 'dart:async';
+import 'dart:ffi';
 // import 'dart:nativewrappers/_internal/vm/lib/ffi_allocation_patch.dart';
 import 'package:event_bus/event_bus.dart';
 import 'package:flutter/material.dart';
+import 'package:get/get.dart';
+import 'package:get/get_core/src/get_main.dart';
 import 'package:ota/controllers/solo/power_end_page.dart';
 import 'package:ota/controllers/step_control_page.dart';
 import 'package:ota/utils/comm_statu_manager.dart';
@@ -67,7 +70,8 @@ class _PowerPageState extends State<PowerPage> {
 
   List<int> middleTargetIndexs = [11, 12, 13,1]; // 中间三个标靶的索引(1为中间的新增的标靶)
 
-
+  /// 游戏暂停或者继续
+  bool gameing = true; /// 游戏中
   @override
   void initState() {
     // TODO: implement initState
@@ -84,7 +88,7 @@ class _PowerPageState extends State<PowerPage> {
     //   int rightcount = _TotalSpeeds.length;
     //   double averagSpeed = rightSum / rightcount;
     //   var rightUserModel1 = BattleUserModel(score: 10, shotInCount: 20,
-    //       topSpeed: 123, avgSpeed: 67,isWinner: true);
+    //       topSpeed: 0, avgSpeed: 0,isWinner: true);
     //   Navigator.push(
     //     context,
     //     MaterialPageRoute(builder: (context) =>PowerEndPage(rightUserModel: rightUserModel1,
@@ -145,6 +149,9 @@ class _PowerPageState extends State<PowerPage> {
 
         print('kSpeedValue--speedIndexs=${speedIndexs}');
       } else if (event.data == kStepControlFinishResponse) {
+        if (gameing == false) {
+          return;
+        }
         indexList.add(0);
 
         ///
@@ -157,8 +164,18 @@ class _PowerPageState extends State<PowerPage> {
           return;
         }
 
-        if (speedIndexs <= 50 && isMove == false) {
+        if (speedIndexs <= 49 && isMove == false) {
           speedIndexs++;
+        }
+
+        if (speedIndexs >= 50) {
+          /// 延迟3s 进到结算界面，防止最后一个球的数据记不进去
+          Future.delayed(Duration(milliseconds: 3000), () {
+            /// 机器人位置校准回到原点
+            CommStatusManager().writerData(positionCheckData());
+            enterEndPage();
+          });
+          return; /// 游戏结束 return
         }
 
         if (widget.type == "p1") {
@@ -199,6 +216,10 @@ class _PowerPageState extends State<PowerPage> {
           _ShotInCount += 1;
           flashingLight(CommStatusManager().targetIndex[0]);
         }
+      } else if (event.data == kRobotIsPowerOff) {
+        print("发球机关机退出游戏界面");
+        Get.snackbar("提示", "发球机异常,退出游戏界面"); // 不需要 context
+        Navigator.pop(context);
       }
       if (mounted) {
         setState(() {});
@@ -319,12 +340,6 @@ class _PowerPageState extends State<PowerPage> {
       CommStatusManager().writerData(stepControlData(params));
       isMove = false;
 
-      /// 延迟1s 进到结算界面，防止最后一个球的数据记不进去
-      Future.delayed(Duration(milliseconds: 1000), () {
-        /// 机器人位置校准回到原点
-        CommStatusManager().writerData(positionCheckData());
-        enterEndPage();
-      });
     }
 
     print("发球索引${speedIndexs}");
@@ -690,12 +705,14 @@ class _PowerPageState extends State<PowerPage> {
             left: 40,
             child: GestureDetector(
                 onTap: () {
+                   gameing = false;
                    stop();
                    TTDialog.gamePauseTaskDialog(context, () {
                     print("弹窗点击");
                     CommStatusManager().writerData(changeModeData(0xff));
                   },() {
                      print("继续播放");
+                     gameing = true;
                      Navigator.pop(context);
                      playLocalAudio('blueMonday1.MP3', isAlwaysplay: true);
                      resumeContinue();

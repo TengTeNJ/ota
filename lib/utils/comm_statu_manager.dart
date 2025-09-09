@@ -1,4 +1,5 @@
 import 'dart:async';
+import 'dart:ffi';
 import 'dart:io';
 import 'package:any_loading/any_loading.dart';
 import 'package:path/path.dart' as path;
@@ -124,6 +125,8 @@ class CommStatusManager {
   bool hasSended = false; // 已经发送步伐
   int stepTimeOutCount = 0; // 超时次数
 
+  bool robotIsPowerOff = false; // 发球机是否关机了（长时间重连不上）
+
   set progress(CommProgress progress) {
     _progress = progress;
   }
@@ -178,6 +181,7 @@ class CommStatusManager {
             //                     CommStatusManager().siteType.toStringAsFixed(0))
             // 因为有时候发球机会被调到非对应场地，所以自动连接满足的机器人设备，但是如果有已经连接的就不要自动连接
             if (event.name.contains(kBLENewDeviceName) && CommStatusManager().currentConnectedDevice == null) {
+              robotIsPowerOff = false;
               connectToDevice(BLEModel(deviceName: event.name, device: event));
             }
           }
@@ -325,7 +329,19 @@ class CommStatusManager {
         } catch (e) {
           print('没有找到满足条件的元素');
         }
-        print("设备已断开连接");
+        print("设备已断开连接${model.deviceName}");
+        if (model.deviceName == kBallMachine2) { // 如果是发球机断链
+          robotIsPowerOff = true;
+          Future.delayed(Duration(milliseconds: 3000), () { /// 3s后游戏结束
+            if (robotIsPowerOff) {
+              print("发球机器人关机了");
+              EventBusManager().eventBus.fire(DataUpdatedEvent(kRobotIsPowerOff));
+            }
+          });
+
+        }
+
+
       }
     });
   }
