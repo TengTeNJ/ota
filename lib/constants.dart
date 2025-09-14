@@ -43,11 +43,12 @@ const kBLE_270_CHARACTERISTIC_WRITER_UUID = "fff2";
 
 /// 2 号场设备名字
 // const kBLEDeviceName = "Tv511u-403F0109";Tennis_2  Stickhandling
-const kBLEDeviceName = "Tennis_2";
 
 const kCamera1 = "Stickhandling";
 const kCamera2 = "Tennis_2";
 
+/// 2 号场设备名字
+const kBLEDeviceName = "Tennis_2";
 const kBLENewDeviceName = "Roboti10";
 const kBLEMySpeedzName = "Myspeedz_2";
 const kBLEMySpeedz1Name = "Myspeedz";
@@ -56,10 +57,11 @@ const kBallMachine1 = "Roboti10_1";
 const kBallMachine2 = "Roboti10_2";
 
 /// 3 号场设备名字
-
 // const kBLEDeviceName = "ARtennis_3";
 // const kBLENewDeviceName = "Roboti10";
 // const kBLEMySpeedzName = "Myspeedz_3";
+// const kBLEMySpeedz1Name = "Myspeedz";
+
 
 const kSanjiaoWidth = 66;
 const kSanjiaoHeight = 58;
@@ -87,6 +89,9 @@ const kOTATextProgress= 'ota_text_progress_update';
 
 const kBLEDisconneted = 'disconnected';
 const kBLEConneted = 'connected';
+
+const kRobotIsPowerOff = 'robot_is_powerOff';
+
 
 const kBLElog = 'log_show';
 
