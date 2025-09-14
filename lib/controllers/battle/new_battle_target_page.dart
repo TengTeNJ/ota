@@ -183,41 +183,6 @@ class _NewBattleTargetPageState extends State<NewBattleTargetPage> {
     Future.delayed(Duration(milliseconds: 2000), () {
       startGame();
     });
-
-    Future.delayed(Duration(milliseconds: 3000),() {
-      _leftTotalSpeeds = [];
-
-      double leftSum = _leftTotalSpeeds.fold(0.0, (previousValue, element) => previousValue + element);
-      int count = _leftTotalSpeeds.length;
-      double leftAverage = leftSum / count;
-      if (count == 0) {
-        leftAverage = 0;
-      }
-
-      double rightSum = _rightTotalSpeeds.fold(0.0, (previousValue, element) => previousValue + element);
-      int rightcount = _rightTotalSpeeds.length;
-      double rightAverage = rightSum / rightcount;
-      if (rightcount == 0) {
-        rightAverage = 0;
-      }
-
-      SystemUtil.lockScreenHorizontalDirection();
-      var leftUserModel = BattleUserModel(score: _leftScore,shotInCount: _leftShotInCount,
-          topSpeed: _leftMaxSpeed, avgSpeed: leftAverage.toInt(),isWinner: _leftScore > _rightScore ?true:false);
-      var rightUserModel = BattleUserModel(score: _rightScore, shotInCount: _rightShotInCount,
-          topSpeed: _rightMaxSpeed, avgSpeed: rightAverage.toInt(),isWinner: _leftScore > _rightScore ?false:true);
-      if (leftUserModel.score == rightUserModel.score) {
-        leftUserModel.isDraw = true;
-        rightUserModel.isDraw = true;
-      }
-      Navigator.push(
-        context,
-        MaterialPageRoute(builder: (context) =>NewBattleTargetEndPage( leftUserModel: leftUserModel,
-          rightUserModel: rightUserModel,
-        )), // 结算页面
-      );
-    });
-
   }
 
   /// 跳转到结算界面
