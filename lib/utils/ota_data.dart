@@ -231,7 +231,7 @@ List<int> stepControlData(TennisMachineParams params){
   CommStatusManager().stepTimeOutTimer = Timer(const Duration(milliseconds: 500), () {
     print('500毫秒后执行一次，超时重发');
     CommStatusManager().stepTimeOutCount ++;
-    if(CommStatusManager().stepTimeOutCount >= 2){
+    if(CommStatusManager().stepTimeOutCount >= 10){
       CommStatusManager().stepTimeOutCount = 0;
       Get.snackbar("提示", "蓝牙通讯异常，请重启机器人设备重试"); // 不需要 context
       return;

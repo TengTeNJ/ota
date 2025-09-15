@@ -189,11 +189,11 @@ class _NewBattleTargetPageState extends State<NewBattleTargetPage> {
   void goToEndPage() {
     double leftSum = _leftTotalSpeeds.fold(0.0, (previousValue, element) => previousValue + element);
     int count = _leftTotalSpeeds.length;
-    double leftAverage = leftSum / count;
+    double leftAverage =  count ==0 ? leftSum / count : 0;
 
     double rightSum = _rightTotalSpeeds.fold(0.0, (previousValue, element) => previousValue + element);
     int rightcount = _rightTotalSpeeds.length;
-    double rightAverage = rightSum / rightcount;
+    double rightAverage =  count ==0 ? rightSum / rightcount : 0;
 
     SystemUtil.lockScreenHorizontalDirection();
       var leftUserModel = BattleUserModel(score: _leftScore,shotInCount: _leftShotInCount,
@@ -267,7 +267,7 @@ class _NewBattleTargetPageState extends State<NewBattleTargetPage> {
       return;
     }
     TennisMachineParams params =
-    TennisMachineParams.fromState(0, 310, 0, 8, 8, 40, 120, 125, 0);
+    TennisMachineParams.fromState(0, 330, 0, 8, 8, 40, 120, 125, 0);
     CommStatusManager().writerData(stepControlData(params));
     _currentIndex --;
 
@@ -278,7 +278,7 @@ class _NewBattleTargetPageState extends State<NewBattleTargetPage> {
     /// 步伐控制指令发球  12  18  20
     if (_currentIndex <=11) {
       TennisMachineParams params =
-      TennisMachineParams.fromState(0, 0, (_currentIndex % 2 == 0) ? -13 : 13, 8, 8, 40, 120, 175, 1);
+      TennisMachineParams.fromState(0, 0, (_currentIndex % 2 == 0) ? -13 : 13, 9, 9, 40, 130, 175, 1);
       CommStatusManager().writerData(stepControlData(params));
     }
     /// 往前移动两米
@@ -290,7 +290,7 @@ class _NewBattleTargetPageState extends State<NewBattleTargetPage> {
 
     if(_currentIndex > 12 && _currentIndex <31) {
       TennisMachineParams params =
-      TennisMachineParams.fromState(0, 0, (_currentIndex % 2 == 0) ? -13 : 13, 7, 7, 40, 120, 175, 1);
+      TennisMachineParams.fromState(0, 0, (_currentIndex % 2 == 0) ? -13 : 13, 8, 8, 40, 130, 175, 1);
       CommStatusManager().writerData(stepControlData(params));
     }
 
@@ -303,7 +303,7 @@ class _NewBattleTargetPageState extends State<NewBattleTargetPage> {
 
     if(_currentIndex > 31  &&_currentIndex < 50) {
       TennisMachineParams params =
-      TennisMachineParams.fromState(0, 0, (_currentIndex % 2 == 0) ? -13 : 13, 7, 7, 40, 120, 175, 1);
+      TennisMachineParams.fromState(0, 0, (_currentIndex % 2 == 0) ? -13 : 13, 8, 8, 40, 130, 175, 1);
       CommStatusManager().writerData(stepControlData(params));
     }
 

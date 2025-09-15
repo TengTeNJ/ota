@@ -460,7 +460,6 @@ class OTAServiceDataParse {
     // if (bleNotAllData.length > 20) {
     //   bleNotAllData.clear();
     // }
-    print('bleNotAllData=${bleNotAllData}');
     print(
         'CommStatusManager().isDeviceDeail=${CommStatusManager().isDeviceDeail}');
     if (CommStatusManager().isDeviceDeail) {
@@ -475,7 +474,7 @@ class OTAServiceDataParse {
           List<int> rightData = data.sublist(0, length);
           handleDeviceData(rightData); // 完整的一帧数据
           List<int> othersData = data.sublist(length, data.length);
-          isNewCamera = true;
+          isNew = true;
           bleNotAllData.clear();
           if (deviceDlayTimer != null) {
             deviceDlayTimer!.cancel();
@@ -545,6 +544,7 @@ class OTAServiceDataParse {
       //   // }
       // }
       return;
+
     }
     if (CommStatusManager().progress == CommProgress.ready) {
       return;

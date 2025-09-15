@@ -160,6 +160,7 @@ class _TennisBallMachineControlState extends State<TennisBallMachineControl> {
   @override
   void initState() {
     super.initState();
+
     CommStatusManager().isStepControlling = false;
     CommStatusManager().isDeviceDeail = true;
     // 初始化控制器并设置初始值
