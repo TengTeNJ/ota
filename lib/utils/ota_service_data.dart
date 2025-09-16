@@ -419,6 +419,7 @@ class OTAServiceDataParse {
             CommStatusManager().stepTimeOutCount = 0;
             // 清空超时定时器
             CommStatusManager().stepTimeOutTimer?.cancel();
+            CommStatusManager().stepTimeOutTimer = null;
           }
         }
       } else if (cmd == 0x19) {

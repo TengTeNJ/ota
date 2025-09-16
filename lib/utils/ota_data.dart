@@ -228,17 +228,18 @@ List<int> stepControlData(TennisMachineParams params){
       'APP 发送步伐控制${stackTrace[1]} ${data.map((toElement) => toElement.toRadixString(16)).toList()}');
 
   EventBusManager().eventBus.fire(DataUpdatedEvent(kBLElog));
-  CommStatusManager().stepTimeOutTimer = Timer(const Duration(milliseconds: 500), () {
-    print('500毫秒后执行一次，超时重发');
-    CommStatusManager().stepTimeOutCount ++;
-    if(CommStatusManager().stepTimeOutCount >= 10){
-      CommStatusManager().stepTimeOutCount = 0;
-      Get.snackbar("提示", "蓝牙通讯异常，请重启机器人设备重试"); // 不需要 context
-      return;
-    }
-    CommStatusManager().writerData(stepControlData(params));
-  }); // 一次性延迟执行
-
+  if(CommStatusManager().stepTimeOutTimer == null){
+    CommStatusManager().stepTimeOutTimer = Timer(const Duration(milliseconds: 500), () {
+      print('500毫秒后执行一次，超时重发');
+      CommStatusManager().stepTimeOutCount ++;
+      if(CommStatusManager().stepTimeOutCount >= 10){
+        CommStatusManager().stepTimeOutCount = 0;
+        Get.snackbar("提示", "蓝牙通讯异常，请重启机器人设备重试"); // 不需要 context
+        return;
+      }
+      CommStatusManager().writerData(stepControlData(params));
+    }); // 一次性延迟执行
+  }
   return data;
 }
 

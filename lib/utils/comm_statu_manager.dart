@@ -324,8 +324,17 @@ class CommStatusManager {
               .deviceList
               .firstWhere((element) => element.device!.id == model.device!.id);
           this.deviceList.remove(firstEven);
-          CommStatusManager().currentConnectedDevice = null;
-          EventBusManager().eventBus.fire(DataUpdatedEvent(kBLEDisconneted));
+          AnyLoading.showError('${model.device!.name} disconnected');
+          if (logDatas.length == 1 && logDatas.contains('-')) {
+            logDatas.remove('-');
+          }
+          this.logDatas.add(
+              '${model.device!.name} disconnected');
+          EventBusManager().eventBus.fire(DataUpdatedEvent(kBLElog));
+          if(model.device!.name.contains(kBallMachine1) || model.device!.name.contains(kBallMachine2)){
+            CommStatusManager().currentConnectedDevice = null;
+            EventBusManager().eventBus.fire(DataUpdatedEvent(kBLEDisconneted));
+          }
         } catch (e) {
           print('没有找到满足条件的元素');
         }
@@ -402,7 +411,14 @@ class CommStatusManager {
       } else if (event.connectionState == DeviceConnectionState.disconnected) {
         // 移除元素
         try {
+          AnyLoading.showError('${model.device!.name} disconnected');
           CommStatusManager().myspeedzConnectedDevice = null;
+          if (logDatas.length == 1 && logDatas.contains('-')) {
+            logDatas.remove('-');
+          }
+          this.logDatas.add(
+              '${model.device!.name} disconnected');
+          EventBusManager().eventBus.fire(DataUpdatedEvent(kBLElog));
         } catch (e) {
           print('没有找到满足条件的元素');
         }
