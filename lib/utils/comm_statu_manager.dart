@@ -169,7 +169,7 @@ class CommStatusManager {
             event.name.contains(kBLENewDeviceName) ||
             event.name.contains(kCamera1) ||
             event.name.contains(kCamera2) ||
-            event.name.contains('NB')) {
+            event.name.contains(kCamera3)) {
           // 如果设备列表数组中无，则添加
           if (!hasDevice(event.id)) {
             print('添加新设备--${event.id}----${event.name}');
@@ -245,7 +245,7 @@ class CommStatusManager {
       if (event.connectionState == DeviceConnectionState.connected) {
         if (model.deviceName.toString().contains(kBLEDeviceName) ||
             model.deviceName.toString().contains(kCamera1) ||
-            model.deviceName.toString().contains(kCamera2)) {
+            model.deviceName.toString().contains(kCamera2) || model.deviceName.toString().contains(kCamera3)) {
           // 摄像头主机
           notifyChar = QualifiedCharacteristic(
               serviceId: Uuid.parse(kBLE_CAMERA_SERVICE_NOTIFY_UUID),

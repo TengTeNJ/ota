@@ -46,6 +46,7 @@ const kBLE_270_CHARACTERISTIC_WRITER_UUID = "fff2";
 
 const kCamera1 = "Stickhandling";
 const kCamera2 = "Tennis_2";
+const kCamera3 = "ARtennis_3";
 
 /// 2 号场设备名字
 const kBLEDeviceName = "Tennis_2";
