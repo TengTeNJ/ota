@@ -1,3 +1,4 @@
+import 'package:any_loading/any_loading.dart';
 import 'package:flutter/material.dart';
 import 'package:ota/constants.dart';
 import 'package:ota/controllers/count_down_page.dart';
@@ -12,6 +13,7 @@ import 'package:provider/provider.dart';
 
 import '../model/ble_model.dart';
 import '../utils/language_model.dart';
+import '../utils/ota_data.dart';
 import '../utils/system_util.dart';
 import '../utils/theme_provider.dart';
 import 'package:numberpicker/numberpicker.dart';
@@ -153,66 +155,66 @@ class _AboutPageState extends State<AboutPage> {
                   ),
                   SizedBox(height: 20),
                   NotificationListener<ScrollNotification>(
-                      child: NumberPicker(
-                    decoration: BoxDecoration(
-                      border: Border(
-                        top: BorderSide(color: Colors.grey),
-                        bottom: BorderSide(color: Colors.grey),
+                    child: NumberPicker(
+                      decoration: BoxDecoration(
+                        border: Border(
+                          top: BorderSide(color: Colors.grey),
+                          bottom: BorderSide(color: Colors.grey),
+                        ),
                       ),
+                      value: CommStatusManager().siteType.toInt(),
+                      minValue: 1,
+                      maxValue: 3,
+                      step: 1,
+                      onChanged: (value) async {
+                        setState(() {
+                          CommStatusManager().siteType = value.toDouble();
+                          _currentValue = value;
+                        });
+                      },
+                      textMapper: (numberText) {
+                        switch (numberText) {
+                          case '1':
+                            return '草地场';
+                          case '2':
+                            return '硬底场';
+                          case '3':
+                            return '少儿场';
+                          default:
+                            return numberText;
+                        }
+                      },
                     ),
-                    value: CommStatusManager().siteType.toInt(),
-                    minValue: 1,
-                    maxValue: 3,
-                    step: 1,
-                    onChanged: (value) async{
-                      setState(() {
-                        CommStatusManager().siteType = value.toDouble();
-                        _currentValue = value;
-                      });
-                    },
-                    textMapper: (numberText) {
-                      switch (numberText) {
-                        case '1':
-                          return '草地场';
-                        case '2':
-                          return '硬底场';
-                        case '3':
-                          return '少儿场';
-                        default:
-                          return numberText;
-                      }
-                    },
-                  ),
-                      // onNotification: (notification) {
-                      //   print('notification=${notification}');
-                      //   if (notification is ScrollEndNotification) {
-                      //     print("滚动结束，当前值: $_currentValue");
-                      //     if (CommStatusManager().currentConnectedDevice != null)
-                      //       return true;
-                      //     Future.delayed(Duration(seconds: 5), () {
-                      //       // 主动连接当前的场地设备
-                      //       BLEModel result =
-                      //       CommStatusManager().deviceList.firstWhere(
-                      //             (element) =>
-                      //         element.deviceName!
-                      //             .contains(kBLENewDeviceName) &&
-                      //             element.deviceName!.contains(
-                      //                 CommStatusManager()
-                      //                     .siteType
-                      //                     .toStringAsFixed(0)),
-                      //         orElse: () => BLEModel(), // 没找到返回 -1
-                      //       );
-                      //       print('+++${result!.hasConected}+++');
-                      //       if (result != null &&
-                      //           result.device != null &&
-                      //           result!.hasConected == false) {
-                      //         print('主动连接---');
-                      //         CommStatusManager().connectToDevice(result);
-                      //       }
-                      //     });
-                      //   }
-                      //   return true;
-                      // }
+                    // onNotification: (notification) {
+                    //   print('notification=${notification}');
+                    //   if (notification is ScrollEndNotification) {
+                    //     print("滚动结束，当前值: $_currentValue");
+                    //     if (CommStatusManager().currentConnectedDevice != null)
+                    //       return true;
+                    //     Future.delayed(Duration(seconds: 5), () {
+                    //       // 主动连接当前的场地设备
+                    //       BLEModel result =
+                    //       CommStatusManager().deviceList.firstWhere(
+                    //             (element) =>
+                    //         element.deviceName!
+                    //             .contains(kBLENewDeviceName) &&
+                    //             element.deviceName!.contains(
+                    //                 CommStatusManager()
+                    //                     .siteType
+                    //                     .toStringAsFixed(0)),
+                    //         orElse: () => BLEModel(), // 没找到返回 -1
+                    //       );
+                    //       print('+++${result!.hasConected}+++');
+                    //       if (result != null &&
+                    //           result.device != null &&
+                    //           result!.hasConected == false) {
+                    //         print('主动连接---');
+                    //         CommStatusManager().connectToDevice(result);
+                    //       }
+                    //     });
+                    //   }
+                    //   return true;
+                    // }
                   ),
                 ],
               ),
@@ -251,8 +253,16 @@ class _AboutPageState extends State<AboutPage> {
               GestureDetector(
                 behavior: HitTestBehavior.opaque,
                 onTap: () {
-                  // SystemUtil.lockScreenHorizontalDirection();
-                  Future.delayed(Duration(milliseconds: 500), () {
+                  AnyLoading.showLoading();
+                  CommStatusManager().writerData(positionCheckData());
+                  Future.delayed(Duration(milliseconds: 1000), () {
+                    AnyLoading.dismiss();
+                    if (![4, 5]
+                        .contains(CommStatusManager().pcr.index)) {
+                      AnyLoading.showError(
+                          '位置未校准完毕：${CommStatusManager().pcr.index},请稍后重试！');
+                      return;
+                    }
                     Navigator.push(
                       context,
                       MaterialPageRoute(

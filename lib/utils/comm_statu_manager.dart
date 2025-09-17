@@ -30,6 +30,15 @@ enum CommProgress {
   error // 出错
 }
 
+enum PositionCheckResponse {
+  ACK , //
+  CALI_STEP_POS, //
+  CALI_STEP_ANGL, //
+  CALI_STEP_IM, //
+  CALI_STEP_DONE, //
+  CALI_FAIL, // 
+}
+
 bool _loadBin = false;
 
 // 2️⃣ 单例类
@@ -126,6 +135,9 @@ class CommStatusManager {
   int stepTimeOutCount = 0; // 超时次数
 
   bool robotIsPowerOff = false; // 发球机是否关机了（长时间重连不上）
+
+  // 0:ACK；1:CALI_STEP_POS；2：CALI_STEP_ANGLE；3：CALI_STEP_IMU；4：CALI_STEP_DONE；5：CALI_FAIL
+  PositionCheckResponse pcr = PositionCheckResponse.ACK;  // 4和5的状态是可以发球的
 
   set progress(CommProgress progress) {
     _progress = progress;

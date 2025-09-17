@@ -448,6 +448,8 @@ class OTAServiceDataParse {
         EventBusManager().eventBus.fire(DataUpdatedEvent(kPowerValue));
       } else if (cmd == 0x18) {
         print('位置校准的回复${bleNotAllData[3]}');
+        int statu = bleNotAllData[3];
+        CommStatusManager().pcr = PositionCheckResponse.values[statu];
       }
       bleNotAllData.clear();
     }

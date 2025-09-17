@@ -151,7 +151,6 @@ class _DeviceControlPageState extends State<DeviceControlPage> {
       }
       return;
     }
-
     CommStatusManager().connectToDevice(model);
   }
 
