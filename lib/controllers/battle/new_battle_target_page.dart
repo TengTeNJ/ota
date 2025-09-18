@@ -278,7 +278,7 @@ class _NewBattleTargetPageState extends State<NewBattleTargetPage> {
     /// 步伐控制指令发球  12  18  20
     if (_currentIndex <=11) {
       TennisMachineParams params =
-      TennisMachineParams.fromState(0, 0, (_currentIndex % 2 == 0) ? -13 : 13, 9, 9, 40, 130, 175, 1);
+      TennisMachineParams.fromState(0, 0, (_currentIndex % 2 == 0) ? -13 : 13, 7, 8, 40, 130, 175, 1);
       CommStatusManager().writerData(stepControlData(params));
     }
     /// 往前移动两米
@@ -290,7 +290,7 @@ class _NewBattleTargetPageState extends State<NewBattleTargetPage> {
 
     if(_currentIndex > 12 && _currentIndex <31) {
       TennisMachineParams params =
-      TennisMachineParams.fromState(0, 0, (_currentIndex % 2 == 0) ? -13 : 13, 8, 8, 40, 130, 175, 1);
+      TennisMachineParams.fromState(0, 0, (_currentIndex % 2 == 0) ? -13 : 13, 7, 8, 40, 130, 175, 1);
       CommStatusManager().writerData(stepControlData(params));
     }
 
@@ -303,7 +303,7 @@ class _NewBattleTargetPageState extends State<NewBattleTargetPage> {
 
     if(_currentIndex > 31  &&_currentIndex < 50) {
       TennisMachineParams params =
-      TennisMachineParams.fromState(0, 0, (_currentIndex % 2 == 0) ? -13 : 13, 8, 8, 40, 130, 175, 1);
+      TennisMachineParams.fromState(0, 0, (_currentIndex % 2 == 0) ? -13 : 13, 7, 8, 40, 130, 175, 1);
       CommStatusManager().writerData(stepControlData(params));
     }
 
@@ -559,6 +559,8 @@ class _NewBattleTargetPageState extends State<NewBattleTargetPage> {
               children: [
                 IconButton(
                   onPressed: () {
+                    /// 用户没有玩完游戏直接退出界面 机器人位置校准回到原点
+                    CommStatusManager().writerData(positionCheckData());
                     Navigator.pop(context);
                   },
                   icon: Icon(Icons.arrow_back_ios_sharp),
