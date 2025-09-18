@@ -56,70 +56,70 @@ class _NtrpIntegrateTestControllerState
   ///综合测试-力量60%控制正手10球、反手10球、 移动打靶击球30球（先亮右边三个灯5  中间三个灯5个球 左边5个球）
   final NtrpIntegrateTaskMap = {
     /// 正手
-    1: () => controlRobotMove(300, 0, 13, 1,8, 9,40, 100, 175),
-    2: () => controlRobotMove(0, 0, 13, 1,8, 9,40, 100, 175),
-    3: () => controlRobotMove(0, 0, 13, 1,8, 9,40, 100, 175),
-    4: () => controlRobotMove(0, 0, 13, 1,8, 9,40, 100, 175),
-    5: () => controlRobotMove(0, 0, 13, 1,8, 9,40, 100, 175),
-    6: () => controlRobotMove(0, 0, 13, 1,8, 9,40, 100, 175),
-    7: () => controlRobotMove(0, 0, 13, 1,8, 9,40, 100, 175),
-    8: () => controlRobotMove(0, 0, 13, 1,8, 9,40, 100, 175),
-    9: () => controlRobotMove(0, 0, 13, 1,8, 9,40, 100, 175),
-    10: () => controlRobotMove(0, 0, 13, 1,8, 9,40, 100, 175),
+    1: () => controlRobotMove(300, 0, 13, 1,7, 8,40, 130, 175),
+    2: () => controlRobotMove(0, 0, 13, 1,7, 8,40, 130, 175),
+    3: () => controlRobotMove(0, 0, 13, 1,7, 8,40, 130, 175),
+    4: () => controlRobotMove(0, 0, 13, 1,7, 8,40, 130, 175),
+    5: () => controlRobotMove(0, 0, 13, 1,7, 8,40, 130, 175),
+    6: () => controlRobotMove(0, 0, 13, 1,7, 8,40, 130, 175),
+    7: () => controlRobotMove(0, 0, 13, 1,7, 8,40, 130, 175),
+    8: () => controlRobotMove(0, 0, 13, 1,7, 8,40, 130, 175),
+    9: () => controlRobotMove(0, 0, 13, 1,7, 8,40, 130, 175),
+    10: () => controlRobotMove(0, 0, 13, 1,7, 8,40, 130, 175),
 
     /// 反手
-    11: () => controlRobotMove(0, 0, -13, 1,8, 9,40, 100, 175),
-    12: () => controlRobotMove(0, 0, -13, 1,8, 9,40, 100, 175),
-    13: () => controlRobotMove(0, 0, -13, 1,8, 9,40, 100, 175),
-    14: () => controlRobotMove(0, 0, -13, 1,8, 9,40, 100, 175),
-    15: () => controlRobotMove(0, 0, -13, 1,8, 9,40, 100, 175),
-    16: () => controlRobotMove(0, 0, -13, 1,8, 9,40, 100, 175),
-    17: () => controlRobotMove(0, 0, -13, 1,8, 9,40, 100, 175),
-    18: () => controlRobotMove(0, 0, -13, 1,8, 9,40, 100, 175),
-    19: () => controlRobotMove(0, 0, -13, 1,8, 9,40, 100, 175),
-    20: () => controlRobotMove(0, 0, -13, 1,8, 9,40, 100, 175),
+    11: () => controlRobotMove(0, 0, -13, 1,7, 8,40, 130, 175),
+    12: () => controlRobotMove(0, 0, -13, 1,7, 8,40, 130, 175),
+    13: () => controlRobotMove(0, 0, -13, 1,7, 8,40, 130, 175),
+    14: () => controlRobotMove(0, 0, -13, 1,7, 8,40, 130, 175),
+    15: () => controlRobotMove(0, 0, -13, 1,7, 8,40, 130, 175),
+    16: () => controlRobotMove(0, 0, -13, 1,7, 8,40, 130, 175),
+    17: () => controlRobotMove(0, 0, -13, 1,7, 8,40, 130, 175),
+    18: () => controlRobotMove(0, 0, -13, 1,7, 8,40, 130, 175),
+    19: () => controlRobotMove(0, 0, -13, 1,7, 8,40, 130, 175),
+    20: () => controlRobotMove(0, 0, -13, 1,7, 8,40, 130, 175),
 
     ///  移动打靶30 个球 （5正手  5中间 5反手  5正手  5中间 5反手）
     // 正手
-    21: () => controlRobotMove(0, 0, 13, 1,8, 9,40, 100, 175),
-    22: () => controlRobotMove(0, 0, 13, 1,8, 9,40, 100, 175),
-    23: () => controlRobotMove(0, 0, 13, 1,8, 9,40, 100, 175),
-    24: () => controlRobotMove(0, 0, 13, 1,8, 9,40, 100, 175),
-    25: () => controlRobotMove(0, 0, 13, 1,8, 9,40, 100, 175),
+    21: () => controlRobotMove(0, 0, 13, 1,7, 8,40, 130, 175),
+    22: () => controlRobotMove(0, 0, 13, 1,7, 8,40, 130, 175),
+    23: () => controlRobotMove(0, 0, 13, 1,7, 8,40, 130, 175),
+    24: () => controlRobotMove(0, 0, 13, 1,7, 8,40, 130, 175),
+    25: () => controlRobotMove(0, 0, 13, 1,7, 8,40, 130, 175),
     // 中间
-    26: () => controlRobotMove(0, 0, 0, 1,8, 9,40, 100, 175),
-    27: () => controlRobotMove(0, 0, 0, 1,8, 9,40, 100, 175),
-    28: () => controlRobotMove(0, 0, 0, 1,8, 9,40, 100, 175),
-    29: () => controlRobotMove(0, 0, 0, 1,8, 9,40, 100, 175),
-    30: () => controlRobotMove(0, 0, 0, 1,8, 9,40, 100, 175),
+    26: () => controlRobotMove(0, 0, 0, 1,7, 8,40, 130, 175),
+    27: () => controlRobotMove(0, 0, 0, 1,7, 8,40, 130, 175),
+    28: () => controlRobotMove(0, 0, 0, 1,7, 8,40, 130, 175),
+    29: () => controlRobotMove(0, 0, 0, 1,7, 8,40, 130, 175),
+    30: () => controlRobotMove(0, 0, 0, 1,7, 8,40, 130, 175),
 
     // 反手
-    31: () => controlRobotMove(0, 0, -13, 1,8, 9,40, 100, 175),
-    32: () => controlRobotMove(0, 0, -13, 1,8, 9,40, 100, 175),
-    33: () => controlRobotMove(0, 0, -13, 1,8, 9,40, 100, 175),
-    34: () => controlRobotMove(0, 0, -13, 1,8, 9,40, 100, 175),
-    35: () => controlRobotMove(0, 0, -13, 1,8, 9,40, 100, 175),
+    31: () => controlRobotMove(0, 0, -13, 1,7, 8,40, 130, 175),
+    32: () => controlRobotMove(0, 0, -13, 1,7, 8,40, 130, 175),
+    33: () => controlRobotMove(0, 0, -13, 1,7, 8,40, 130, 175),
+    34: () => controlRobotMove(0, 0, -13, 1,7, 8,40, 130, 175),
+    35: () => controlRobotMove(0, 0, -13, 1,7, 8,40, 130, 175),
 
     // 正手
-    36: () => controlRobotMove(0, 0, 13, 1,8, 9,40, 100, 175),
-    37: () => controlRobotMove(0, 0, 13, 1,8, 9,40, 100, 175),
-    38: () => controlRobotMove(0, 0, 13, 1,8, 9,40, 100, 175),
-    39: () => controlRobotMove(0, 0, 13, 1,8, 9,40, 100, 175),
-    40: () => controlRobotMove(0, 0, 13, 1,8, 9,40, 100, 175),
+    36: () => controlRobotMove(0, 0, 13, 1,7, 8,40, 130, 175),
+    37: () => controlRobotMove(0, 0, 13, 1,7, 8,40, 130, 175),
+    38: () => controlRobotMove(0, 0, 13, 1,7, 8,40, 130, 175),
+    39: () => controlRobotMove(0, 0, 13, 1,7, 8,40, 130, 175),
+    40: () => controlRobotMove(0, 0, 13, 1,7, 8,40, 130, 175),
 
     // 中间
-    41: () => controlRobotMove(0, 0, 0, 1,8, 9,40, 100, 175),
-    42: () => controlRobotMove(0, 0, 0, 1,8, 9,40, 100, 175),
-    43: () => controlRobotMove(0, 0, 0, 1,8, 9,40, 100, 175),
-    44: () => controlRobotMove(0, 0, 0, 1,8, 9,40, 100, 175),
-    45: () => controlRobotMove(0, 0, 0, 1,8, 9,40, 100, 175),
+    41: () => controlRobotMove(0, 0, 0, 1,7, 8,40, 130, 175),
+    42: () => controlRobotMove(0, 0, 0, 1,7, 8,40, 130, 175),
+    43: () => controlRobotMove(0, 0, 0, 1,7, 8,40, 130, 175),
+    44: () => controlRobotMove(0, 0, 0, 1,7, 8,40, 130, 175),
+    45: () => controlRobotMove(0, 0, 0, 1,7, 8,40, 130, 175),
 
     // 反手
-    46: () => controlRobotMove(0, 0, -13, 1,8, 9,40, 100, 175),
-    47: () => controlRobotMove(0, 0, -13, 1,8, 9,40, 100, 175),
-    48: () => controlRobotMove(0, 0, -13, 1,8, 9,40, 100, 175),
-    49: () => controlRobotMove(0, 0, -13, 1,8, 9,40, 100, 175),
-    50: () => controlRobotMove(0, 0, -13, 1,8, 9,40, 100, 175),
+    46: () => controlRobotMove(0, 0, -13, 1,7, 8,40, 130, 175),
+    47: () => controlRobotMove(0, 0, -13, 1,7, 8,40, 130, 175),
+    48: () => controlRobotMove(0, 0, -13, 1,7, 8,40, 130, 175),
+    49: () => controlRobotMove(0, 0, -13, 1,7, 8,40, 130, 175),
+    50: () => controlRobotMove(0, 0, -13, 1,7, 8,40, 130, 175),
 
     // 向前走60 不发球
     // 31: () => controlRobotMove(60, 0, 0, 0, 16, 12, 40, 90, 175),
@@ -335,7 +335,7 @@ class _NtrpIntegrateTestControllerState
       return;
     }
     TennisMachineParams params =
-        TennisMachineParams.fromState(0, 310, 0, 8, 9, 40, 100, 125, 0);
+        TennisMachineParams.fromState(0, 310, 0, 7, 8, 40, 100, 125, 0);
     CommStatusManager().writerData(stepControlData(params));
   }
 

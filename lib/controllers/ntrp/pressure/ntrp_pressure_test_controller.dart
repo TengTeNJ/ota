@@ -50,6 +50,8 @@ class _NtrpPressureTestControllerState extends State<NtrpPressureTestController>
   List<int> middleTargetIndexs = [11,12, 13,1];// 中间三个标靶的索引(1为中间的新增的标靶)
   List<int> leftTargetIndexs = [14,15,0];// 左侧三个标靶的索引
   List<int> rightTargetIndexs = [8,9,10];// 右侧三个标靶的索引
+  bool gameEnd = false; /// 游戏结束
+
 
   /*开始*/
   void startGame() {
@@ -60,29 +62,29 @@ class _NtrpPressureTestControllerState extends State<NtrpPressureTestController>
 
   ///发球机步伐
   final NtrpPressureTaskMap = {
-    1: () => controlRobotMove(300, 0, 13, 1,7,8,40, 120,150),
-    2: () => controlRobotMove(0, 0, -13, 1,7,8,40, 120,150),
-    3: () => controlRobotMove(0, 0, 13, 1,7,8,40, 120,150),
-    4: () => controlRobotMove(0, 0, -13, 1,7,8,40, 120,150),
-    5: () => controlRobotMove(0, 0, 13, 1,7,8,40, 120,150),
-    6: () => controlRobotMove(0, 0, -13, 1,7,8,40, 120,150),
-    7: () => controlRobotMove(0, 0, 13, 1,7,8,40, 120,150),
-    8: () => controlRobotMove(0, 0, -13, 1,7,8,40, 120,150),
-    9: () => controlRobotMove(0, 0, 13, 1,7,8,40, 120,150),
-    10: () => controlRobotMove(0, 0, -13, 1,7,8,40, 120,150),
+    1: () => controlRobotMove(300, 0, 13, 1,7,8,40, 130,150),
+    2: () => controlRobotMove(0, 0, -13, 1,7,8,40, 130,150),
+    3: () => controlRobotMove(0, 0, 13, 1,7,8,40, 130,150),
+    4: () => controlRobotMove(0, 0, -13, 1,7,8,40, 130,150),
+    5: () => controlRobotMove(0, 0, 13, 1,7,8,40, 130,150),
+    6: () => controlRobotMove(0, 0, -13, 1,7,8,40, 130,150),
+    7: () => controlRobotMove(0, 0, 13, 1,7,8,40, 130,150),
+    8: () => controlRobotMove(0, 0, -13, 1,7,8,40, 130,150),
+    9: () => controlRobotMove(0, 0, 13, 1,7,8,40, 130,150),
+    10: () => controlRobotMove(0, 0, -13, 1,7,8,40, 130,150),
 
-    11: () => controlRobotMove(0, 0, 13, 1,7,8,40, 120,150),
-    12: () => controlRobotMove(0, 0, -13, 1,7,8,40, 120,150),
-    13: () => controlRobotMove(0, 0, 13, 1,7,8,40, 120,150),
-    14: () => controlRobotMove(0, 0, -13, 1,7,8,40, 120,150),
-    15: () => controlRobotMove(0, 0, 13, 1,7,8,40, 120,150),
-    16: () => controlRobotMove(0, 0, -13, 1,7,8,40, 120,150),
-    17: () => controlRobotMove(0, 0, 13, 1,7,8,40, 120,150),
-    18: () => controlRobotMove(0, 0, -13, 1,7,8,40, 120,150),
-    19: () => controlRobotMove(0, 0, 13, 1,7,8,40, 120,150),
-    20: () => controlRobotMove(0, 0, -13, 1,7,8,40, 120,150),
+    11: () => controlRobotMove(0, 0, 13, 1,7,8,40, 130,150),
+    12: () => controlRobotMove(0, 0, -13, 1,7,8,40, 130,150),
+    13: () => controlRobotMove(0, 0, 13, 1,7,8,40, 130,150),
+    14: () => controlRobotMove(0, 0, -13, 1,7,8,40, 130,150),
+    15: () => controlRobotMove(0, 0, 13, 1,7,8,40, 130,150),
+    16: () => controlRobotMove(0, 0, -13, 1,7,8,40, 130,150),
+    17: () => controlRobotMove(0, 0, 13, 1,7,8,40, 130,150),
+    18: () => controlRobotMove(0, 0, -13, 1,7,8,40, 130,150),
+    19: () => controlRobotMove(0, 0, 13, 1,7,8,40, 130,150),
+    20: () => controlRobotMove(0, 0, -13, 1,7,8,40, 130,150),
 
-    21: () => controlRobotMove(0, 0, -13, 0,7,8,40, 120,150),
+    21: () => controlRobotMove(0, 0, -13, 0,7,8,40, 130,150),
 
   };
 
@@ -118,6 +120,10 @@ class _NtrpPressureTestControllerState extends State<NtrpPressureTestController>
       if (event.data == kSpeedValue) {
         print('kSpeedValue--speedIndexs=${speedIndexs}');
       } else if (event.data == kStepControlFinishResponse) {
+        if (gameEnd) {
+          return;
+        }
+
         indexList.add(0);
         speedIndexs++;
         NtrpPressureTestGame();
@@ -178,6 +184,8 @@ class _NtrpPressureTestControllerState extends State<NtrpPressureTestController>
         timer.cancel();
         setState(() {});
         Future.delayed(Duration(milliseconds: 2000), () {
+          /// 机器人位置校准回到原点
+          CommStatusManager().writerData(positionCheckData());
           Navigator.push(
             context,
             MaterialPageRoute(builder: (context) =>NtrpPressureEndController(score: pressureScore,)
@@ -188,7 +196,9 @@ class _NtrpPressureTestControllerState extends State<NtrpPressureTestController>
         return;
       }
       if (_remainingMs <= 1000) {
-        controlRobotMove(0, 0, 0, 0, 7, 8, 40, 120, 150);
+        // controlRobotMove(0, 0, 0, 0, 7, 8, 40, 130, 150);
+       gameEnd = true;
+
       }
       _remainingMs -= 10;
       setState(() {});
