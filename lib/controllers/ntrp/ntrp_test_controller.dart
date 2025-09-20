@@ -404,11 +404,14 @@ class _NtrpTestControllerState extends State<NtrpTestController> {
     // 正手的平均速度>= 50Km/h
     // 反手手的平均速度>= 40Km/h
     // 截击球的击中率 >=30%.
+    // 反手的的击中率 >=40%.
     var shotRate = forehandNumberOfShots + backhandNumberOfShots;
     if (shotRate >= 20
         && volleyNumberOfShots >= 6
         && foreaveragSpeed >= 50
-        && backaveragSpeed >= 40 ) {
+        && backaveragSpeed >= 40
+        && backhandNumberOfShots >= 8
+        ) {
       CommStatusManager().ntrpTechnicalProficiencyResult = true;
     }
     print("第一阶段测评结果为${CommStatusManager().ntrpTechnicalProficiencyResult}");

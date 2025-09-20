@@ -100,15 +100,10 @@ class CommStatusManager {
 
   /// 步伐类型（p1 2 3 4）
 
-  bool ntrpTechnicalProficiencyResult = false;
-
-  /// Ntrp 第一轮测评结果
-  bool ntrpMultiDimensionalResult = false;
-
-  /// Ntrp 第二轮测评结果
-  double ntrpCorrectCount = 0.0;
-
-  /// Ntrp 答对题的数量
+  bool ntrpTechnicalProficiencyResult = false;/// Ntrp 第一轮测评结果
+  bool ntrpMultiDimensionalResult = false;/// Ntrp 第二轮测评结果
+  bool ntrpPressureTestResult = false;/// Ntrp 第三轮压力测试测评结果
+  double ntrpCorrectCount = 0.0;/// Ntrp 答对题的数量
 
   int totalDataLength = 0;
   int hasSendDataLength = 0;

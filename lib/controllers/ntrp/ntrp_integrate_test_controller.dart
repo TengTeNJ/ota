@@ -296,6 +296,7 @@ class _NtrpIntegrateTestControllerState
       // powerControl的击中率 >= 50%
       // 正手的平均速度>= 50Km/h
       // 反手手的平均速度>= 40Km/h
+      // 移动靶的击中率 >=30%.
       if (powerControlShots >= 10
           && moveShots >= 9
           && powerControlAvgSpeed >= 50
@@ -303,8 +304,7 @@ class _NtrpIntegrateTestControllerState
         CommStatusManager().ntrpMultiDimensionalResult = true;
       }
       print("第二阶段测评结果为${CommStatusManager().ntrpMultiDimensionalResult}");
-
-      setState(() {});      // 移动靶的击中率 >=30%.
+      setState(() {});
 
     });
   }

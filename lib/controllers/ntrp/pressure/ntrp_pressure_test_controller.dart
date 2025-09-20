@@ -186,6 +186,11 @@ class _NtrpPressureTestControllerState extends State<NtrpPressureTestController>
         Future.delayed(Duration(milliseconds: 2000), () {
           /// 机器人位置校准回到原点
           CommStatusManager().writerData(positionCheckData());
+          if (pressureScore >=8) {
+            CommStatusManager().ntrpPressureTestResult = true;
+          }
+
+
           Navigator.push(
             context,
             MaterialPageRoute(builder: (context) =>NtrpPressureEndController(score: pressureScore,)
@@ -196,7 +201,6 @@ class _NtrpPressureTestControllerState extends State<NtrpPressureTestController>
         return;
       }
       if (_remainingMs <= 1000) {
-        // controlRobotMove(0, 0, 0, 0, 7, 8, 40, 130, 150);
        gameEnd = true;
 
       }

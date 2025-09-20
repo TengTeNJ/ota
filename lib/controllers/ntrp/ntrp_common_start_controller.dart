@@ -101,7 +101,7 @@ class _NtrpCommonStartControllerState extends State<NtrpCommonStartController> {
             var isWinner = false;
 
             var testIsWinner = CommStatusManager().ntrpTechnicalProficiencyResult
-                || CommStatusManager().ntrpMultiDimensionalResult;
+                && CommStatusManager().ntrpMultiDimensionalResult && CommStatusManager().ntrpPressureTestResult;
             if (testIsWinner && score >=18) {
               isWinner = true;
             }
@@ -121,9 +121,12 @@ class _NtrpCommonStartControllerState extends State<NtrpCommonStartController> {
                 rightUserModel: model,type: resultType.finalResult,
               )),
             );
-
             /// 得分清0
             CommStatusManager().ntrpCorrectCount = 0;
+            CommStatusManager().ntrpTechnicalProficiencyResult = false;
+            CommStatusManager().ntrpMultiDimensionalResult = false;
+            CommStatusManager().ntrpPressureTestResult = false;
+
           }
       }
 
