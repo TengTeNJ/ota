@@ -1,4 +1,5 @@
 import 'dart:async';
+import 'dart:ffi';
 
 import 'package:event_bus/event_bus.dart';
 import 'package:flutter/material.dart';
@@ -21,7 +22,9 @@ import '../../step_control_page.dart';
 
 /// 压力测试
 class NtrpPressureTestController extends StatefulWidget {
-  const NtrpPressureTestController({super.key});
+  bool isNtrp = true; // 是否是Ntrp
+
+  NtrpPressureTestController({ this.isNtrp = true});
 
   @override
   State<NtrpPressureTestController> createState() => _NtrpPressureTestControllerState();
@@ -111,8 +114,12 @@ class _NtrpPressureTestControllerState extends State<NtrpPressureTestController>
     // TODO: implement initState
     super.initState();
     startGame();
-    _startCountdown();
-    playLocalAudio('countDown.MP3', isAlwaysplay: true);
+    Future.delayed(Duration(milliseconds:6000),(){
+      _startCountdown();
+      playLocalAudio('countDown.MP3', isAlwaysplay: true);
+    });
+
+
 
     CommStatusManager().isDeviceDeail = true;
     EventBus eventBus = EventBusManager().eventBus;
@@ -193,7 +200,7 @@ class _NtrpPressureTestControllerState extends State<NtrpPressureTestController>
 
           Navigator.push(
             context,
-            MaterialPageRoute(builder: (context) =>NtrpPressureEndController(score: pressureScore,)
+            MaterialPageRoute(builder: (context) =>NtrpPressureEndController(score: pressureScore,isNtrp: widget.isNtrp,)
             ), // 结算页面
           );
           setState(() {});
@@ -280,7 +287,7 @@ class _NtrpPressureTestControllerState extends State<NtrpPressureTestController>
                         width: 20,
                       ),
                       Text(
-                        'NTRP TEST',
+                        'PRESSURE TEST',
                         style: TextStyle(
                             fontWeight: FontWeight.bold,
                             fontFamily: "tengxun",

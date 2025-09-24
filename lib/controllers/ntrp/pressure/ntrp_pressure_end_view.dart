@@ -10,8 +10,9 @@ import 'pressure_end_progress_view.dart';
 
 class NtrpPressureEndView extends StatefulWidget {
   int count = 0;
+  bool isNtrp = true;
 
-  NtrpPressureEndView({required this.count});
+  NtrpPressureEndView({required this.count,this.isNtrp = true});
 
   @override
   State<NtrpPressureEndView> createState() => _NtrpPressureEndViewState();
@@ -28,6 +29,11 @@ class _NtrpPressureEndViewState extends State<NtrpPressureEndView> {
     countDownTimer = Timer.periodic(Duration(milliseconds: 1000), (timer) async{
       if (countDownSecond == 1 ) {
         countDownTimer?.cancel();
+        /// 如何不是NTRP 测试，不进入理论测试
+        if (widget.isNtrp == false) {
+          return;
+        }
+
         /// 倒计时结束，进入理论测试
         Navigator.push(
           context,
@@ -64,6 +70,7 @@ class _NtrpPressureEndViewState extends State<NtrpPressureEndView> {
               Column(
                 mainAxisAlignment: MainAxisAlignment.center,
                 children: [
+                  widget.isNtrp == true ?
                   new CircularPercentIndicator(
                     radius: 60.0,
                     lineWidth: 4.0,
@@ -95,7 +102,29 @@ class _NtrpPressureEndViewState extends State<NtrpPressureEndView> {
 
                     backgroundColor: Color.fromRGBO(112, 112, 112, 1.0),
                     progressColor: Color.fromRGBO(21, 233, 120, 1.0),
+                  )
+                  :
+                  new CircularPercentIndicator(
+                    radius: 60.0,
+                    lineWidth: 4.0,
+                    percent: (widget.count/20).toDouble(),
+                    center:
+                    Text(
+                      '${(widget.count/20 * 100).toStringAsFixed(0)}%',
+                      style: TextStyle(
+                          fontWeight: FontWeight.bold,
+                          fontSize: 16,
+                          fontFamily: 'tengxun',
+                          color: Colors.white),
+                    ),
+
+                    backgroundColor: Color.fromRGBO(112, 112, 112, 1.0),
+                    progressColor: Color.fromRGBO(21, 233, 120, 1.0),
                   ),
+
+
+
+
                   SizedBox(height:20,),
                   Constants.regularWhiteTextWidget("NEXT", 10,  Color.fromRGBO(21, 233, 120, 1.0)),
 

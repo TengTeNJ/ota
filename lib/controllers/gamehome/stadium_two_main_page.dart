@@ -15,16 +15,18 @@ class StadiumTwoMainPage extends StatefulWidget {
 }
 
 class _StadiumTwoMainPageState extends State<StadiumTwoMainPage> {
-  List titles = ["Solo Mode", "2 Player Mode", "NTRP Test"];
+  List titles = ["Solo Mode", "2 Player Mode", "NTRP Test","Pressure Mode"];
   List subTitles = [
     "Precision Control Drills",
     "Battle Training",
-    "Level Test"
+    "Level Test",
+    "Pressure Training"
   ];
   List imagePaths = [
     "assets/images/solo_mode.png",
     "assets/images/battle_mode.png",
-    "assets/images/ntrp_test.png"
+    "assets/images/ntrp_test.png",
+    "assets/images/pressure_test.png"
   ];
 
   int _clickCount = 0;
@@ -68,6 +70,11 @@ class _StadiumTwoMainPageState extends State<StadiumTwoMainPage> {
               MaterialPageRoute(
                   builder: (context) => NtrpGuidePageController()), // NTRP引导界面
               // MaterialPageRoute(builder: (context) =>NtrpPressureTestController()), // 压力测试界面
+            );
+          } else if (i == 3) {
+            Navigator.push(
+              context,
+              MaterialPageRoute(builder: (context) =>NtrpPressureTestController(isNtrp: false,)), // 压力测试界面
             );
           }
         },
@@ -119,7 +126,7 @@ class _StadiumTwoMainPageState extends State<StadiumTwoMainPage> {
                   child: SingleChildScrollView(
                     scrollDirection: Axis.horizontal,
                     child: Row(
-                      children: List.generate(3, (i) => _buildCard(i)),
+                      children: List.generate(titles.length, (i) => _buildCard(i)),
                     ),
                   ),
                 )

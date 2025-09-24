@@ -497,6 +497,28 @@ class _PowerPageState extends State<PowerPage> {
         children: [
           Positioned(
             child: Row(
+              mainAxisAlignment: MainAxisAlignment.spaceBetween,
+              children: [
+                IconButton(
+                  onPressed: () {
+                    /// 用户没有玩完游戏直接退出界面 机器人位置校准回到原点
+                    CommStatusManager().writerData(positionCheckData());
+                    Navigator.pop(context);
+                  },
+                  icon: Icon(Icons.arrow_back_ios_sharp),
+                  color: Colors.white,
+                ),
+              ],
+            ),
+            left: 16,
+            right: 16,
+            top: 16,
+          ),
+
+
+
+          Positioned(
+            child: Row(
               mainAxisAlignment: MainAxisAlignment.center,
               children: [
                 // IconButton(
@@ -712,6 +734,16 @@ class _PowerPageState extends State<PowerPage> {
                   },() {
                      print("继续播放");
                      gameing = true;
+                     if (speedIndexs <= 13) {
+                       TennisMachineParams params =
+                       TennisMachineParams.fromState(0, 0, 0, 9, 9, 40, 130, 125, 1);
+                       CommStatusManager().writerData(stepControlData(params));
+                     } else {
+                       TennisMachineParams params =
+                       TennisMachineParams.fromState(0, 0, 0, 8, 8, 40, 130, 125, 1);
+                       CommStatusManager().writerData(stepControlData(params));
+                     }
+
                      Navigator.pop(context);
                      playLocalAudio('blueMonday1.MP3', isAlwaysplay: true);
                      resumeContinue();
