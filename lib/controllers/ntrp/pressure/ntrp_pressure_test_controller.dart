@@ -90,6 +90,15 @@ class _NtrpPressureTestControllerState extends State<NtrpPressureTestController>
 
     21: () => controlRobotMove(0, 0, -13, 0,7,8,40, 130,150),
 
+    22: () => controlRobotMove(0, 0, 13, 1,7,8,40, 130,150),
+    23: () => controlRobotMove(0, 0, -13, 1,7,8,40, 130,150),
+    24: () => controlRobotMove(0, 0, 13, 1,7,8,40, 130,150),
+    25: () => controlRobotMove(0, 0, -13, 1,7,8,40, 130,150),
+    26: () => controlRobotMove(0, 0, 13, 1,7,8,40, 130,150),
+    27: () => controlRobotMove(0, 0, -13, 1,7,8,40, 130,150),
+    28: () => controlRobotMove(0, 0, 13, 1,7,8,40, 130,150),
+    29: () => controlRobotMove(0, 0, -13, 1,7,8,40, 130,150),
+
   };
 
   DateTime _lastShotInTime = DateTime.now(); // 记录上次击中的时间
@@ -115,8 +124,7 @@ class _NtrpPressureTestControllerState extends State<NtrpPressureTestController>
     // TODO: implement initState
     super.initState();
     startGame();
-    // 播放音效
-    playLocalAudio('countDown.MP3', isAlwaysplay: true);
+
     CommStatusManager().isDeviceDeail = true;
     EventBus eventBus = EventBusManager().eventBus;
     _subscription = eventBus.on<DataUpdatedEvent>().listen((event) {
@@ -131,8 +139,14 @@ class _NtrpPressureTestControllerState extends State<NtrpPressureTestController>
         // 开始压力测试
         NtrpPressureTestGame();
         // 前两次的移动 不现实标靶 正式发球后才两标靶
-        if (speedIndexs >= 2 && speedIndexs % 2 == 0) {
+        if (speedIndexs == 2) {
           _startCountdown();
+
+          // 播放音效
+          playLocalAudio('countDown.MP3', isAlwaysplay: true);
+        }
+
+        if (speedIndexs >= 2 && speedIndexs % 2 == 0) {
           lights = [
              false, false, false, true, true, true, true, true, true]; // 左侧标靶亮
         } else {
