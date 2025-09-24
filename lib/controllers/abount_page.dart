@@ -253,10 +253,12 @@ class _AboutPageState extends State<AboutPage> {
               GestureDetector(
                 behavior: HitTestBehavior.opaque,
                 onTap: () {
+                  CommStatusManager().isDeviceDeail = true;
                   AnyLoading.showLoading();
                   CommStatusManager().writerData(positionCheckData());
                   Future.delayed(Duration(milliseconds: 1000), () {
                     AnyLoading.dismiss();
+                    CommStatusManager().isDeviceDeail = false;
                     if (![4, 5]
                         .contains(CommStatusManager().pcr.index)) {
                       AnyLoading.showError(

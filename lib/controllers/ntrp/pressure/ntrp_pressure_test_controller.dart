@@ -31,10 +31,11 @@ class NtrpPressureTestController extends StatefulWidget {
 }
 
 class _NtrpPressureTestControllerState extends State<NtrpPressureTestController> {
+  // 初始化隐藏所有的标靶 游戏开始后才正式显示
   List<bool> lights = [
-    false,
-    false,
-    false,
+    true,
+    true,
+    true,
     true,
     true,
     true,
@@ -114,13 +115,8 @@ class _NtrpPressureTestControllerState extends State<NtrpPressureTestController>
     // TODO: implement initState
     super.initState();
     startGame();
-    Future.delayed(Duration(milliseconds:6000),(){
-      _startCountdown();
-      playLocalAudio('countDown.MP3', isAlwaysplay: true);
-    });
-
-
-
+    // 播放音效
+    playLocalAudio('countDown.MP3', isAlwaysplay: true);
     CommStatusManager().isDeviceDeail = true;
     EventBus eventBus = EventBusManager().eventBus;
     _subscription = eventBus.on<DataUpdatedEvent>().listen((event) {
@@ -130,12 +126,14 @@ class _NtrpPressureTestControllerState extends State<NtrpPressureTestController>
         if (gameEnd) {
           return;
         }
-
         indexList.add(0);
         speedIndexs++;
+        // 开始压力测试
         NtrpPressureTestGame();
-        if (speedIndexs % 2 == 0) {
-           lights = [
+        // 前两次的移动 不现实标靶 正式发球后才两标靶
+        if (speedIndexs >= 2 && speedIndexs % 2 == 0) {
+          _startCountdown();
+          lights = [
              false, false, false, true, true, true, true, true, true]; // 左侧标靶亮
         } else {
            lights = [true, true, true, true, true, true, false, false, false];  // 右侧标靶亮
