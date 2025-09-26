@@ -6,6 +6,7 @@ import 'package:ota/controllers/battle/new_battle_target_page.dart';
 import 'package:ota/controllers/new_target_single_ppage.dart';
 import 'package:ota/controllers/solo/power_page.dart';
 import 'package:ota/controllers/gamehome/stadium_two_main_page.dart';
+import 'package:ota/controllers/step/horizontal_move_page.dart';
 import 'package:ota/controllers/target_page.dart';
 import 'package:ota/utils/comm_statu_manager.dart';
 import 'package:package_info_plus/package_info_plus.dart';
@@ -145,7 +146,6 @@ class _AboutPageState extends State<AboutPage> {
                 ],
               ),
               SizedBox(height: 20),
-
               Row(
                 mainAxisAlignment: MainAxisAlignment.spaceBetween,
                 children: [
@@ -218,9 +218,7 @@ class _AboutPageState extends State<AboutPage> {
                   ),
                 ],
               ),
-
               SizedBox(height: 20),
-
               Row(
                 mainAxisAlignment: MainAxisAlignment.spaceBetween,
                 children: [
@@ -249,22 +247,11 @@ class _AboutPageState extends State<AboutPage> {
                   ),
                 ],
               ),
-
               GestureDetector(
                 behavior: HitTestBehavior.opaque,
                 onTap: () {
                   CommStatusManager().isDeviceDeail = true;
-                  AnyLoading.showLoading();
-                  CommStatusManager().writerData(positionCheckData());
-                  Future.delayed(Duration(milliseconds: 1000), () {
-                    AnyLoading.dismiss();
-                    CommStatusManager().isDeviceDeail = false;
-                    if (![4, 5]
-                        .contains(CommStatusManager().pcr.index)) {
-                      AnyLoading.showError(
-                          '位置未校准完毕：${CommStatusManager().pcr.index},请稍后重试！');
-                      return;
-                    }
+                  if([4, 5].contains(CommStatusManager().pcr.index)){
                     Navigator.push(
                       context,
                       MaterialPageRoute(
@@ -272,6 +259,26 @@ class _AboutPageState extends State<AboutPage> {
                       // MaterialPageRoute(builder: (context) =>NewTargetSinglePpage()), // 目标页面
                       // MaterialPageRoute(builder: (context) =>TargetPage()), // 目标页面
                     );
+                    return;
+                  }
+                  AnyLoading.showLoading();
+                  CommStatusManager().writerData(positionCheckData());
+                  Future.delayed(Duration(milliseconds: 3000), () {
+                    AnyLoading.dismiss();
+                    CommStatusManager().isDeviceDeail = false;
+                    if (![4, 5].contains(CommStatusManager().pcr.index)) {
+                      AnyLoading.showError(
+                          '位置未校准完毕：${CommStatusManager().pcr.index},请稍后重试！');
+                      return;
+                    }else{
+                      Navigator.push(
+                        context,
+                        MaterialPageRoute(
+                            builder: (context) => StadiumTwoMainPage()), // 目标页面
+                        // MaterialPageRoute(builder: (context) =>NewTargetSinglePpage()), // 目标页面
+                        // MaterialPageRoute(builder: (context) =>TargetPage()), // 目标页面
+                      );
+                    }
                   });
                 },
                 child: Row(
@@ -358,6 +365,27 @@ class _AboutPageState extends State<AboutPage> {
                       ],
                     ),
                   ),
+                ],
+              ),
+              ListView(
+                shrinkWrap: true,
+                padding: EdgeInsets.zero,
+                children: [
+                 GestureDetector(
+                   behavior: HitTestBehavior.opaque,
+                   child:  ListTile(
+                   contentPadding: EdgeInsets.zero,
+                   title: Text('步伐训练',
+                       style: TextStyle(
+                           fontSize: 18, fontWeight: FontWeight.bold)),
+                   trailing: Icon(Icons.arrow_forward_ios),
+                 ),onTap: (){
+                   Navigator.push(
+                     context,
+                     MaterialPageRoute(
+                         builder: (context) => HorizontalMovePage()), // 目标页面
+                   );
+                 },)
                 ],
               ),
             ],
