@@ -189,11 +189,11 @@ class _NewBattleTargetPageState extends State<NewBattleTargetPage> {
   void goToEndPage() {
     double leftSum = _leftTotalSpeeds.fold(0.0, (previousValue, element) => previousValue + element);
     int count = _leftTotalSpeeds.length;
-    double leftAverage =  count ==0 ? leftSum / count : 0;
+    double leftAverage =  count ==0 ?  0: leftSum / count ;
 
     double rightSum = _rightTotalSpeeds.fold(0.0, (previousValue, element) => previousValue + element);
     int rightcount = _rightTotalSpeeds.length;
-    double rightAverage =  count ==0 ? rightSum / rightcount : 0;
+    double rightAverage =  rightcount ==0 ?  0 : rightSum / rightcount ;
 
     SystemUtil.lockScreenHorizontalDirection();
       var leftUserModel = BattleUserModel(score: _leftScore,shotInCount: _leftShotInCount,
@@ -267,7 +267,7 @@ class _NewBattleTargetPageState extends State<NewBattleTargetPage> {
       return;
     }
     TennisMachineParams params =
-    TennisMachineParams.fromState(0, 330, 0, 8, 8, 40, 120, 125, 0);
+    TennisMachineParams.fromState(0, 330, 0, 7, 8, 40, 120, 125, 0);
     CommStatusManager().writerData(stepControlData(params));
     _currentIndex --;
 

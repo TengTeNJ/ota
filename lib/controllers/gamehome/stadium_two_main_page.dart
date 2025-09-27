@@ -1,9 +1,12 @@
 import 'package:flutter/material.dart';
+import 'package:get/get.dart';
+import 'package:get/get_core/src/get_main.dart';
 import 'package:ota/constants.dart';
 import 'package:ota/controllers/ntrp/ntrp_guide_page_controller.dart';
 import 'package:ota/controllers/solo/power_page.dart';
 import 'package:ota/controllers/gamehome/stadium_mode_choose_view.dart';
 
+import '../../utils/comm_statu_manager.dart';
 import '../battle/new_battle_target_page.dart';
 import '../ntrp/pressure/ntrp_pressure_test_controller.dart';
 
@@ -50,6 +53,13 @@ class _StadiumTwoMainPageState extends State<StadiumTwoMainPage> {
       ),
       child: GestureDetector(
         onTap: () {
+          // 判断有没有连接发球机
+          if (CommStatusManager().currentConnectedDevice == null) {
+             print("发球机未连接，请检查发球机重试");
+             Get.snackbar("提示", "发球机未连接，请检查发球机重试"); // 不需要 context
+             return;
+          }
+
           if (i == 0) {
             Navigator.push(
               context,

@@ -253,26 +253,25 @@ class _AboutPageState extends State<AboutPage> {
               GestureDetector(
                 behavior: HitTestBehavior.opaque,
                 onTap: () {
-                  CommStatusManager().isDeviceDeail = true;
-                  AnyLoading.showLoading();
-                  CommStatusManager().writerData(positionCheckData());
-                  Future.delayed(Duration(milliseconds: 1000), () {
-                    AnyLoading.dismiss();
-                    CommStatusManager().isDeviceDeail = false;
-                    if (![4, 5]
-                        .contains(CommStatusManager().pcr.index)) {
-                      AnyLoading.showError(
-                          '位置未校准完毕：${CommStatusManager().pcr.index},请稍后重试！');
-                      return;
-                    }
-                    Navigator.push(
-                      context,
-                      MaterialPageRoute(
-                          builder: (context) => StadiumTwoMainPage()), // 目标页面
-                      // MaterialPageRoute(builder: (context) =>NewTargetSinglePpage()), // 目标页面
-                      // MaterialPageRoute(builder: (context) =>TargetPage()), // 目标页面
-                    );
-                  });
+                  // CommStatusManager().isDeviceDeail = true;
+                  // AnyLoading.showLoading();
+                  // CommStatusManager().writerData(positionCheckData());
+                  // Future.delayed(Duration(milliseconds: 5000), () {
+                  //   AnyLoading.dismiss();
+                  //   CommStatusManager().isDeviceDeail = false;
+                  // });
+                  //
+                  // if (![4, 5]
+                  //     .contains(CommStatusManager().pcr.index)) {
+                  //   AnyLoading.showError(
+                  //       '位置未校准完毕：${CommStatusManager().pcr.index},请稍后重试！');
+                  //   return;
+                  // }
+                  Navigator.push(
+                    context,
+                    MaterialPageRoute(
+                        builder: (context) => StadiumTwoMainPage()), // 目标页面
+                  );
                 },
                 child: Row(
                   mainAxisAlignment: MainAxisAlignment.spaceBetween,
