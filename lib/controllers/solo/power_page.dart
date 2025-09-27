@@ -83,7 +83,6 @@ class _PowerPageState extends State<PowerPage> {
 
     print("索引为${speedIndexs}");
 
-
     // Future.delayed(Duration(milliseconds: 10000), () {
     //   double rightSum = _TotalSpeeds.fold(0.0, (previousValue, element) => previousValue + element);
     //   int rightcount = _TotalSpeeds.length;

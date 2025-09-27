@@ -329,7 +329,6 @@ class _NewBattleTargetPageState extends State<NewBattleTargetPage> {
             child: Row(
               crossAxisAlignment: CrossAxisAlignment.start,
               children: [
-
                 /// Scores
                 Container(
                   child: Column(
