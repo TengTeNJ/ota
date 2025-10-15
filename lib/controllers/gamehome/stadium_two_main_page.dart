@@ -54,11 +54,11 @@ class _StadiumTwoMainPageState extends State<StadiumTwoMainPage> {
       child: GestureDetector(
         onTap: () {
           // 判断有没有连接发球机
-          if (CommStatusManager().currentConnectedDevice == null) {
-             print("发球机未连接，请检查发球机重试");
-             Get.snackbar("提示", "发球机未连接，请检查发球机重试"); // 不需要 context
-             return;
-          }
+          // if (CommStatusManager().currentConnectedDevice == null) {
+          //    print("发球机未连接，请检查发球机重试");
+          //    Get.snackbar("提示", "发球机未连接，请检查发球机重试"); // 不需要 context
+          //    return;
+          // }
 
           if (i == 0) {
             Navigator.push(

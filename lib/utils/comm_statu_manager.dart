@@ -92,13 +92,10 @@ class CommStatusManager {
   Stream<DiscoveredDevice>? _scanStream;
   double maxSpeed = 2;
 
-  double siteType = 2;
-
   /// 场地类型（1号场 2号场 3 号场）
-
-  double stepType = 1;
-
+  double siteType = 2;
   /// 步伐类型（p1 2 3 4）
+  double stepType = 1;
 
   bool ntrpTechnicalProficiencyResult = false;/// Ntrp 第一轮测评结果
   bool ntrpMultiDimensionalResult = false;/// Ntrp 第二轮测评结果

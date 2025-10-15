@@ -43,6 +43,10 @@ class FireController {
   }
 
   void _handleSuccess() {
+    if(_currentTaskIndex >= tasks.length){
+      print('_currentTaskIndex = ${_currentTaskIndex}');
+      return;
+    }
     final task = tasks[_currentTaskIndex];
 
     _currentShot++;
