@@ -1,4 +1,5 @@
 import 'dart:async';
+import 'dart:nativewrappers/_internal/vm/lib/ffi_allocation_patch.dart';
 
 import 'package:event_bus/event_bus.dart';
 
@@ -15,6 +16,13 @@ class FireTask {
   FireTask({required this.count, required this.params});
 }
 
+// 发球的位置
+enum Position {
+  left,
+  center,
+  right,
+}
+
 // 定义一个发球控制器
 class FireController {
   final List<FireTask> tasks;
@@ -24,17 +32,22 @@ class FireController {
 
   Function()? onFinished; // 全部任务完成回调
   Function(int taskIndex, int shotIndex)? onProgress; // 进度回调
-
+  Function(Position position)? positionRefresh; // 位置刷新
   FireController(this.tasks);
 
   void start() {
+    positionRefresh?.call(Position.left);
     // 监听 EventBus
     EventBus eventBus = EventBusManager().eventBus;
 
     _subscription = eventBus.on<DataUpdatedEvent>().listen((event){
       if (event.data == kStepControlFinishResponse) {
         // 收到回复
-        _handleSuccess();
+        final task = tasks[_currentTaskIndex];
+        final params = task.params;
+        if(params.ballCount != 0){
+          _handleSuccess();
+        }
       }
     });
     _currentTaskIndex = 0;

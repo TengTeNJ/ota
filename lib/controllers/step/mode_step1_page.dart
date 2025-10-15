@@ -325,7 +325,7 @@ class _ModeStep1PageState extends State<ModeStep1Page> {
               child: CommStatusManager().currentSpeed > 70
                   ? Center(
                 child: Text(
-                  'greatJobPrompt}',
+                  '',
                   style: TextStyle(
                       fontWeight: FontWeight.bold,
                       fontSize: 32,
