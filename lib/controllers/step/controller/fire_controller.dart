@@ -1,5 +1,4 @@
 import 'dart:async';
-import 'dart:nativewrappers/_internal/vm/lib/ffi_allocation_patch.dart';
 
 import 'package:event_bus/event_bus.dart';
 
@@ -32,11 +31,11 @@ class FireController {
 
   Function()? onFinished; // 全部任务完成回调
   Function(int taskIndex, int shotIndex)? onProgress; // 进度回调
-  Function(Position position)? positionRefresh; // 位置刷新
+  Function(int index)? positionRefresh; // 位置刷新
   FireController(this.tasks);
 
   void start() {
-    positionRefresh?.call(Position.left);
+    positionRefresh?.call(0);
     // 监听 EventBus
     EventBus eventBus = EventBusManager().eventBus;
 
@@ -45,9 +44,7 @@ class FireController {
         // 收到回复
         final task = tasks[_currentTaskIndex];
         final params = task.params;
-        if(params.ballCount != 0){
           _handleSuccess();
-        }
       }
     });
     _currentTaskIndex = 0;
@@ -72,6 +69,7 @@ class FireController {
       // 切换下一个点位
       _currentTaskIndex++;
       _currentShot = 0;
+      positionRefresh?.call(_currentTaskIndex);
       _fireNext();
     }
   }

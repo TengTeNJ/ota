@@ -450,6 +450,139 @@ class FirePlan {
     ]);
   }
 
+  static const double mode2_left = 10;
+  static const double mode2_right = 9;
+  static const double mode2_ball_angel = 140;
+  factory FirePlan.mode2Step({int count = 10}) {
+    return FirePlan([
+      // 移动到左半场中间
+      FireTask(
+        count: 1,
+        params: TennisMachineParams.fromState(0, 130, 0, mode2_left, mode2_right, 40, mode2_ball_angel, 175, 0),
+      ),
+      // 10个球
+      FireTask(
+        count: count,
+        params: TennisMachineParams.fromState(0, 0, 0, mode2_left, mode2_right, 40, mode2_ball_angel, 175, 1),
+      ),
+      // 移动到中间
+      FireTask(
+        count: 1,
+        params: TennisMachineParams.fromState(0, 200, 0, mode2_left, mode2_right, 40, mode2_ball_angel, 175, 0),
+      ),
+      // 10个球
+      FireTask(
+        count: count,
+        params: TennisMachineParams.fromState(0, 0, 0, mode2_left, mode2_right, 40, mode2_ball_angel, 175, 1),
+      ),
+      // 移动到右侧中间
+      FireTask(
+        count: 1,
+        params: TennisMachineParams.fromState(0, 230, 0, mode2_left, mode2_right, 40, mode2_ball_angel, 175, 0),
+      ),
+      // 10个球
+      FireTask(
+        count: count,
+        params: TennisMachineParams.fromState(0, 0, 0, mode2_left, mode2_right, 40, mode2_ball_angel, 175, 1),
+      ),
+      // 移动到中间
+      FireTask(
+        count: 1,
+        params: TennisMachineParams.fromState(0, -230, 0, mode2_left, mode2_right, 40, mode2_ball_angel, 175, 0),
+      ),
+      // 左右交替
+      FireTask(
+        count: 1,
+        params: TennisMachineParams.fromState(0, 0, 8, mode2_left, mode2_right, 40, mode2_ball_angel, 175, 1),
+      ),
+      FireTask(
+        count: 1,
+        params: TennisMachineParams.fromState(0, 0, -8, mode2_left, mode2_right, 40, mode2_ball_angel, 175, 1),
+      ),
+      // 左右交替
+      FireTask(
+        count: 1,
+        params: TennisMachineParams.fromState(0, 0, 8, mode2_left, mode2_right, 40, mode2_ball_angel, 175, 1),
+      ),
+      FireTask(
+        count: 1,
+        params: TennisMachineParams.fromState(0, 0, -8, mode2_left, mode2_right, 40, mode2_ball_angel ,175, 1),
+      ),
+      // 左右交替
+      FireTask(
+        count: 1,
+        params: TennisMachineParams.fromState(0, 0, 8, mode2_left, mode2_right, 40, mode2_ball_angel, 175, 1),
+      ),
+      FireTask(
+        count: 1,
+        params: TennisMachineParams.fromState(0, 0, -8, mode2_left, mode2_right, 40, mode2_ball_angel, 175, 1),
+      ),
+      // 左右交替
+      FireTask(
+        count: 1,
+        params: TennisMachineParams.fromState(0, 0, 8, mode2_left, mode2_right, 40, mode2_ball_angel, 175, 1),
+      ),
+      FireTask(
+        count: 1,
+        params: TennisMachineParams.fromState(0, 0, -8, mode2_left, mode2_right, 40, mode2_ball_angel, 175, 1),
+      ),
+      // 左右交替
+      FireTask(
+        count: 1,
+        params: TennisMachineParams.fromState(0, 0, 8, mode2_left, mode2_right, 40, mode2_ball_angel, 175, 1),
+      ),
+      FireTask(
+        count: 1,
+        params: TennisMachineParams.fromState(0, 0, -8, mode2_left, mode2_right, 40, mode2_ball_angel, 175, 1),
+      ),
+      // 左右交替
+      FireTask(
+        count: 1,
+        params: TennisMachineParams.fromState(0, 0, 8, mode2_left, mode2_right, 40, mode2_ball_angel, 175, 1),
+      ),
+      FireTask(
+        count: 1,
+        params: TennisMachineParams.fromState(0, 0, -8, mode2_left, mode2_right, 40, mode2_ball_angel, 175, 1),
+      ),
+      // 左右交替
+      FireTask(
+        count: 1,
+        params: TennisMachineParams.fromState(0, 0, 8, mode2_left, mode2_right, 40, mode2_ball_angel, 175, 1),
+      ),
+      FireTask(
+        count: 1,
+        params: TennisMachineParams.fromState(0, 0, -8, mode2_left, mode2_right, 40, mode2_ball_angel, 175, 1),
+      ),
+      // 左右交替
+      FireTask(
+        count: 1,
+        params: TennisMachineParams.fromState(0, 0, 8, mode2_left, mode2_right, 40, mode2_ball_angel, 175, 1),
+      ),
+      FireTask(
+        count: 1,
+        params: TennisMachineParams.fromState(0, 0, -8, mode2_left, mode2_right, 40, mode2_ball_angel, 175, 1),
+      ),
+      // 左右交替
+      FireTask(
+        count: 1,
+        params: TennisMachineParams.fromState(0, 0, 8, mode2_left, mode2_right, 40, mode2_ball_angel, 175, 1),
+      ),
+      FireTask(
+        count: 1,
+        params: TennisMachineParams.fromState(0, 0, -8, mode2_left, mode2_right, 40, mode2_ball_angel, 175, 1),
+      ),
+      // 左右交替
+      FireTask(
+        count: 1,
+        params: TennisMachineParams.fromState(0, 0, 8, mode2_left, mode2_right, 40, mode2_ball_angel, 175, 1),
+      ),
+      FireTask(
+        count: 1,
+        params: TennisMachineParams.fromState(0, 0, -8, mode2_left, mode2_right, 40, mode2_ball_angel, 175, 1),
+      ),
+    ]);
+  }
+
   static const double mode2_up_slow = 10;
   static const double mode2_down_slow = 9;
 
@@ -459,176 +592,176 @@ class FirePlan {
   static const double ballAngle_slow = 160;
   static const double ballAngle_fast = 180;
 
-  factory FirePlan.mode2Step({int count = 10}) {
-    return FirePlan([
-      // 移动到中间
-      FireTask(
-        count: 1,
-        params: TennisMachineParams.fromState(0, 330, 0, mode2_up_slow, mode2_down_slow, 40, 170, 175, 0),
-      ),
-
-      // 第一阶段左右交替 10个球
-      FireTask(
-        count: 1,
-        params: TennisMachineParams.fromState(0, 0, 8, mode2_up_slow, mode2_down_slow, 40, ballAngle_slow, 175, 1),
-      ),
-      FireTask(
-        count: 1,
-        params: TennisMachineParams.fromState(0, 0, -8, mode2_up_slow, mode2_down_slow, 40, ballAngle_slow, 175, 1),
-      ),
-      FireTask(
-        count: 1,
-        params: TennisMachineParams.fromState(0, 0, 8, mode2_up_slow, mode2_down_slow, 40, ballAngle_slow, 175, 1),
-      ),
-      FireTask(
-        count: 1,
-        params: TennisMachineParams.fromState(0, 0, -8, mode2_up_slow, mode2_down_slow, 40, ballAngle_slow, 175, 1),
-      ),
-      FireTask(
-        count: 1,
-        params: TennisMachineParams.fromState(0, 0, 8, mode2_up_slow, mode2_down_slow, 40, ballAngle_slow, 175, 1),
-      ),
-      FireTask(
-        count: 1,
-        params: TennisMachineParams.fromState(0, 0, -8, mode2_up_slow, mode2_down_slow, 40, ballAngle_slow, 175, 1),
-      ),
-      FireTask(
-        count: 1,
-        params: TennisMachineParams.fromState(0, 0, 8, mode2_up_slow, mode2_down_slow, 40, ballAngle_slow, 175, 1),
-      ),
-      FireTask(
-        count: 1,
-        params: TennisMachineParams.fromState(0, 0, -8, mode2_up_slow, mode2_down_slow, 40, ballAngle_slow, 175, 1),
-      ),
-      FireTask(
-        count: 1,
-        params: TennisMachineParams.fromState(0, 0, 8, mode2_up_slow, mode2_down_slow, 40, ballAngle_slow, 175, 1),
-      ),
-      FireTask(
-        count: 1,
-        params: TennisMachineParams.fromState(0, 0, -8, mode2_up_slow, mode2_down_slow, 40, ballAngle_slow, 175, 1),
-      ),
-
-      // 10个球
-      FireTask(
-        count: count,
-        params: TennisMachineParams.fromState(0, 0, 0, mode1_left, mode1_right, 40, 170, 175, 1),
-      ),
-      // 移动到中间
-      FireTask(
-        count: 1,
-        params: TennisMachineParams.fromState(0, 200, 0, mode1_left, mode1_right, 40, 170, 175, 0),
-      ),
-      // 10个球
-      FireTask(
-        count: count,
-        params: TennisMachineParams.fromState(0, 0, 0, mode1_left, mode1_right, 40, 170, 175, 1),
-      ),
-      // 移动到右侧中间
-      FireTask(
-        count: 1,
-        params: TennisMachineParams.fromState(0, 230, 0, mode1_left, mode1_right, 40, 170, 175, 0),
-      ),
-      // 10个球
-      FireTask(
-        count: count,
-        params: TennisMachineParams.fromState(0, 0, 0, mode1_left, mode1_right, 40, 170, 175, 1),
-      ),
-      // 移动到中间
-      FireTask(
-        count: 1,
-        params: TennisMachineParams.fromState(0, -230, 0, mode1_left, mode1_right, 40, 170, 175, 0),
-      ),
-      // 左右交替
-      FireTask(
-        count: 1,
-        params: TennisMachineParams.fromState(0, 0, 8, mode1_left, mode1_right, 40, 170, 175, 1),
-      ),
-      FireTask(
-        count: 1,
-        params: TennisMachineParams.fromState(0, 0, -8, mode1_left, mode1_right, 40, 170, 175, 1),
-      ),
-      // 左右交替
-      FireTask(
-        count: 1,
-        params: TennisMachineParams.fromState(0, 0, 8, mode1_left, mode1_right, 40, 170, 175, 1),
-      ),
-      FireTask(
-        count: 1,
-        params: TennisMachineParams.fromState(0, 0, -8, mode1_left, mode1_right, 40, 170, 175, 1),
-      ),
-      // 左右交替
-      FireTask(
-        count: 1,
-        params: TennisMachineParams.fromState(0, 0, 8, mode1_left, mode1_right, 40, 170, 175, 1),
-      ),
-      FireTask(
-        count: 1,
-        params: TennisMachineParams.fromState(0, 0, -8, mode1_left, mode1_right, 40, 170, 175, 1),
-      ),
-      // 左右交替
-      FireTask(
-        count: 1,
-        params: TennisMachineParams.fromState(0, 0, 8, mode1_left, mode1_right, 40, 170, 175, 1),
-      ),
-      FireTask(
-        count: 1,
-        params: TennisMachineParams.fromState(0, 0, -8, mode1_left, mode1_right, 40, 170, 175, 1),
-      ),
-      // 左右交替
-      FireTask(
-        count: 1,
-        params: TennisMachineParams.fromState(0, 0, 8, mode1_left, mode1_right, 40, 170, 175, 1),
-      ),
-      FireTask(
-        count: 1,
-        params: TennisMachineParams.fromState(0, 0, -8, mode1_left, mode1_right, 40, 170, 175, 1),
-      ),
-      // 左右交替
-      FireTask(
-        count: 1,
-        params: TennisMachineParams.fromState(0, 0, 8, mode1_left, mode1_right, 40, 170, 175, 1),
-      ),
-      FireTask(
-        count: 1,
-        params: TennisMachineParams.fromState(0, 0, -8, mode1_left, mode1_right, 40, 170, 175, 1),
-      ),
-      // 左右交替
-      FireTask(
-        count: 1,
-        params: TennisMachineParams.fromState(0, 0, 8, mode1_left, mode1_right, 40, 170, 175, 1),
-      ),
-      FireTask(
-        count: 1,
-        params: TennisMachineParams.fromState(0, 0, -8, mode1_left, mode1_right, 40, 170, 175, 1),
-      ),
-      // 左右交替
-      FireTask(
-        count: 1,
-        params: TennisMachineParams.fromState(0, 0, 8, mode1_left, mode1_right, 40, 170, 175, 1),
-      ),
-      FireTask(
-        count: 1,
-        params: TennisMachineParams.fromState(0, 0, -8, mode1_left, mode1_right, 40, 170, 175, 1),
-      ),
-      // 左右交替
-      FireTask(
-        count: 1,
-        params: TennisMachineParams.fromState(0, 0, 8, mode1_left, mode1_right, 40, 170, 175, 1),
-      ),
-      FireTask(
-        count: 1,
-        params: TennisMachineParams.fromState(0, 0, -8, mode1_left, mode1_right, 40, 170, 175, 1),
-      ),
-      // 左右交替
-      FireTask(
-        count: 1,
-        params: TennisMachineParams.fromState(0, 0, 8, mode1_left, mode1_right, 40, 170, 175, 1),
-      ),
-      FireTask(
-        count: 1,
-        params: TennisMachineParams.fromState(0, 0, -8, mode1_left, mode1_right, 40, 170, 175, 1),
-      ),
-    ]);
-  }
+  // factory FirePlan.mode2Step({int count = 10}) {
+  //   return FirePlan([
+  //     // 移动到中间
+  //     FireTask(
+  //       count: 1,
+  //       params: TennisMachineParams.fromState(0, 330, 0, mode2_up_slow, mode2_down_slow, 40, 170, 175, 0),
+  //     ),
+  //
+  //     // 第一阶段左右交替 10个球
+  //     FireTask(
+  //       count: 1,
+  //       params: TennisMachineParams.fromState(0, 0, 8, mode2_up_slow, mode2_down_slow, 40, ballAngle_slow, 175, 1),
+  //     ),
+  //     FireTask(
+  //       count: 1,
+  //       params: TennisMachineParams.fromState(0, 0, -8, mode2_up_slow, mode2_down_slow, 40, ballAngle_slow, 175, 1),
+  //     ),
+  //     FireTask(
+  //       count: 1,
+  //       params: TennisMachineParams.fromState(0, 0, 8, mode2_up_slow, mode2_down_slow, 40, ballAngle_slow, 175, 1),
+  //     ),
+  //     FireTask(
+  //       count: 1,
+  //       params: TennisMachineParams.fromState(0, 0, -8, mode2_up_slow, mode2_down_slow, 40, ballAngle_slow, 175, 1),
+  //     ),
+  //     FireTask(
+  //       count: 1,
+  //       params: TennisMachineParams.fromState(0, 0, 8, mode2_up_slow, mode2_down_slow, 40, ballAngle_slow, 175, 1),
+  //     ),
+  //     FireTask(
+  //       count: 1,
+  //       params: TennisMachineParams.fromState(0, 0, -8, mode2_up_slow, mode2_down_slow, 40, ballAngle_slow, 175, 1),
+  //     ),
+  //     FireTask(
+  //       count: 1,
+  //       params: TennisMachineParams.fromState(0, 0, 8, mode2_up_slow, mode2_down_slow, 40, ballAngle_slow, 175, 1),
+  //     ),
+  //     FireTask(
+  //       count: 1,
+  //       params: TennisMachineParams.fromState(0, 0, -8, mode2_up_slow, mode2_down_slow, 40, ballAngle_slow, 175, 1),
+  //     ),
+  //     FireTask(
+  //       count: 1,
+  //       params: TennisMachineParams.fromState(0, 0, 8, mode2_up_slow, mode2_down_slow, 40, ballAngle_slow, 175, 1),
+  //     ),
+  //     FireTask(
+  //       count: 1,
+  //       params: TennisMachineParams.fromState(0, 0, -8, mode2_up_slow, mode2_down_slow, 40, ballAngle_slow, 175, 1),
+  //     ),
+  //
+  //     // 10个球
+  //     FireTask(
+  //       count: count,
+  //       params: TennisMachineParams.fromState(0, 0, 0, mode1_left, mode1_right, 40, 170, 175, 1),
+  //     ),
+  //     // 移动到中间
+  //     FireTask(
+  //       count: 1,
+  //       params: TennisMachineParams.fromState(0, 200, 0, mode1_left, mode1_right, 40, 170, 175, 0),
+  //     ),
+  //     // 10个球
+  //     FireTask(
+  //       count: count,
+  //       params: TennisMachineParams.fromState(0, 0, 0, mode1_left, mode1_right, 40, 170, 175, 1),
+  //     ),
+  //     // 移动到右侧中间
+  //     FireTask(
+  //       count: 1,
+  //       params: TennisMachineParams.fromState(0, 230, 0, mode1_left, mode1_right, 40, 170, 175, 0),
+  //     ),
+  //     // 10个球
+  //     FireTask(
+  //       count: count,
+  //       params: TennisMachineParams.fromState(0, 0, 0, mode1_left, mode1_right, 40, 170, 175, 1),
+  //     ),
+  //     // 移动到中间
+  //     FireTask(
+  //       count: 1,
+  //       params: TennisMachineParams.fromState(0, -230, 0, mode1_left, mode1_right, 40, 170, 175, 0),
+  //     ),
+  //     // 左右交替
+  //     FireTask(
+  //       count: 1,
+  //       params: TennisMachineParams.fromState(0, 0, 8, mode1_left, mode1_right, 40, 170, 175, 1),
+  //     ),
+  //     FireTask(
+  //       count: 1,
+  //       params: TennisMachineParams.fromState(0, 0, -8, mode1_left, mode1_right, 40, 170, 175, 1),
+  //     ),
+  //     // 左右交替
+  //     FireTask(
+  //       count: 1,
+  //       params: TennisMachineParams.fromState(0, 0, 8, mode1_left, mode1_right, 40, 170, 175, 1),
+  //     ),
+  //     FireTask(
+  //       count: 1,
+  //       params: TennisMachineParams.fromState(0, 0, -8, mode1_left, mode1_right, 40, 170, 175, 1),
+  //     ),
+  //     // 左右交替
+  //     FireTask(
+  //       count: 1,
+  //       params: TennisMachineParams.fromState(0, 0, 8, mode1_left, mode1_right, 40, 170, 175, 1),
+  //     ),
+  //     FireTask(
+  //       count: 1,
+  //       params: TennisMachineParams.fromState(0, 0, -8, mode1_left, mode1_right, 40, 170, 175, 1),
+  //     ),
+  //     // 左右交替
+  //     FireTask(
+  //       count: 1,
+  //       params: TennisMachineParams.fromState(0, 0, 8, mode1_left, mode1_right, 40, 170, 175, 1),
+  //     ),
+  //     FireTask(
+  //       count: 1,
+  //       params: TennisMachineParams.fromState(0, 0, -8, mode1_left, mode1_right, 40, 170, 175, 1),
+  //     ),
+  //     // 左右交替
+  //     FireTask(
+  //       count: 1,
+  //       params: TennisMachineParams.fromState(0, 0, 8, mode1_left, mode1_right, 40, 170, 175, 1),
+  //     ),
+  //     FireTask(
+  //       count: 1,
+  //       params: TennisMachineParams.fromState(0, 0, -8, mode1_left, mode1_right, 40, 170, 175, 1),
+  //     ),
+  //     // 左右交替
+  //     FireTask(
+  //       count: 1,
+  //       params: TennisMachineParams.fromState(0, 0, 8, mode1_left, mode1_right, 40, 170, 175, 1),
+  //     ),
+  //     FireTask(
+  //       count: 1,
+  //       params: TennisMachineParams.fromState(0, 0, -8, mode1_left, mode1_right, 40, 170, 175, 1),
+  //     ),
+  //     // 左右交替
+  //     FireTask(
+  //       count: 1,
+  //       params: TennisMachineParams.fromState(0, 0, 8, mode1_left, mode1_right, 40, 170, 175, 1),
+  //     ),
+  //     FireTask(
+  //       count: 1,
+  //       params: TennisMachineParams.fromState(0, 0, -8, mode1_left, mode1_right, 40, 170, 175, 1),
+  //     ),
+  //     // 左右交替
+  //     FireTask(
+  //       count: 1,
+  //       params: TennisMachineParams.fromState(0, 0, 8, mode1_left, mode1_right, 40, 170, 175, 1),
+  //     ),
+  //     FireTask(
+  //       count: 1,
+  //       params: TennisMachineParams.fromState(0, 0, -8, mode1_left, mode1_right, 40, 170, 175, 1),
+  //     ),
+  //     // 左右交替
+  //     FireTask(
+  //       count: 1,
+  //       params: TennisMachineParams.fromState(0, 0, 8, mode1_left, mode1_right, 40, 170, 175, 1),
+  //     ),
+  //     FireTask(
+  //       count: 1,
+  //       params: TennisMachineParams.fromState(0, 0, -8, mode1_left, mode1_right, 40, 170, 175, 1),
+  //     ),
+  //     // 左右交替
+  //     FireTask(
+  //       count: 1,
+  //       params: TennisMachineParams.fromState(0, 0, 8, mode1_left, mode1_right, 40, 170, 175, 1),
+  //     ),
+  //     FireTask(
+  //       count: 1,
+  //       params: TennisMachineParams.fromState(0, 0, -8, mode1_left, mode1_right, 40, 170, 175, 1),
+  //     ),
+  //   ]);
+  // }
 }

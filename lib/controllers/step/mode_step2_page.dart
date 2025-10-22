@@ -15,25 +15,25 @@ import '../../views/total_power_view.dart';
 import 'controller/fire_controller.dart';
 import 'controller/horizontal_move_tasks.dart';
 
-class ModeStep1Page extends StatefulWidget {
-  const ModeStep1Page({super.key});
+class ModeStep2Page extends StatefulWidget {
+  const ModeStep2Page({super.key});
 
   @override
-  State<ModeStep1Page> createState() => _ModeStep1PageState();
+  State<ModeStep2Page> createState() => _ModeStep2PageState();
 }
 
-class _ModeStep1PageState extends State<ModeStep1Page> {
+class _ModeStep2PageState extends State<ModeStep2Page> {
   late StreamSubscription<DataUpdatedEvent> _subscription;
   List<bool> lights = [true, true, true, false, false, false, true, true, true];
   List<int> middleTargetIndexs = [11, 12, 13, 1]; // 中间三个标靶的索引(1为中间的新增的标靶)
-  List<int> leftTargetIndexs = [14,15,0];// 左侧三个标靶的索引
-  List<int> rightTargetIndexs = [8,9,10];// 右侧三个标靶的索引
+  List<int> leftTargetIndexs = [14, 15, 0]; // 左侧三个标靶的索引
+  List<int> rightTargetIndexs = [8, 9, 10]; // 右侧三个标靶的索引
   int gameIndex = 0;
   int hasSendedCount = 0; // 已发球的个数
   int targetShotCount = 0; //  击中标靶的个数
   int maxSpeed = 0; // 最大速度
-  int ballDirection = 1;// 发球的方向 1 中间  0左边 2 右边
-
+  int ballDirection = 1; // 发球机的位置 1 中间  0左边 2 右边 3随机
+  bool isRandom = false;
   DateTime _lastShotInTime = DateTime.now(); // 记录上次击中的时间
   @override
   void initState() {
@@ -57,14 +57,18 @@ class _ModeStep1PageState extends State<ModeStep1Page> {
       if (event.data == kSpeedValue) {
         // 收到速度数据
         SpeedPopup.show(context, speed: CommStatusManager().currentSpeed);
-        print('CommStatusManager().currentSpeed=${CommStatusManager().currentSpeed}');
+        print(
+            'CommStatusManager().currentSpeed=${CommStatusManager().currentSpeed}');
         setState(() {
           maxSpeed = max(maxSpeed, CommStatusManager().currentSpeed);
         });
       } else if (event.data == kTargetIndex) {
         if (_updateTime(1) < 1000) {
-          return;/// 1s内不处理
-        };
+          return;
+
+          /// 1s内不处理
+        }
+        ;
         // 标靶击中
         print('power界面 击中标靶的索引为${CommStatusManager().targetIndex}');
         if (middleTargetIndexs.contains(CommStatusManager().targetIndex[0])) {
@@ -73,49 +77,69 @@ class _ModeStep1PageState extends State<ModeStep1Page> {
               targetShotCount++;
             });
           }
-        } else if(leftTargetIndexs.contains(CommStatusManager().targetIndex[0])) {
+        } else if (leftTargetIndexs
+            .contains(CommStatusManager().targetIndex[0])) {
           if (ballDirection == 0) {
             setState(() {
               targetShotCount++;
             });
-            }
-          } else if(rightTargetIndexs.contains(CommStatusManager().targetIndex[0])) {
-            if (ballDirection == 2) {
-              setState(() {
-                targetShotCount++;
-              });
-            }
+          }
+        } else if (rightTargetIndexs
+            .contains(CommStatusManager().targetIndex[0])) {
+          if (ballDirection == 2) {
+            setState(() {
+              targetShotCount++;
+            });
+          }
         }
       }
     });
   }
 
+  static const positionDatas = [
+    [false, false, false, true, true, true, true, true, true], // 左
+    [true, true, true, true, true, true, false, false, false], // 中
+    [true, true, true, false, false, false, true, true, true], // 右
+  ];
+
   // 发球控制
   void fireControll() {
-    final plan = FirePlan.mode1Step(count: 10);
+    final plan = FirePlan.mode2Step(count: 10);
     final controller = FireController(plan.tasks);
     controller.onProgress = (taskIndex, shotIndex) {
       print("第 $taskIndex 个点位，第 $shotIndex 球完成");
       setState(() {
-        hasSendedCount ++;
+        hasSendedCount++;
+        if (isRandom) {
+          // 开始随机
+          int randomNumber = Random().nextInt(3);
+          lights = positionDatas[randomNumber];
+          ballDirection = randomNumber;
+        }
       });
+
     };
     controller.onFinished = () {
       print("任务计划完成！");
       CommStatusManager().writerData(changeModeData(0xff));
     };
     // 切换task task索引变化
-    controller.positionRefresh = (int index){
+    controller.positionRefresh = (int index) {
       // 中间
-      if(index == 0 || index == 1){
+      if (index == 0 || index == 1) {
         ballDirection = 0;
         // 左侧
         lights = [false, false, false, true, true, true, true, true, true];
-      }else if (index == 4 || index == 5) {
+      } else if (index == 4 || index == 5) {
         ballDirection = 2;
         // 右侧
         lights = [true, true, true, true, true, true, false, false, false];
-      }else{
+      } else if (index >= 7) {
+        ballDirection = 3;
+        isRandom = true;
+        // 中间
+        lights = [true, true, true, false, false, false, true, true, true];
+      } else {
         ballDirection = 1;
         // 中间
         lights = [true, true, true, false, false, false, true, true, true];
@@ -360,14 +384,14 @@ class _ModeStep1PageState extends State<ModeStep1Page> {
               left: 400,
               child: CommStatusManager().currentSpeed > 70
                   ? Center(
-                child: Text(
-                  '',
-                  style: TextStyle(
-                      fontWeight: FontWeight.bold,
-                      fontSize: 32,
-                      color: Colors.white),
-                ),
-              )
+                      child: Text(
+                        '',
+                        style: TextStyle(
+                            fontWeight: FontWeight.bold,
+                            fontSize: 32,
+                            color: Colors.white),
+                      ),
+                    )
                   : Container()),
 
           /// stop 暂停按钮
