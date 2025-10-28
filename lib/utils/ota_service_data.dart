@@ -446,6 +446,11 @@ class OTAServiceDataParse {
         CommStatusManager().angleValue = _angelValue;
 
         EventBusManager().eventBus.fire(DataUpdatedEvent(kPowerValue));
+
+        int errorCodeEnable  = bleNotAllData[13];// 故障使能
+        if(errorCodeEnable == 1){
+          // 使能打开后 才进行分析故障
+        }
       } else if (cmd == 0x18) {
         print('位置校准的回复${bleNotAllData[3]}');
         int statu = bleNotAllData[3];
