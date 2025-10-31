@@ -26,6 +26,12 @@ const kBLE_SERVICE_WRITER_UUID = "fff0";
 const kBLE_CHARACTERISTIC_NOTIFY_UUID = "fff1";
 const kBLE_CHARACTERISTIC_WRITER_UUID = "fff2";
 
+// 给CWY测试
+// const kBLE_SERVICE_NOTIFY_UUID = "ffe0";
+// const kBLE_SERVICE_WRITER_UUID = "ffe5";
+// const kBLE_CHARACTERISTIC_NOTIFY_UUID = "ffe4";
+// const kBLE_CHARACTERISTIC_WRITER_UUID = "ffe9";
+
 /*摄像头主机*/
 const kBLE_CAMERA_SERVICE_NOTIFY_UUID = "ffe0";
 const kBLE_CAMERA_CHARACTERISTIC_NOTIFY_UUID = "ffe4";
@@ -58,6 +64,7 @@ const kBLEMySpeedz1Name = "Myspeedz";
 const kBallMachine1 = "Roboti10_1";
 const kBallMachine2 = "Roboti10_2";
 
+
 /// 3 号场设备名字
 // const kBLEDeviceName = "ARtennis_3";
 // const kBLENewDeviceName = "Roboti10";
@@ -76,12 +83,8 @@ const kLiuHeight = 58;
 
 const kScale = 1.5;
 
-
 const kHeigthScale = 768.0/375.0;
-
 const kWidhtScale = 1024.0/812.0;
-
-
 
 
 // OTA 进度变化
@@ -93,8 +96,6 @@ const kBLEDisconneted = 'disconnected';
 const kBLEConneted = 'connected';
 
 const kRobotIsPowerOff = 'robot_is_powerOff';
-
-
 const kBLElog = 'log_show';
 
 const kFindNewDevice = 'find_new_ble_device';

@@ -257,6 +257,10 @@ class _DeviceControlPageState extends State<DeviceControlPage> {
           CommStatusManager().writerData(positionCheckData());
           return;
         }
+        if (data == 'clear') {
+          CommStatusManager().writerData(resetAllErrorCode());
+          return;
+        }
         if (data == 'adjust') {
           Navigator.push(
             context,
@@ -457,6 +461,15 @@ class _DeviceControlPageState extends State<DeviceControlPage> {
                                     context,
                                     '${Provider.of<LanguageModel>(context, listen: true).getText('请求系统状态')}',
                                     'statu'),
+                              ],
+                            ),
+                            Row(
+                              mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                              children: [
+                                _buildModeButton(
+                                    context,
+                                    '${Provider.of<LanguageModel>(context, listen: true).getText('手动清除故障')}',
+                                    'clear'),
                               ],
                             ),
                           ],

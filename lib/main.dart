@@ -6,6 +6,9 @@ import 'package:ota/utils/theme_provider.dart';
 import 'package:provider/provider.dart';
 import 'package:any_loading/any_loading.dart';
 import 'package:get/get.dart';
+
+final GlobalKey<NavigatorState> navigatorKey = GlobalKey<NavigatorState>();
+
 void main() {
   runApp(
     ChangeNotifierProvider(
@@ -27,6 +30,7 @@ class MyApp extends StatelessWidget {
     final themeProvider = Provider.of<ThemeProvider>(context);
     return Consumer<LanguageModel>(builder: (context,language,child){
       return GetMaterialApp(
+        navigatorKey: navigatorKey, // ✅ 注册全局导航key
         debugShowCheckedModeBanner: false,
         title: 'Flutter Demo',
         theme: ThemeData.light(), // 亮色主题

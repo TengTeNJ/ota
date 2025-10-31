@@ -1,5 +1,7 @@
+import 'package:any_loading/any_loading.dart';
 import 'package:ota/constants.dart';
 
+import '../model/fault_statu_one.dart';
 import 'comm_statu_manager.dart';
 import 'dart:async';
 import 'event_manager.dart';
@@ -450,11 +452,18 @@ class OTAServiceDataParse {
         int errorCodeEnable  = bleNotAllData[13];// 故障使能
         if(errorCodeEnable == 1){
           // 使能打开后 才进行分析故障
+          // 模拟蓝牙返回的两个字节
+          List<int> data = [error1, error2];
+          final status = DeviceStatus.fromBytes(data);
+          status.printSummary();
         }
       } else if (cmd == 0x18) {
         print('位置校准的回复${bleNotAllData[3]}');
         int statu = bleNotAllData[3];
         CommStatusManager().pcr = PositionCheckResponse.values[statu];
+      }else if(cmd == 0x12){
+        print('清除故障成功');
+        AnyLoading.showSuccess('清除障碍成功');
       }
       bleNotAllData.clear();
     }

@@ -1,8 +1,8 @@
 import '../../step_control_page.dart';
 import 'fire_controller.dart';
 //
-TennisMachineParams nearData = TennisMachineParams.fromState(0, 0, 0, 7, 6, 40, 120, 125, 1);
-TennisMachineParams farData = TennisMachineParams.fromState(0, 0, 0, 12, 11, 40, 160, 125, 1);
+TennisMachineParams nearData = TennisMachineParams.fromState(0, 0, 0, 42, 26, 40, 225, 300, 1);
+TennisMachineParams farData = TennisMachineParams.fromState(0, 0, 0, 55, 50, 40, 177, 300, 1);
 
 class FirePlan {
   final List<FireTask> tasks;
@@ -55,14 +55,6 @@ class FirePlan {
 
   factory FirePlan.nearAndFar({int count = 10}) {
     return FirePlan([
-      FireTask(
-        count: 1,
-        params: TennisMachineParams.fromState(0, 350, 0, 12, 13, 40, 180, 175, 0),
-      ),
-      // FireTask(
-      //   count: 1,
-      //   params: TennisMachineParams.fromState(0, 350, 0, 11, 12, 40, 180, 175, 0),
-      // ),
       // 远球
       FireTask(
         count: 1,

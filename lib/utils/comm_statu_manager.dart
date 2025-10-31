@@ -73,6 +73,8 @@ class CommStatusManager {
 
   List<int> targetIndex = [];
 
+  bool hasErrorDialog = false;
+
   /// 击中标靶的索引
   bool isOta = true;
   List<String> otaStrings = ['', '', '', '', '', '', ''];

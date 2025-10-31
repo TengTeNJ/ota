@@ -21,6 +21,8 @@ import 'controllers/ota_page.dart';
 import 'package:http/http.dart' as http;
 import 'dart:convert';
 
+import 'model/fault_statu_one.dart';
+
 class RootPageController extends StatefulWidget {
   const RootPageController({super.key});
 
@@ -43,10 +45,15 @@ class _RootPageControllerState extends State<RootPageController> {
   void initState() {
     // TODO: implement initState
     super.initState();
+    // 模拟弹窗提示发球机故障
+    // Future.delayed(Duration(milliseconds: 2), () {
+    //   List<int> data = [0x01, 0x80];
+    //   final status = DeviceStatus.fromBytes(data);
+    //   status.printSummary();
+    // });
     // 开始蓝牙搜索
     scanBLE();
     dataRequest();
-
 // // 创建原始字节数据
 //     final bytes = Uint8List(8);
 //
@@ -80,7 +87,9 @@ class _RootPageControllerState extends State<RootPageController> {
     }
     print('Response url: ${url}');
     AnyLoading.showLoading(
-        title: Provider.of<LanguageModel>(context, listen: false).getText('正在更新最新固件程序...'), maskType: AnyLoadingMaskType.black);
+        title: Provider.of<LanguageModel>(context, listen: false)
+            .getText('正在更新最新固件程序...'),
+        maskType: AnyLoadingMaskType.black);
     bool _value = await downloadAndConvertBin(url);
     setState(() {
       _hasRequest = true;
@@ -89,7 +98,8 @@ class _RootPageControllerState extends State<RootPageController> {
       AnyLoading.dismiss();
       ScaffoldMessenger.of(context).showSnackBar(
         SnackBar(
-          content: Text(Provider.of<LanguageModel>(context, listen: false).getText('更新下载最新的固件成功')),
+          content: Text(Provider.of<LanguageModel>(context, listen: false)
+              .getText('更新下载最新的固件成功')),
           duration: Duration(seconds: 2),
         ),
       );
@@ -97,7 +107,8 @@ class _RootPageControllerState extends State<RootPageController> {
       AnyLoading.dismiss();
       ScaffoldMessenger.of(context).showSnackBar(
         SnackBar(
-          content:Text(Provider.of<LanguageModel>(context, listen: false).getText('更新下载最新的固件失败，使用本地默认固件')),
+          content: Text(Provider.of<LanguageModel>(context, listen: false)
+              .getText('更新下载最新的固件失败，使用本地默认固件')),
           duration: Duration(seconds: 5),
         ),
       );
@@ -163,19 +174,23 @@ class _RootPageControllerState extends State<RootPageController> {
         items: [
           BottomNavigationBarItem(
             icon: const Icon(Icons.copy),
-            label: Provider.of<LanguageModel>(context, listen: true).getText('烧录'),
+            label:
+                Provider.of<LanguageModel>(context, listen: true).getText('烧录'),
           ),
-           BottomNavigationBarItem(
+          BottomNavigationBarItem(
             icon: Icon(Icons.system_update),
-            label: Provider.of<LanguageModel>(context, listen: true).getText('OTA升级'),
+            label: Provider.of<LanguageModel>(context, listen: true)
+                .getText('OTA升级'),
           ),
-           BottomNavigationBarItem(
+          BottomNavigationBarItem(
             icon: Icon(Icons.devices),
-            label: Provider.of<LanguageModel>(context, listen: true).getText('设备'),
+            label:
+                Provider.of<LanguageModel>(context, listen: true).getText('设备'),
           ),
-           BottomNavigationBarItem(
+          BottomNavigationBarItem(
             icon: Icon(Icons.more),
-            label: Provider.of<LanguageModel>(context, listen: true).getText('更多'),
+            label:
+                Provider.of<LanguageModel>(context, listen: true).getText('更多'),
           ),
         ],
       ),
