@@ -278,7 +278,9 @@ class _NewBattleTargetPageState extends State<NewBattleTargetPage> {
     /// 步伐控制指令发球  12  18  20
     if (_currentIndex <=11) {
       TennisMachineParams params =
-      TennisMachineParams.fromState(0, 0, (_currentIndex % 2 == 0) ? -13 : 13, 7, 8, 40, 130, 175, 1);
+      TennisMachineParams.fromState(0, 0, (_currentIndex % 2 == 0) ? -13 : 13, CommStatusManager().topCommonWheelSpeed
+          , CommStatusManager().bottoCommonmWheelSpeed, 40
+          , CommStatusManager().ballCommonAngle, 175, 1);
       CommStatusManager().writerData(stepControlData(params));
     }
     /// 往前移动两米
@@ -290,7 +292,9 @@ class _NewBattleTargetPageState extends State<NewBattleTargetPage> {
 
     if(_currentIndex > 12 && _currentIndex <31) {
       TennisMachineParams params =
-      TennisMachineParams.fromState(0, 0, (_currentIndex % 2 == 0) ? -13 : 13, 7, 8, 40, 130, 175, 1);
+      TennisMachineParams.fromState(0, 0, (_currentIndex % 2 == 0) ? -13 : 13, CommStatusManager().topCommonWheelSpeed
+          , CommStatusManager().bottoCommonmWheelSpeed, 40,
+          CommStatusManager().ballCommonAngle, 175, 1);
       CommStatusManager().writerData(stepControlData(params));
     }
 
@@ -303,7 +307,9 @@ class _NewBattleTargetPageState extends State<NewBattleTargetPage> {
 
     if(_currentIndex > 31  &&_currentIndex < 50) {
       TennisMachineParams params =
-      TennisMachineParams.fromState(0, 0, (_currentIndex % 2 == 0) ? -13 : 13, 7, 8, 40, 130, 175, 1);
+      TennisMachineParams.fromState(0, 0, (_currentIndex % 2 == 0) ? -13 : 13, CommStatusManager().topCommonWheelSpeed,
+          CommStatusManager().bottoCommonmWheelSpeed, 40,
+          CommStatusManager().ballCommonAngle, 175, 1);
       CommStatusManager().writerData(stepControlData(params));
     }
 

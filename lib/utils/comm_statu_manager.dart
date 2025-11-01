@@ -1,5 +1,4 @@
 import 'dart:async';
-import 'dart:ffi';
 import 'dart:io';
 import 'package:any_loading/any_loading.dart';
 import 'package:path/path.dart' as path;
@@ -98,6 +97,11 @@ class CommStatusManager {
   double siteType = 2;
   /// 步伐类型（p1 2 3 4）
   double stepType = 1;
+
+  /// 发球机参数适配和校对（上发球轮速度,下发球轮速度,发球角度）
+  double topCommonWheelSpeed = 4.0; // 上发球轮速度
+  double bottoCommonmWheelSpeed = 4.0; // 下发球轮速度
+  double ballCommonAngle = 130.0; // 发球角度（默认130）
 
   bool ntrpTechnicalProficiencyResult = false;/// Ntrp 第一轮测评结果
   bool ntrpMultiDimensionalResult = false;/// Ntrp 第二轮测评结果

@@ -1,5 +1,4 @@
 import 'dart:async';
-import 'dart:ffi';
 // import 'dart:nativewrappers/_internal/vm/lib/ffi_allocation_patch.dart';
 import 'package:event_bus/event_bus.dart';
 import 'package:flutter/material.dart';
@@ -82,6 +81,12 @@ class _PowerPageState extends State<PowerPage> {
     startCountdown();
 
     print("索引为${speedIndexs}");
+
+    print("上发球轮${CommStatusManager().topCommonWheelSpeed}");
+    print("下发球轮${CommStatusManager().bottoCommonmWheelSpeed}");
+    print("发球角度${CommStatusManager().ballCommonAngle}");
+
+
 
     // Future.delayed(Duration(milliseconds: 10000), () {
     //   double rightSum = _TotalSpeeds.fold(0.0, (previousValue, element) => previousValue + element);
@@ -305,8 +310,10 @@ class _PowerPageState extends State<PowerPage> {
   void modeOneGame() {
     /// 步伐控制指令发球  12  18  20
     if (speedIndexs <= 12) {
+
+
       TennisMachineParams params =
-          TennisMachineParams.fromState(0, 0, 0, 9, 9, 40, 130, 125, 1);
+          TennisMachineParams.fromState(0, 0, 0, CommStatusManager().topCommonWheelSpeed, CommStatusManager().bottoCommonmWheelSpeed, 40, CommStatusManager().ballCommonAngle, 125, 1);
       CommStatusManager().writerData(stepControlData(params));
       isMove = false;
     } else if (speedIndexs == 13) {
@@ -318,7 +325,7 @@ class _PowerPageState extends State<PowerPage> {
       speedIndexs++;
     } else if (13 < speedIndexs && speedIndexs < 31) {
       TennisMachineParams params =
-          TennisMachineParams.fromState(0, 0, 0, 8, 8, 40, 130, 125, 1);
+          TennisMachineParams.fromState(0, 0, 0, CommStatusManager().topCommonWheelSpeed, CommStatusManager().bottoCommonmWheelSpeed, 40, CommStatusManager().ballCommonAngle, 125, 1);
       CommStatusManager().writerData(stepControlData(params));
       isMove = false;
     } else if (speedIndexs == 31) {
@@ -330,7 +337,10 @@ class _PowerPageState extends State<PowerPage> {
       speedIndexs++;
     } else if (speedIndexs > 31 && speedIndexs < 50) {
       TennisMachineParams params =
-          TennisMachineParams.fromState(0, 0, 0, 8, 8, 40, 130, 125, 1);
+          TennisMachineParams.fromState(0, 0, 0, CommStatusManager().topCommonWheelSpeed,
+              CommStatusManager().bottoCommonmWheelSpeed,
+              40,
+              CommStatusManager().ballCommonAngle, 125, 1);
       CommStatusManager().writerData(stepControlData(params));
       isMove = false;
     } else if (speedIndexs == 50) {

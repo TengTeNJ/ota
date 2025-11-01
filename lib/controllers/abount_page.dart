@@ -4,12 +4,14 @@ import 'package:ota/constants.dart';
 import 'package:ota/controllers/count_down_page.dart';
 import 'package:ota/controllers/battle/new_battle_target_page.dart';
 import 'package:ota/controllers/new_target_single_ppage.dart';
+import 'package:ota/controllers/paramSetting/param_setting_controller.dart';
 import 'package:ota/controllers/solo/power_page.dart';
 import 'package:ota/controllers/gamehome/stadium_two_main_page.dart';
 import 'package:ota/controllers/step/fore_and_back_page.dart';
 import 'package:ota/controllers/step/horizontal_move_page.dart';
 import 'package:ota/controllers/step/mode_step1_page.dart';
 import 'package:ota/controllers/step/mode_step2_page.dart';
+import 'package:ota/controllers/step_control_page.dart';
 import 'package:ota/controllers/target_page.dart';
 import 'package:ota/utils/comm_statu_manager.dart';
 import 'package:package_info_plus/package_info_plus.dart';
@@ -443,6 +445,30 @@ class _AboutPageState extends State<AboutPage> {
                   },)
                 ],
               ),
+
+              /// 发球机参数设置
+              ListView(
+                shrinkWrap: true,
+                padding: EdgeInsets.zero,
+                children: [
+                  GestureDetector(
+                    behavior: HitTestBehavior.opaque,
+                    child:  ListTile(
+                      contentPadding: EdgeInsets.zero,
+                      title: Text('发球机参数设置',
+                          style: TextStyle(
+                              fontSize: 18, fontWeight: FontWeight.bold)),
+                      trailing: Icon(Icons.arrow_forward_ios),
+                    ),onTap: (){
+                    Navigator.push(
+                      context,
+                      MaterialPageRoute(
+                          builder: (context) => ParamSettingController()), // 参数设置页面
+                    );
+                  },)
+                ],
+              ),
+
             ],
           ),
         ),
