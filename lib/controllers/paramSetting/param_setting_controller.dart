@@ -230,7 +230,7 @@ class _ParamSettingControllerState extends State<ParamSettingController> {
                             value: topWheelSpeed,
                             min: 4,
                             max: 12,
-                            divisions: 4,
+                            divisions: 9,
                             label: topWheelSpeed.round().toString(),
                             onChanged: (double value) {
                               setState(() {
@@ -257,7 +257,7 @@ class _ParamSettingControllerState extends State<ParamSettingController> {
                             value: bottomWheelSpeed,
                             min: 4,
                             max: 12,
-                            divisions: 4,
+                            divisions: 9,
                             label: bottomWheelSpeed.round().toString(),
                             onChanged: (double value) {
                               setState(() {
@@ -282,9 +282,9 @@ class _ParamSettingControllerState extends State<ParamSettingController> {
                         Expanded(
                           child: Slider(
                             value: ballAngle,
-                            min: 130,
-                            max: 160.0,
-                            divisions: 3,
+                            min: 120,
+                            max: 200.0,
+                            divisions: 16,
                             label: ballAngle.round().toString(),
                             onChanged: (double value) {
                               setState(() {
@@ -396,7 +396,6 @@ class _ParamSettingControllerState extends State<ParamSettingController> {
                   onPressed: () {
 
 
-
                   },
                   // icon: Icon(isRunning ? Icons.stop : Icons.play_arrow),
                   label: Text('保存设定',
@@ -418,7 +417,6 @@ class _ParamSettingControllerState extends State<ParamSettingController> {
                 // 启动/停止按钮
                 ElevatedButton.icon(
                   onPressed: () {
-
                     setState(() {
                       isRunning = !isRunning;
                       print("状态${isRunning}");
@@ -433,7 +431,6 @@ class _ParamSettingControllerState extends State<ParamSettingController> {
                         // 发送控制命令
                         sendControlCommand(params);
                       }
-
                     });
 
                     // 创建参数对象
@@ -442,7 +439,6 @@ class _ParamSettingControllerState extends State<ParamSettingController> {
                         topWheelSpeed, bottomWheelSpeed, turntableSpeed,
                         ballAngle, ballInterval, ballCount
                     );
-
                     // 发送控制命令
                     sendControlCommand(params);
                   },
@@ -456,7 +452,6 @@ class _ParamSettingControllerState extends State<ParamSettingController> {
                   style: ElevatedButton.styleFrom(
                     backgroundColor: isRunning ? Color.fromRGBO(236, 189, 88, 1.0) : Colors.green,
                     foregroundColor: Colors.white, // ← 文字/图标颜色
-
                     padding: const EdgeInsets.symmetric(horizontal: 24, vertical: 16),
                     shape: RoundedRectangleBorder(
                       borderRadius: BorderRadius.circular(8),
