@@ -2,8 +2,11 @@ import 'dart:async';
 
 import 'package:event_bus/event_bus.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter_easyloading/flutter_easyloading.dart';
 import 'package:ota/constants.dart';
+import 'package:ota/utils/data_base.dart';
 
+import '../../utils/audio_player_util.dart';
 import '../../utils/comm_statu_manager.dart';
 import '../../utils/event_manager.dart';
 import '../../utils/ota_data.dart';
@@ -48,6 +51,27 @@ class _ParamSettingControllerState extends State<ParamSettingController> {
 
   late StreamSubscription<DataUpdatedEvent> _subscription;
 
+  ///发球机步伐
+  final NtrpPressureTaskMaps = {
+    for (int i = 1; i <= 50; i++)
+      i: () => controlRobotMove(
+        0, 0, (i % 2 == 1) ? 13 : -13, 1, CommStatusManager().topCommonWheelSpeed, CommStatusManager().bottoCommonmWheelSpeed, 40, CommStatusManager().ballCommonAngle, 150,
+      ),
+  };
+
+
+  List<int> indexList = [];
+  int speedIndexs = 0;
+
+
+  Future<void> getStoreData() async{
+    topWheelSpeed = await DataBaseHelper().fetchTopWheelSpeedData();
+    bottomWheelSpeed = await DataBaseHelper().fetchBottomWheelSpeedData();
+    ballAngle = await DataBaseHelper().fetchBallAngleData();
+    setState(() {
+
+    });
+  }
 
   @override
   void initState() {
@@ -56,9 +80,26 @@ class _ParamSettingControllerState extends State<ParamSettingController> {
 
     CommStatusManager().isStepControlling = false;
     CommStatusManager().isDeviceDeail = true;
-    topWheelSpeed = CommStatusManager().topCommonWheelSpeed;
-    bottomWheelSpeed = CommStatusManager().bottoCommonmWheelSpeed;
-    ballAngle = CommStatusManager().ballCommonAngle;
+     getStoreData();
+
+    CommStatusManager().isDeviceDeail = true;
+    EventBus eventBus = EventBusManager().eventBus;
+    _subscription = eventBus.on<DataUpdatedEvent>().listen((event) {
+      if (event.data == kStepControlFinishResponse) {
+        print("发球机开始发球了");
+        indexList.add(0);
+        speedIndexs++;
+        // 开始发球测试
+        // newTaskMapss[indexList.length]?.call();
+        // modeOneGame();
+        if (mounted) {
+          setState(() {});
+        }
+      }
+    });
+
+
+
 
     // 初始化控制器并设置初始值
     xController = TextEditingController(text: xPosition.round().toString());
@@ -99,8 +140,6 @@ class _ParamSettingControllerState extends State<ParamSettingController> {
         if (value >= 0 && value <= 100) {
           setState(() {
             turntableSpeed = value.toDouble();
-
-
           });
         }
       });
@@ -138,15 +177,6 @@ class _ParamSettingControllerState extends State<ParamSettingController> {
       });
     });
 
-    EventBus eventBus = EventBusManager().eventBus;
-    _subscription = eventBus.on<DataUpdatedEvent>().listen((event) {
-      if (event.data == kStepControlFinishResponse) {
-           if (isRunning == false) {
-
-           }
-      }
-
-    });
   }
 
   // 辅助方法：从控制器更新值
@@ -229,13 +259,14 @@ class _ParamSettingControllerState extends State<ParamSettingController> {
                           child: Slider(
                             value: topWheelSpeed,
                             min: 4,
-                            max: 12,
-                            divisions: 9,
+                            max: 15,
+                            divisions: 12,
                             label: topWheelSpeed.round().toString(),
                             onChanged: (double value) {
                               setState(() {
                                 topWheelSpeed = value;
-                                CommStatusManager().topCommonWheelSpeed = topWheelSpeed;
+                                print("上发球轮${topWheelSpeed}");
+                                DataBaseHelper().saveTopWheelSpeedData(value.roundToDouble());
                                 topWheelController.text = value.round().toString();
                               });
                             },
@@ -256,13 +287,13 @@ class _ParamSettingControllerState extends State<ParamSettingController> {
                           child: Slider(
                             value: bottomWheelSpeed,
                             min: 4,
-                            max: 12,
-                            divisions: 9,
+                            max: 15,
+                            divisions: 12,
                             label: bottomWheelSpeed.round().toString(),
                             onChanged: (double value) {
                               setState(() {
                                 bottomWheelSpeed = value;
-                                CommStatusManager().bottoCommonmWheelSpeed = bottomWheelSpeed;
+                                DataBaseHelper().saveBottomWheelSpeedData(value.roundToDouble());
                                 bottomWheelController.text = value.round().toString();
                               });
                             },
@@ -289,8 +320,7 @@ class _ParamSettingControllerState extends State<ParamSettingController> {
                             onChanged: (double value) {
                               setState(() {
                                 ballAngle = value;
-                                CommStatusManager().ballCommonAngle = ballAngle;
-                                print("mengheng${CommStatusManager().ballCommonAngle}");
+                                DataBaseHelper().saveBallAngleData(ballAngle.roundToDouble());
                                 ballAngleController.text = value.round().toString();
                               });
                             },
@@ -460,6 +490,37 @@ class _ParamSettingControllerState extends State<ParamSettingController> {
                 ),
               ],
             ),
+
+
+            const SizedBox(height: 24),
+
+            // 交叉循环发球
+            Row(
+              mainAxisAlignment: MainAxisAlignment.spaceEvenly,
+              children: [
+                // 交叉循环按钮
+                ElevatedButton.icon(
+                  onPressed: () {
+
+                    },
+                  label: Text('交叉循环',
+                    style: const TextStyle(
+                      fontWeight: FontWeight.bold, // 加粗
+                      fontSize: 16,                // 可选
+                    ),
+                  ),
+                  style: ElevatedButton.styleFrom(
+                    backgroundColor: Colors.green,
+                    foregroundColor: Colors.white, // ← 文字/图标颜色
+                    padding: const EdgeInsets.symmetric(horizontal: 24, vertical: 16),
+                    shape: RoundedRectangleBorder(
+                      borderRadius: BorderRadius.circular(8),
+                    ),
+                  ),
+                ),
+              ],
+            ),
+            const SizedBox(height: 24)
           ],
         ),
       ),

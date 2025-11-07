@@ -7,6 +7,7 @@ import 'package:get/get_core/src/get_main.dart';
 import 'package:ota/controllers/solo/power_end_page.dart';
 import 'package:ota/controllers/step_control_page.dart';
 import 'package:ota/utils/comm_statu_manager.dart';
+import 'package:ota/utils/data_base.dart';
 import 'package:ota/utils/dialog.dart';
 import 'package:ota/utils/service_util.dart';
 import 'package:ota/utils/system_util.dart';
@@ -71,23 +72,37 @@ class _PowerPageState extends State<PowerPage> {
 
   /// 游戏暂停或者继续
   bool gameing = true; /// 游戏中
+
+
+  double gameTopWheelSpeed = 4.0; // 上发球轮速度
+  double gameBottomWheelSpeed = 4.0; // 下发球轮速度
+  double gameBallAngle = 130;
+
+  Future<void> getSoreageData() async{
+    gameTopWheelSpeed = await  DataBaseHelper().fetchTopWheelSpeedData();
+    gameBottomWheelSpeed = await  DataBaseHelper().fetchBottomWheelSpeedData();
+    gameBallAngle = await  DataBaseHelper().fetchBallAngleData();
+    print("上${gameTopWheelSpeed}");
+    print("下${gameBottomWheelSpeed}");
+    print("角度${gameBallAngle}");
+  }
+
   @override
   void initState() {
     // TODO: implement initState
     super.initState();
 
+    TennisMachineParams params =
+    TennisMachineParams.fromState(0, 0, 0, 8.4,
+        8.3, 40,
+        gameBallAngle, 125, 1);
+    CommStatusManager().writerData(stepControlData(params));
+
     print('进入到力量训练${widget.type}');
     playLocalAudio('blueMonday1.MP3', isAlwaysplay: true);
     startCountdown();
 
-    print("索引为${speedIndexs}");
-
-    print("上发球轮${CommStatusManager().topCommonWheelSpeed}");
-    print("下发球轮${CommStatusManager().bottoCommonmWheelSpeed}");
-    print("发球角度${CommStatusManager().ballCommonAngle}");
-
-
-
+    getSoreageData();
     // Future.delayed(Duration(milliseconds: 10000), () {
     //   double rightSum = _TotalSpeeds.fold(0.0, (previousValue, element) => previousValue + element);
     //   int rightcount = _TotalSpeeds.length;
@@ -311,9 +326,10 @@ class _PowerPageState extends State<PowerPage> {
     /// 步伐控制指令发球  12  18  20
     if (speedIndexs <= 12) {
 
-
       TennisMachineParams params =
-          TennisMachineParams.fromState(0, 0, 0, CommStatusManager().topCommonWheelSpeed, CommStatusManager().bottoCommonmWheelSpeed, 40, CommStatusManager().ballCommonAngle, 125, 1);
+          TennisMachineParams.fromState(0, 0, 0, gameTopWheelSpeed,
+              gameBottomWheelSpeed, 40,
+              gameBallAngle, 125, 1);
       CommStatusManager().writerData(stepControlData(params));
       isMove = false;
     } else if (speedIndexs == 13) {
@@ -325,7 +341,9 @@ class _PowerPageState extends State<PowerPage> {
       speedIndexs++;
     } else if (13 < speedIndexs && speedIndexs < 31) {
       TennisMachineParams params =
-          TennisMachineParams.fromState(0, 0, 0, CommStatusManager().topCommonWheelSpeed, CommStatusManager().bottoCommonmWheelSpeed, 40, CommStatusManager().ballCommonAngle, 125, 1);
+          TennisMachineParams.fromState(0, 0, 0, gameTopWheelSpeed,
+              gameBottomWheelSpeed, 40,
+              gameBallAngle, 125, 1);
       CommStatusManager().writerData(stepControlData(params));
       isMove = false;
     } else if (speedIndexs == 31) {
@@ -337,10 +355,10 @@ class _PowerPageState extends State<PowerPage> {
       speedIndexs++;
     } else if (speedIndexs > 31 && speedIndexs < 50) {
       TennisMachineParams params =
-          TennisMachineParams.fromState(0, 0, 0, CommStatusManager().topCommonWheelSpeed,
-              CommStatusManager().bottoCommonmWheelSpeed,
+          TennisMachineParams.fromState(0, 0, 0, gameTopWheelSpeed,
+              gameBottomWheelSpeed,
               40,
-              CommStatusManager().ballCommonAngle, 125, 1);
+              gameBallAngle, 125, 1);
       CommStatusManager().writerData(stepControlData(params));
       isMove = false;
     } else if (speedIndexs == 50) {

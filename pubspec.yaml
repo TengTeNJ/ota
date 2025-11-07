@@ -59,6 +59,8 @@ dependencies:
 
   ttntrp: ^0.0.4
   get: ^4.7.2
+  shared_preferences: ^2.0.20
+
 
 
 dev_dependencies:

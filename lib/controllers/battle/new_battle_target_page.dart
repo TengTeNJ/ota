@@ -13,6 +13,7 @@ import 'package:ota/views/total_power_view.dart';
 import '../../constants.dart';
 import '../../utils/audio_player_util.dart';
 import '../../utils/comm_statu_manager.dart';
+import '../../utils/data_base.dart';
 import '../../utils/event_manager.dart';
 import '../../utils/ota_data.dart';
 import '../../utils/system_util.dart';
@@ -67,11 +68,25 @@ class _NewBattleTargetPageState extends State<NewBattleTargetPage> {
     await flutterTts.speak(number.toString()); // 播放数字
   }
 
+  double gameTopWheelSpeed = 4.0; // 上发球轮速度
+  double gameBottomWheelSpeed = 4.0; // 下发球轮速度
+  double gameBallAngle = 130;
+
+  Future<void> getSoreageData() async{
+    gameTopWheelSpeed = await  DataBaseHelper().fetchTopWheelSpeedData();
+    gameBottomWheelSpeed = await  DataBaseHelper().fetchBottomWheelSpeedData();
+    gameBallAngle = await  DataBaseHelper().fetchBallAngleData();
+    print("上${gameTopWheelSpeed}");
+    print("下${gameBottomWheelSpeed}");
+    print("角度${gameBallAngle}");
+  }
+
   @override
   void initState() {
     // TODO: implement initState
     super.initState();
     print("进入到battle 界面");
+    getSoreageData();
 
     print("对战的索引${_currentIndex}");
     playLocalAudio('yangBG2.MP3',isAlwaysplay: true);
@@ -278,9 +293,10 @@ class _NewBattleTargetPageState extends State<NewBattleTargetPage> {
     /// 步伐控制指令发球  12  18  20
     if (_currentIndex <=11) {
       TennisMachineParams params =
-      TennisMachineParams.fromState(0, 0, (_currentIndex % 2 == 0) ? -13 : 13, CommStatusManager().topCommonWheelSpeed
-          , CommStatusManager().bottoCommonmWheelSpeed, 40
-          , CommStatusManager().ballCommonAngle, 175, 1);
+      TennisMachineParams.fromState(0, 0, (_currentIndex % 2 == 0) ? -13 : 13,
+          gameTopWheelSpeed
+          , gameBottomWheelSpeed, 40
+          , gameBallAngle, 175, 1);
       CommStatusManager().writerData(stepControlData(params));
     }
     /// 往前移动两米
@@ -292,9 +308,10 @@ class _NewBattleTargetPageState extends State<NewBattleTargetPage> {
 
     if(_currentIndex > 12 && _currentIndex <31) {
       TennisMachineParams params =
-      TennisMachineParams.fromState(0, 0, (_currentIndex % 2 == 0) ? -13 : 13, CommStatusManager().topCommonWheelSpeed
-          , CommStatusManager().bottoCommonmWheelSpeed, 40,
-          CommStatusManager().ballCommonAngle, 175, 1);
+      TennisMachineParams.fromState(0, 0, (_currentIndex % 2 == 0) ? -13 : 13,
+          gameTopWheelSpeed
+          , gameBottomWheelSpeed, 40,
+          gameBallAngle, 175, 1);
       CommStatusManager().writerData(stepControlData(params));
     }
 
@@ -307,9 +324,10 @@ class _NewBattleTargetPageState extends State<NewBattleTargetPage> {
 
     if(_currentIndex > 31  &&_currentIndex < 50) {
       TennisMachineParams params =
-      TennisMachineParams.fromState(0, 0, (_currentIndex % 2 == 0) ? -13 : 13, CommStatusManager().topCommonWheelSpeed,
-          CommStatusManager().bottoCommonmWheelSpeed, 40,
-          CommStatusManager().ballCommonAngle, 175, 1);
+      TennisMachineParams.fromState(0, 0, (_currentIndex % 2 == 0) ? -13 : 13,
+          gameTopWheelSpeed,
+          gameBottomWheelSpeed, 40,
+          gameBallAngle, 175, 1);
       CommStatusManager().writerData(stepControlData(params));
     }
 

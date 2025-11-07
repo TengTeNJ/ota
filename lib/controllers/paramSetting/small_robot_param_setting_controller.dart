@@ -79,42 +79,7 @@ class _SmallRobotParamSettingControllerState extends State<SmallRobotParamSettin
         150,
       ),
   };
-
-  final newTaskMapss = {
-    1: () => controlRobotMove(0, 0, 0, 1,highWheel,highWheel,40, kHighAngle,150),
-    2: () => controlRobotMove(0, 0, 0, 1,highWheel,highWheel,40, kHighAngle,150),
-    3: () => controlRobotMove(0, 0, 0, 1,highWheel,highWheel,40, kHighAngle,150),
-    4: () => controlRobotMove(0, 0, 0, 1,highWheel,highWheel,40, kHighAngle,150),
-    5: () => controlRobotMove(0, 0, 0, 1,highWheel,highWheel,40, kHighAngle,150),
-    6: () => controlRobotMove(0, 0, 0, 1,highWheel,highWheel,40, kHighAngle,150),
-    7: () => controlRobotMove(0, 0, 0, 1,highWheel,highWheel,40, kHighAngle,150),
-    8: () => controlRobotMove(0, 0, 0, 1,highWheel,highWheel,40, kHighAngle,150),
-    9: () => controlRobotMove(0, 0, 0, 1,highWheel,highWheel,40, kHighAngle,150),
-    10: () => controlRobotMove(0, 0, 0, 1,highWheel,highWheel,40, kHighAngle,150),
-
-    11: () => controlRobotMove(0, 0, 0, 1,bottomWheel,bottomWheel,40, kBottomAngle,150),
-    12: () => controlRobotMove(0, 0, 0, 1,bottomWheel,bottomWheel,40, kBottomAngle,150),
-    13: () => controlRobotMove(0, 0, 0, 1,bottomWheel,bottomWheel,40, kBottomAngle,150),
-    14: () => controlRobotMove(0, 0, 0, 1,bottomWheel,bottomWheel,40, kBottomAngle,150),
-    15: () => controlRobotMove(0, 0, 0, 1,bottomWheel,bottomWheel,40, kBottomAngle,150),
-    16: () => controlRobotMove(0, 0, 0, 1,bottomWheel,bottomWheel,40, kBottomAngle,150),
-    17: () => controlRobotMove(0, 0, 0, 1,bottomWheel,bottomWheel,40, kBottomAngle,150),
-    18: () => controlRobotMove(0, 0, 0, 1,bottomWheel,bottomWheel,40, kBottomAngle,150),
-    19: () => controlRobotMove(0, 0, 0, 1,bottomWheel,bottomWheel,40, kBottomAngle,150),
-    20: () => controlRobotMove(0, 0, 0, 1,bottomWheel,bottomWheel,40, kBottomAngle,150),
-
-    21: () => controlRobotMove(0, 0, 0, 1,nearWheel,nearWheel,40, kNearAngle,150),
-    22: () => controlRobotMove(0, 0, 0, 1,nearWheel,nearWheel,40, kNearAngle,150),
-    23: () => controlRobotMove(0, 0, 0, 1,nearWheel,nearWheel,40, kNearAngle,150),
-    24: () => controlRobotMove(0, 0, 0, 1,nearWheel,nearWheel,40, kNearAngle,150),
-    25: () => controlRobotMove(0, 0, 0, 1,nearWheel,nearWheel,40, kNearAngle,150),
-    26: () => controlRobotMove(0, 0, 0, 1,nearWheel,nearWheel,40, kNearAngle,150),
-    27: () => controlRobotMove(0, 0, 0, 1,nearWheel,nearWheel,40, kNearAngle,150),
-    28: () => controlRobotMove(0, 0, 0, 1,nearWheel,nearWheel,40, kNearAngle,150),
-    29: () => controlRobotMove(0, 0, 0, 1,nearWheel,nearWheel,40, kNearAngle,150),
-    30: () => controlRobotMove(0, 0, 0, 1,nearWheel,nearWheel,40, kNearAngle,150),
-  };
-
+  
 
   void modeOneGame() {
     if (speedIndexs <= 11) {
