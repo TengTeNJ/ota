@@ -337,7 +337,6 @@ class _TennisBallMachineControlState extends State<TennisBallMachineControl> {
                       ),
                     ),
                     const SizedBox(height: 16),
-
                     // X轴控制（竖向）
                     Row(
                       children: [

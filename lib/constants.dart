@@ -120,7 +120,12 @@ const kSpeedValue= 'speed_value';
 
 const kTargetIndex = 'target_index';
 
+const kCaliStatu= 'cali_stati'; // 校准状态
+
+
 const kModeDistance = 150;
+
+
 
 /// ntrp 结果类型
 enum resultType{

@@ -15,6 +15,7 @@ import 'package:wheel_chooser/wheel_chooser.dart';
 import '../constants.dart';
 import '../utils/comm_statu_manager.dart';
 import '../utils/event_manager.dart';
+import '../utils/global_alert_manager.dart';
 import '../utils/language_model.dart';
 import '../utils/ota_data.dart';
 import '../utils/ota_service_data.dart';
@@ -114,7 +115,6 @@ class _DeviceControlPageState extends State<DeviceControlPage> {
       });
     });
     initData();
-    // wwQQQQQQQwwwwww
   }
 
   initData() {
@@ -246,14 +246,17 @@ class _DeviceControlPageState extends State<DeviceControlPage> {
         }
 
         if (data == 'reset') {
+          print('reset----');
           CommStatusManager().writerData(resetToPreVersion());
           return;
         }
         if (data == 'statu') {
+          print('statu----');
           CommStatusManager().writerData(systemFeedbackData());
           return;
         }
         if (data == 'position') {
+          print('position----');
           CommStatusManager().writerData(positionCheckData());
           return;
         }

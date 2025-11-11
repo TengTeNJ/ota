@@ -1,6 +1,8 @@
 import 'package:any_loading/any_loading.dart';
 import 'package:ota/constants.dart';
+import 'package:ota/utils/global_alert_manager.dart';
 
+import '../main.dart';
 import '../model/fault_statu_one.dart';
 import 'comm_statu_manager.dart';
 import 'dart:async';
@@ -461,6 +463,23 @@ class OTAServiceDataParse {
         print('位置校准的回复${bleNotAllData[3]}');
         int statu = bleNotAllData[3];
         CommStatusManager().pcr = PositionCheckResponse.values[statu];
+       // EventBusManager().eventBus.fire(DataUpdatedEvent(kCaliStatu));
+        final context = navigatorKey.currentContext;
+        if (context == null) return; // 防止context还未加载完成
+        switch (statu) {
+          case 1:
+            GlobalAlertManager().show(context, '正在校准，请稍等......');
+            break;
+          case 4:
+            GlobalAlertManager().dismiss();
+            break;
+          case 5:
+            GlobalAlertManager().dismiss();
+            Future.delayed(Duration(milliseconds:500),(){
+              AnyLoading.showError('校准失败');
+            });
+            break;
+        }
       }else if(cmd == 0x12){
         print('清除故障成功');
         AnyLoading.showSuccess('清除障碍成功');
