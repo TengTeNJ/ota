@@ -1,8 +1,11 @@
 import '../../step_control_page.dart';
 import 'fire_controller.dart';
 //
-TennisMachineParams nearData = TennisMachineParams.fromState(0, 0, 0, 42, 26, 40, 225, 300, 1);
-TennisMachineParams farData = TennisMachineParams.fromState(0, 0, 0, 55, 50, 40, 177, 300, 1);
+TennisMachineParams farData = TennisMachineParams.fromState(0, 0, 0, 35, 35, 40, 177, 200, 1);
+TennisMachineParams nearData = TennisMachineParams.fromState(0, 0, 0, 25, 25, 40, 225, 200, 1);
+
+TennisMachineParams jiejiData = TennisMachineParams.fromState(0, 0, 0, 35, 35, 40, 225, 200, 1);
+
 
 class FirePlan {
   final List<FireTask> tasks;
@@ -60,132 +63,42 @@ class FirePlan {
         count: 1,
         params: farData,
       ),
-      // 近球
-      FireTask(
-        count: 1,
-        params: nearData,
-      ),
-      // 远球
       FireTask(
         count: 1,
         params: farData,
       ),
-      // 近球
-      FireTask(
-        count: 1,
-        params: nearData,
-      ),
-      // 远球
       FireTask(
         count: 1,
         params: farData,
       ),
-      // 近球
-      FireTask(
-        count: 1,
-        params: nearData,
-      ),
-      // 远球
       FireTask(
         count: 1,
         params: farData,
       ),
-      // 近球
-      FireTask(
-        count: 1,
-        params: nearData,
-      ),
-      // 远球
       FireTask(
         count: 1,
         params: farData,
       ),
-      // 近球
-      FireTask(
-        count: 1,
-        params: nearData,
-      ),
-      // 远球
       FireTask(
         count: 1,
         params: farData,
       ),
-      // 近球
-      FireTask(
-        count: 1,
-        params: nearData,
-      ),
-      // 远球
       FireTask(
         count: 1,
         params: farData,
       ),
-      // 近球
-      FireTask(
-        count: 1,
-        params: nearData,
-      ),
-      // 远球
       FireTask(
         count: 1,
         params: farData,
       ),
-      // 近球
-      FireTask(
-        count: 1,
-        params: nearData,
-      ),
-      // 远球
       FireTask(
         count: 1,
         params: farData,
       ),
-      // 近球
-      FireTask(
-        count: 1,
-        params: nearData,
-      ),
-      // 远球
       FireTask(
         count: 1,
         params: farData,
       ),
-      // 近球
-      FireTask(
-        count: 1,
-        params: nearData,
-      ),
-      // 远球
-      FireTask(
-        count: 1,
-        params: farData,
-      ),
-      // 近球
-      FireTask(
-        count: 1,
-        params: nearData,
-      ),
-      // 远球
-      FireTask(
-        count: 1,
-        params: farData,
-      ),
-      // 近球
-      FireTask(
-        count: 1,
-        params: nearData,
-      ),
-      // 远球
-      FireTask(
-        count: 1,
-        params: farData,
-      ),
-      // 近球
-      FireTask(
-        count: 1,
-        params: nearData,
-      ),
-      // 远球
       FireTask(
         count: 1,
         params: farData,
@@ -196,116 +109,102 @@ class FirePlan {
         params: nearData,
       ),
 
-      // 远球
-      FireTask(
-        count: 1,
-        params: farData,
-      ),
       // 近球
       FireTask(
         count: 1,
         params: nearData,
       ),
-      // 远球
-      FireTask(
-        count: 1,
-        params: farData,
-      ),
+
       // 近球
       FireTask(
         count: 1,
         params: nearData,
       ),
-      // 远球
-      FireTask(
-        count: 1,
-        params: farData,
-      ),
+
       // 近球
       FireTask(
         count: 1,
         params: nearData,
       ),
-      // 远球
-      FireTask(
-        count: 1,
-        params: farData,
-      ),
+
       // 近球
       FireTask(
         count: 1,
         params: nearData,
       ),
-      // 远球
-      FireTask(
-        count: 1,
-        params: farData,
-      ),
+
       // 近球
       FireTask(
         count: 1,
         params: nearData,
       ),
-      // 远球
-      FireTask(
-        count: 1,
-        params: farData,
-      ),
+
       // 近球
       FireTask(
         count: 1,
         params: nearData,
       ),
-      // 远球
-      FireTask(
-        count: 1,
-        params: farData,
-      ),
+
       // 近球
       FireTask(
         count: 1,
         params: nearData,
       ),
-      // 远球
-      FireTask(
-        count: 1,
-        params: farData,
-      ),
+
       // 近球
       FireTask(
         count: 1,
         params: nearData,
       ),
-      // 远球
-      FireTask(
-        count: 1,
-        params: farData,
-      ),
+
       // 近球
       FireTask(
         count: 1,
         params: nearData,
       ),
-      // 远球
-      FireTask(
-        count: 1,
-        params: farData,
-      ),
+
+
       // 近球
       FireTask(
         count: 1,
         params: nearData,
       ),
-      // 远球
-      FireTask(
-        count: 1,
-        params: farData,
-      ),
+
       // 近球
       FireTask(
         count: 1,
         params: nearData,
       ),
+
+      // 截击
+      FireTask(
+        count: 1,
+        params: jiejiData,
+      ),
+
+      // 截击
+      FireTask(
+        count: 1,
+        params: jiejiData,
+      ),
+
+      // 截击
+      FireTask(
+        count: 1,
+        params: jiejiData,
+      ),
+
+      // 截击
+      FireTask(
+        count: 1,
+        params: jiejiData,
+      ),
+
+
+
+
+
+
     ]);
   }
 
@@ -583,6 +482,10 @@ class FirePlan {
 
   static const double ballAngle_slow = 160;
   static const double ballAngle_fast = 180;
+
+
+
+
 
   // factory FirePlan.mode2Step({int count = 10}) {
   //   return FirePlan([

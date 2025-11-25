@@ -61,7 +61,7 @@ const kBLENewDeviceName = "Roboti10";
 const kBLEMySpeedzName = "Myspeedz_2";
 const kBLEMySpeedz1Name = "Myspeedz";
 
-const kBallMachine1 = "Roboti10_1";
+const kBallMachine1 = "Roboti10-1";
 const kBallMachine2 = "Roboti10_2";
 
 

@@ -159,6 +159,7 @@ class CommStatusManager {
 
   /*开始扫描*/
   Future<void> startScan() async {
+
     // 不能重复扫描
     if (_scanStream != null) {
       return;
@@ -174,9 +175,14 @@ class CommStatusManager {
         if (event.name.isEmpty) {
           return;
         }
-        // print('event.name=${event.name}====${event.name.length}');
+        var type = CommStatusManager().siteType.toInt();
+        var robotName = kBallMachine2;
+        if (type == 2) {
+          robotName = kBallMachine1;
+        }
+
         if (event.name.contains(kBLEDeviceName) ||
-            event.name.contains(kBLENewDeviceName) ||
+            event.name.contains(robotName) ||
             event.name.contains(kCamera1) ||
             event.name.contains(kCamera2) ||
             event.name.contains(kCamera3)) {
@@ -470,6 +476,7 @@ class CommStatusManager {
    * 发送蓝牙数据
    */
   void writerData(List<int> data) {
+    print("哈哈发送的数据${data}");
     // 发送数据
     if (CommStatusManager().currentConnectedDevice != null) {
       CommStatusManager().ble.writeCharacteristicWithoutResponse(

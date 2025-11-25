@@ -1,3 +1,5 @@
+import 'dart:async';
+
 import 'package:flutter/material.dart';
 
 class GlobalAlertManager extends ChangeNotifier {
@@ -7,8 +9,22 @@ class GlobalAlertManager extends ChangeNotifier {
 
   OverlayEntry? _overlayEntry;
 
+  Timer? _loadingTimer;
+
+  Duration timeout = const Duration(seconds: 15);
+
+
   void show(BuildContext context, String message) {
     if (_overlayEntry != null) return; // 已显示则不重复创建
+
+    // 先清掉上一轮定时器，防止重复
+    _loadingTimer?.cancel();
+    _loadingTimer = Timer(timeout, (){
+      dismiss();
+      dismiss();
+      print("弹窗超时自动移除");
+    });
+
 
     _overlayEntry = OverlayEntry(
       builder: (context) => Stack(

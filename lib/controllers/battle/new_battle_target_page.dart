@@ -282,7 +282,8 @@ class _NewBattleTargetPageState extends State<NewBattleTargetPage> {
       return;
     }
     TennisMachineParams params =
-    TennisMachineParams.fromState(0, 330, 0, 7, 8, 40, 120, 125, 0);
+    TennisMachineParams.fromState(0,CommStatusManager().siteType.toInt() == 1 ? 450 : 310,
+        0, 7, 8, 40, 120, 125, 0);
     CommStatusManager().writerData(stepControlData(params));
     _currentIndex --;
 
@@ -291,7 +292,7 @@ class _NewBattleTargetPageState extends State<NewBattleTargetPage> {
   /// P2 发球模式
   void modeTwoGame( ) {
     /// 步伐控制指令发球  12  18  20
-    if (_currentIndex <=11) {
+    if (_currentIndex <=11) {  
       TennisMachineParams params =
       TennisMachineParams.fromState(0, 0, (_currentIndex % 2 == 0) ? -13 : 13,
           gameTopWheelSpeed
@@ -309,9 +310,9 @@ class _NewBattleTargetPageState extends State<NewBattleTargetPage> {
     if(_currentIndex > 12 && _currentIndex <31) {
       TennisMachineParams params =
       TennisMachineParams.fromState(0, 0, (_currentIndex % 2 == 0) ? -13 : 13,
-          gameTopWheelSpeed
-          , gameBottomWheelSpeed, 40,
-          gameBallAngle, 175, 1);
+          gameTopWheelSpeed - 1
+          , gameBottomWheelSpeed - 1, 40,
+          gameBallAngle - 5, 175, 1);
       CommStatusManager().writerData(stepControlData(params));
     }
 
@@ -325,9 +326,9 @@ class _NewBattleTargetPageState extends State<NewBattleTargetPage> {
     if(_currentIndex > 31  &&_currentIndex < 50) {
       TennisMachineParams params =
       TennisMachineParams.fromState(0, 0, (_currentIndex % 2 == 0) ? -13 : 13,
-          gameTopWheelSpeed,
-          gameBottomWheelSpeed, 40,
-          gameBallAngle, 175, 1);
+          gameTopWheelSpeed - 1,
+          gameBottomWheelSpeed - 1, 40,
+          gameBallAngle - 5, 175, 1);
       CommStatusManager().writerData(stepControlData(params));
     }
 

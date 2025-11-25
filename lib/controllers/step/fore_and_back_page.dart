@@ -75,7 +75,7 @@ class _ForeAndBackPageState extends State<ForeAndBackPage> {
 
   // 发球控制
   void fireControll() {
-    final plan = FirePlan.nearAndFar(count: 1);
+    final plan = FirePlan.nearAndFar(count: 10);
     final controller = FireController(plan.tasks);
     controller.onProgress = (taskIndex, shotIndex) {
       print("第 $taskIndex 个点位，第 $shotIndex 球完成");

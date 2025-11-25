@@ -492,7 +492,7 @@ class OTAServiceDataParse {
     if (data.isEmpty) {
       return;
     }
-    print('data=${data}');
+    print('打印的发球机回复的数据data=${data}');
     // if (bleNotAllData.length > 20) {
     //   bleNotAllData.clear();
     // }

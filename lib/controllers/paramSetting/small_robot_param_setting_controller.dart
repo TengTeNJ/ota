@@ -4,6 +4,7 @@ import 'package:event_bus/event_bus.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_easyloading/flutter_easyloading.dart';
 import 'package:ota/constants.dart';
+import 'package:ota/controllers/paramSetting/small_robot_task.dart';
 
 import '../../utils/audio_player_util.dart';
 import '../../utils/comm_statu_manager.dart';
@@ -91,19 +92,17 @@ class _SmallRobotParamSettingControllerState extends State<SmallRobotParamSettin
     }
   }
 
-// 10个远球  10个 近球发球控制
+// 小型发球机远近球交替训练
   void fireControll() {
-    final plan = FirePlan.nearAndFar(count: 10);
+    final plan = SmallRobotTask.nearFarStep();
     final controller = FireController(plan.tasks);
     controller.onProgress = (taskIndex, shotIndex) {
       print("第 $taskIndex 个点位，第 $shotIndex 球完成");
       setState(() {
-
       });
     };
     controller.onFinished = () {
       print("任务计划完成！");
-      CommStatusManager().writerData(changeModeData(0xff));
     };
     controller.start();
   }

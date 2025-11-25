@@ -1,10 +1,13 @@
 import 'dart:async';
 // import 'dart:nativewrappers/_internal/vm/lib/ffi_allocation_patch.dart';
+import 'package:any_loading/any_loading.dart';
 import 'package:event_bus/event_bus.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter_easyloading/flutter_easyloading.dart';
 import 'package:get/get.dart';
 import 'package:get/get_core/src/get_main.dart';
 import 'package:ota/controllers/solo/power_end_page.dart';
+import 'package:ota/controllers/solo/solo_move_task.dart';
 import 'package:ota/controllers/step_control_page.dart';
 import 'package:ota/utils/comm_statu_manager.dart';
 import 'package:ota/utils/data_base.dart';
@@ -16,6 +19,7 @@ import 'package:percent_indicator/circular_percent_indicator.dart';
 import '../../constants.dart';
 import '../../model/Battle_user_model.dart';
 import '../../utils/audio_player_util.dart';
+import '../../utils/error_dialog.dart';
 import '../../utils/event_manager.dart';
 import '../../utils/ota_data.dart';
 import '../../views/show_speed_view.dart';
@@ -23,6 +27,7 @@ import '../../views/show_speed_view.dart';
 import 'package:flutter_tts/flutter_tts.dart';
 
 import '../../views/total_power_view.dart';
+import '../step/controller/fire_controller.dart';
 
 class PowerPage extends StatefulWidget {
   String type = "p1";
@@ -72,6 +77,10 @@ class _PowerPageState extends State<PowerPage> {
 
   /// 游戏暂停或者继续
   bool gameing = true; /// 游戏中
+  ///
+  /// 发球中
+  bool servesing = true; /// 发球中
+
 
 
   double gameTopWheelSpeed = 4.0; // 上发球轮速度
@@ -91,164 +100,14 @@ class _PowerPageState extends State<PowerPage> {
   void initState() {
     // TODO: implement initState
     super.initState();
-
-    TennisMachineParams params =
-    TennisMachineParams.fromState(0, 0, 0, 8.4,
-        8.3, 40,
-        gameBallAngle, 125, 1);
-    CommStatusManager().writerData(stepControlData(params));
+    CommStatusManager().isDeviceDeail = true;
 
     print('进入到力量训练${widget.type}');
     playLocalAudio('blueMonday1.MP3', isAlwaysplay: true);
     startCountdown();
 
     getSoreageData();
-    // Future.delayed(Duration(milliseconds: 10000), () {
-    //   double rightSum = _TotalSpeeds.fold(0.0, (previousValue, element) => previousValue + element);
-    //   int rightcount = _TotalSpeeds.length;
-    //   double averagSpeed = rightSum / rightcount;
-    //   var rightUserModel1 = BattleUserModel(score: 10, shotInCount: 20,
-    //       topSpeed: 0, avgSpeed: 0,isWinner: true);
-    //   Navigator.push(
-    //     context,
-    //     MaterialPageRoute(builder: (context) =>PowerEndPage(rightUserModel: rightUserModel1,
-    //     )), // 结算页面
-    //   );
-    //   setState(() {});
-    // });
-
-    CommStatusManager().isDeviceDeail = true;
-    //CommStatusManager().connectToMyspeedzDevice();
-    EventBus eventBus = EventBusManager().eventBus;
-    _subscription = eventBus.on<DataUpdatedEvent>().listen((event) {
-      if (event.data == kSpeedValue) {
-        // 监测到速度数据
-        // if (!_startFlag) {
-        //   return;
-        // }
-        _TotalSpeeds.add(CommStatusManager().currentSpeed);
-        // 显示速度
-        SpeedPopup.show(context, speed: CommStatusManager().currentSpeed);
-        if (CommStatusManager().currentSpeed > 70) {
-          greatJobPrompt = "Great Job !";
-          setState(() {});
-          playOnceLocalAudio("greatjob.mp3");
-        }
-
-        if (CommStatusManager().currentSpeed < 70) {
-          _speakNumber(CommStatusManager().currentSpeed);
-        }
-
-        // 监测到的速度数据变量递增
-        if (kBLEDeviceName == "ARtennis_3") {
-          speedIndexs++; //3 号场依赖于测速器
-          print("3号场");
-        }
-        if (speedIndexs <= 10) {
-          // 力量范围测量结束 进入训练
-          maxSpeed = maxSpeed > CommStatusManager().currentSpeed
-              ? maxSpeed
-              : CommStatusManager().currentSpeed;
-        } else if (speedIndexs <= 30) {
-          if (speedIndexs == 11) {
-            gameIndex++;
-            // 进入到力量训练
-          }
-        } else {
-          if (speedIndexs == 31) {
-            gameIndex++;
-            // 进入到组合训练
-          }
-        }
-        //
-        /// 一轮结束显示Shot in
-        if (speedIndexs == 30) {
-          endPrompt = "Shot in ${numbersOfHit}";
-          setState(() {});
-        }
-
-        print('kSpeedValue--speedIndexs=${speedIndexs}');
-      } else if (event.data == kStepControlFinishResponse) {
-        if (gameing == false) {
-          return;
-        }
-        indexList.add(0);
-
-        ///
-        var type = CommStatusManager().siteType.toInt();
-        if (speedIndexs == 0 && type == 1) {
-          TennisMachineParams params =
-              TennisMachineParams.fromState(0, 150, 0, 14, 14, 40, 110, 125, 0);
-          CommStatusManager().writerData(stepControlData(params));
-          speedIndexs++;
-          return;
-        }
-
-        if (speedIndexs <= 49 && isMove == false) {
-          speedIndexs++;
-        }
-
-        if (speedIndexs >= 50) {
-          /// 延迟3s 进到结算界面，防止最后一个球的数据记不进去
-          Future.delayed(Duration(milliseconds: 3000), () {
-            /// 机器人位置校准回到原点
-            CommStatusManager().writerData(positionCheckData());
-            enterEndPage();
-          });
-          return; /// 游戏结束 return
-        }
-
-        if (widget.type == "p1") {
-          print("p1路径");
-          newModeThreeGame();
-        } else if (widget.type == "p3") {
-          // modeThreeGame();
-          newModeThreeGame();
-          print("p3路径");
-        }
-
-        if (speedIndexs <= 10) {
-          // 力量范围测量结束 进入训练
-          maxSpeed = maxSpeed > CommStatusManager().currentSpeed
-              ? maxSpeed
-              : CommStatusManager().currentSpeed;
-        } else if (speedIndexs <= 30) {
-          if (speedIndexs == 11) {
-            gameIndex++;
-            // 进入到力量训练
-          }
-        } else {
-          if (speedIndexs == 31) {
-            gameIndex++;
-            // 进入到组合训练
-          }
-        }
-        _startFlag = true;
-        print('kStepControlFinishResponse--speedIndexs=${speedIndexs}');
-      } else if (event.data == kTargetIndex) {
-        /// 击中标靶的索引
-        if (_updateTime(1) < 1000) {
-          return;/// 1s内不处理
-        }
-        print('power界面 击中标靶的索引为${CommStatusManager().targetIndex}');
-        if (middleTargetIndexs.contains(CommStatusManager().targetIndex[0])){
-          numbersOfHit += 1;
-          _ShotInCount += 1;
-          flashingLight(CommStatusManager().targetIndex[0]);
-        }
-      } else if (event.data == kRobotIsPowerOff) {
-        print("发球机关机退出游戏界面");
-        Get.snackbar("提示", "发球机异常,退出游戏界面"); // 不需要 context
-        Navigator.pop(context);
-      }
-      if (mounted) {
-        setState(() {});
-      }
-    });
-    // 延迟两秒后开始
-    Future.delayed(Duration(milliseconds: 2000), () {
-      // startGame();
-    });
+    dataListen();
   }
 
   int _updateTime(double timeStamp) {
@@ -321,15 +180,18 @@ class _PowerPageState extends State<PowerPage> {
     isMove = true;
   }
 
+
+
   /// P1发球模式
   void modeOneGame() {
+    servesing = true;
     /// 步伐控制指令发球  12  18  20
     if (speedIndexs <= 12) {
 
       TennisMachineParams params =
           TennisMachineParams.fromState(0, 0, 0, gameTopWheelSpeed,
               gameBottomWheelSpeed, 40,
-              gameBallAngle, 125, 1);
+              gameBallAngle - 5, 125, 1);
       CommStatusManager().writerData(stepControlData(params));
       isMove = false;
     } else if (speedIndexs == 13) {
@@ -341,9 +203,9 @@ class _PowerPageState extends State<PowerPage> {
       speedIndexs++;
     } else if (13 < speedIndexs && speedIndexs < 31) {
       TennisMachineParams params =
-          TennisMachineParams.fromState(0, 0, 0, gameTopWheelSpeed,
-              gameBottomWheelSpeed, 40,
-              gameBallAngle, 125, 1);
+          TennisMachineParams.fromState(0, 0, 0, gameTopWheelSpeed - 1,
+              gameBottomWheelSpeed - 1, 40,
+              gameBallAngle - 5, 125, 1);
       CommStatusManager().writerData(stepControlData(params));
       isMove = false;
     } else if (speedIndexs == 31) {
@@ -355,10 +217,10 @@ class _PowerPageState extends State<PowerPage> {
       speedIndexs++;
     } else if (speedIndexs > 31 && speedIndexs < 50) {
       TennisMachineParams params =
-          TennisMachineParams.fromState(0, 0, 0, gameTopWheelSpeed,
-              gameBottomWheelSpeed,
+          TennisMachineParams.fromState(0, 0, 0, gameTopWheelSpeed - 1,
+              gameBottomWheelSpeed -1 ,
               40,
-              gameBallAngle, 125, 1);
+              gameBallAngle - 5, 125, 1);
       CommStatusManager().writerData(stepControlData(params));
       isMove = false;
     } else if (speedIndexs == 50) {
@@ -438,19 +300,9 @@ class _PowerPageState extends State<PowerPage> {
   }
 
   ///.布云朝克特 等相关步伐
-  void newModeThreeGame() {
-    // var type = CommStatusManager().stepType.toInt();
-    // if (type == 2) {
-    //   jarmikSinnerRomaTask[indexList.length]?.call();
-    //   print("步伐2");
-    // } else if (type == 3) {
-    //   taskMap[indexList.length]?.call();
-    //   print("步伐3");
-    // } else if (type == 1) {
-      modeOneGame();
-    //   print("步伐p1");
-    // }
-  }
+  // void newModeThreeGame() {
+  //     modeOneGame();
+  // }
 
   void enterEndPage() {
     double rightSum = _TotalSpeeds.fold(
@@ -472,6 +324,169 @@ class _PowerPageState extends State<PowerPage> {
     );
   }
 
+  void fireControll() {
+    final plan = SoloFirePlan.newGrassLandStep(count: 10,gameTopWheelSpeed: gameTopWheelSpeed,
+       gameBottomWheelSpeed: gameBottomWheelSpeed,
+       gameBallAngle: gameBallAngle
+    );
+
+    final hardCourt = SoloFirePlan.newGrassLandStep(gameTopWheelSpeed: gameTopWheelSpeed,
+     gameBottomWheelSpeed: gameBottomWheelSpeed,
+      gameBallAngle: gameBallAngle
+    );
+
+    var type = CommStatusManager().siteType.toInt();
+    print("场地类型666${type}");
+    var controller = FireController(type == 1 ?  plan.tasks : hardCourt.tasks);
+    controller.onProgress = (taskIndex, shotIndex) {
+      print("第 $taskIndex 个点位，第 $shotIndex 球完成");
+      setState(() {
+        speedIndexs ++;
+      });
+    };
+    controller.onFinished = () {
+      print("50个球已经发完！");
+      /// 延迟3s 进到结算界面，防止最后一个球的数据记不进去
+      Future.delayed(Duration(milliseconds: 3000), () {
+        /// 机器人位置校准回到原点
+        CommStatusManager().writerData(positionCheckData());
+        enterEndPage();
+      });
+    };
+    controller.start();
+
+  }
+
+  void dataListen() {
+    EventBus eventBus = EventBusManager().eventBus;
+    _subscription = eventBus.on<DataUpdatedEvent>().listen((event) {
+      if (event.data == kSpeedValue) {
+        _TotalSpeeds.add(CommStatusManager().currentSpeed);
+        // 显示速度
+        SpeedPopup.show(context, speed: CommStatusManager().currentSpeed);
+        if (CommStatusManager().currentSpeed > 70) {
+          greatJobPrompt = "Great Job !";
+          setState(() {});
+          playOnceLocalAudio("greatjob.mp3");
+        }
+
+        if (CommStatusManager().currentSpeed < 70) {
+          _speakNumber(CommStatusManager().currentSpeed);
+        }
+
+        // 监测到的速度数据变量递增
+        if (kBLEDeviceName == "ARtennis_3") {
+          speedIndexs++; //3 号场依赖于测速器
+          print("3号场");
+        }
+        if (speedIndexs <= 10) {
+          // 力量范围测量结束 进入训练
+          maxSpeed = maxSpeed > CommStatusManager().currentSpeed
+              ? maxSpeed
+              : CommStatusManager().currentSpeed;
+        } else if (speedIndexs <= 30) {
+          if (speedIndexs == 11) {
+            gameIndex++;
+            // 进入到力量训练
+          }
+        } else {
+          if (speedIndexs == 31) {
+            gameIndex++;
+            // 进入到组合训练
+          }
+        }
+        //
+        /// 一轮结束显示Shot in
+        if (speedIndexs == 30) {
+          endPrompt = "Shot in ${numbersOfHit}";
+          setState(() {});
+        }
+
+        print('kSpeedValue--speedIndexs=${speedIndexs}');
+      } else if (event.data == kStepControlFinishResponse) {
+        servesing = false; // 发球结束
+        // if (gameing == false) {
+        //   return;
+        // }
+        // indexList.add(0);
+
+        // ///
+        // var type = CommStatusManager().siteType.toInt();
+        // print("场地类型666${type}");
+        // if (speedIndexs == 0 && type == 1) {
+        //   /// 操场摩擦力大，做二次移动
+        //   print("操场摩擦力大，做二次移动");
+        //   TennisMachineParams params =
+        //   TennisMachineParams.fromState(0, 160, 0, 14, 14, 40, 110, 125, 0);
+        //   CommStatusManager().writerData(stepControlData(params));
+        //   speedIndexs++;
+        //   return;
+        // }
+
+        // if (speedIndexs <= 49 && isMove == false) {
+        //   speedIndexs++;
+        // }
+
+        // if (speedIndexs >= 50) {
+        //   /// 延迟3s 进到结算界面，防止最后一个球的数据记不进去
+        //   Future.delayed(Duration(milliseconds: 3000), () {
+        //     /// 机器人位置校准回到原点
+        //     CommStatusManager().writerData(positionCheckData());
+        //     enterEndPage();
+        //   });
+        //   return; /// 游戏结束 return
+        // }
+
+        // if (widget.type == "p1") {
+        //   print("p1路径");
+        //   newModeThreeGame();
+        // } else if (widget.type == "p3") {
+        //   // modeThreeGame();
+        //   newModeThreeGame();
+        //   print("p3路径");
+        // }
+
+        // if (speedIndexs <= 10) {
+        //   // 力量范围测量结束 进入训练
+        //   maxSpeed = maxSpeed > CommStatusManager().currentSpeed
+        //       ? maxSpeed
+        //       : CommStatusManager().currentSpeed;
+        // } else if (speedIndexs <= 30) {
+        //   if (speedIndexs == 11) {
+        //     gameIndex++;
+        //     // 进入到力量训练
+        //   }
+        // } else {
+        //   if (speedIndexs == 31) {
+        //     gameIndex++;
+        //     // 进入到组合训练
+        //   }
+        // }
+        _startFlag = true;
+        print('kStepControlFinishResponse--speedIndexs=${speedIndexs}');
+      } else if (event.data == kTargetIndex) {
+        /// 击中标靶的索引
+        if (_updateTime(1) < 1000) {
+          return;/// 1s内不处理
+        }
+        print('power界面 击中标靶的索引为${CommStatusManager().targetIndex}');
+        if (middleTargetIndexs.contains(CommStatusManager().targetIndex[0])){
+          numbersOfHit += 1;
+          _ShotInCount += 1;
+          flashingLight(CommStatusManager().targetIndex[0]);
+        }
+      } else if (event.data == kRobotIsPowerOff) {
+        print("发球机关机退出游戏界面");
+        Get.snackbar("提示", "发球机异常,退出游戏界面"); // 不需要 context
+        Navigator.pop(context);
+      }
+      if (mounted) {
+        setState(() {});
+      }
+    });
+
+  }
+
   void startCountdown() {
     _timer = Timer.periodic(Duration(seconds: 1), (Timer timer) {
       setState(() {
@@ -482,7 +497,7 @@ class _PowerPageState extends State<PowerPage> {
           print('456------');
           timer.cancel();
           _opacity = 0.0;
-          startGame();
+          fireControll();
           // 使蒙层消失
         }
       });
@@ -526,23 +541,31 @@ class _PowerPageState extends State<PowerPage> {
             child: Row(
               mainAxisAlignment: MainAxisAlignment.spaceBetween,
               children: [
-                IconButton(
-                  onPressed: () {
-                    /// 用户没有玩完游戏直接退出界面 机器人位置校准回到原点
-                    CommStatusManager().writerData(positionCheckData());
-                    Navigator.pop(context);
-                  },
-                  icon: Icon(Icons.arrow_back_ios_sharp),
-                  color: Colors.white,
-                ),
+                // IconButton(
+                //   onPressed: () {
+                //     gameing = false;
+                //     /// 用户没有玩完游戏直接退出界面 机器人位置校准回到原点
+                //     ///  发球结束才回原点，不然会有边回原点边发球的bug
+                //     // EasyLoading.show(status: "发球中,请稍候....", maskType: EasyLoadingMaskType.clear);
+                //     // AnyLoading.showLoading();
+                //     // Future.delayed(Duration(milliseconds: 4000), () {
+                //     //   if (servesing == false) {
+                //         print('球发完了');
+                //         // AnyLoading.dismiss();
+                //         CommStatusManager().writerData(positionCheckData());
+                //         Navigator.pop(context);
+                //       // }
+                //     // });
+                //     },
+                //   icon: Icon(Icons.arrow_back_ios_sharp),
+                //   color: Colors.white,
+                // ),
               ],
             ),
             left: 16,
             right: 16,
-            top: 16,
+            top: 100,
           ),
-
-
 
           Positioned(
             child: Row(
