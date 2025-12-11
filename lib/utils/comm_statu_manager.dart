@@ -175,14 +175,14 @@ class CommStatusManager {
         if (event.name.isEmpty) {
           return;
         }
-        var type = CommStatusManager().siteType.toInt();
-        var robotName = kBallMachine1;
-        if (type == 2) {
-          robotName = kBallMachine2;
-        }
+        // var type = CommStatusManager().siteType.toInt();
+        // var robotName = kBallMachine1;
+        // if (type == 2) {
+        //   robotName = kBallMachine2;
+        // }
 
         if (event.name.contains(kBLEDeviceName) ||
-            event.name.contains(robotName) ||
+            event.name.contains(kBLENewDeviceName) ||
             event.name.contains(kCamera1) ||
             event.name.contains(kCamera2) ||
             event.name.contains(kCamera3)) {
