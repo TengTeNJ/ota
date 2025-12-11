@@ -31,7 +31,7 @@ class _SmallRobotParamSettingControllerState extends State<SmallRobotParamSettin
   double topWheelSpeed = 4.0; // 上发球轮速度（区间问0---99）
   double bottomWheelSpeed = 4.0; // 下发球轮速度（区间问0---99）
   double turntableSpeed = 40.0; // 转盘速度（默认40）（区间为0--40）
-  double ballAngle = 130; // 发球角度（区间为90---225）
+  double ballAngle = 90; // 发球角度（区间为90---225）
 
   // 发球模式参数
   double ballInterval = 2.0; // 发球间隔(秒)
@@ -117,6 +117,7 @@ class _SmallRobotParamSettingControllerState extends State<SmallRobotParamSettin
     CommStatusManager().isDeviceDeail = true;
     topWheelSpeed = CommStatusManager().topCommonWheelSpeed;
     bottomWheelSpeed = CommStatusManager().bottoCommonmWheelSpeed;
+    print("角度${ballAngle}");
     ballAngle = CommStatusManager().ballCommonAngle;
 
 
@@ -147,6 +148,7 @@ class _SmallRobotParamSettingControllerState extends State<SmallRobotParamSettin
     bottomWheelController = TextEditingController(text: bottomWheelSpeed.round().toString());
     turntableController = TextEditingController(text: turntableSpeed.round().toString());
     ballAngleController = TextEditingController(text: ballAngle.round().toString());
+
     ballIntervalController = TextEditingController(text: ballInterval.toStringAsFixed(1));
     ballCountController = TextEditingController(text: ballCount.toString());
 
@@ -183,15 +185,15 @@ class _SmallRobotParamSettingControllerState extends State<SmallRobotParamSettin
       });
     });
 
-    ballAngleController.addListener(() {
-      updateValueFromController(ballAngleController, (value) {
-        if (value >= -45 && value <= 45) {
-          setState(() {
-            ballAngle = value.toDouble();
-          });
-        }
-      });
-    });
+    // ballAngleController.addListener(() {
+    //   updateValueFromController(ballAngleController, (value) {
+    //     if (value >= -45 && value <= 45) {
+    //       setState(() {
+    //         ballAngle = value.toDouble();
+    //       });
+    //     }
+    //   });
+    // });
 
     ballIntervalController.addListener(() {
       final text = ballIntervalController.text;
@@ -350,9 +352,9 @@ class _SmallRobotParamSettingControllerState extends State<SmallRobotParamSettin
                         Expanded(
                           child: Slider(
                             value: ballAngle,
-                            min: 90,
-                            max: 225.0,
-                            divisions: 16,
+                            min: 90.0,
+                            max: 95.0,
+                            divisions: 5,
                             label: ballAngle.round().toString(),
                             onChanged: (double value) {
                               setState(() {

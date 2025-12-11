@@ -338,6 +338,10 @@ class FirePlan {
         count: 1,
         params: TennisMachineParams.fromState(0, 0, -8, mode1_left, mode1_right, 40, 140, 175, 1),
       ),
+      FireTask(
+        count: 1,
+        params: TennisMachineParams.fromState(20, 0, 0, mode1_left, mode1_right, 40, 140, 175, 1),
+      ),
     ]);
   }
 
