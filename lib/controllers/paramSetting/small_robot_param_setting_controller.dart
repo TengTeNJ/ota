@@ -4,6 +4,7 @@ import 'package:event_bus/event_bus.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_easyloading/flutter_easyloading.dart';
 import 'package:ota/constants.dart';
+import 'package:ota/controllers/paramSetting/small_robot_course_controller.dart';
 import 'package:ota/controllers/paramSetting/small_robot_task.dart';
 
 import '../../utils/audio_player_util.dart';
@@ -31,7 +32,7 @@ class _SmallRobotParamSettingControllerState extends State<SmallRobotParamSettin
   double topWheelSpeed = 4.0; // 上发球轮速度（区间问0---99）
   double bottomWheelSpeed = 4.0; // 下发球轮速度（区间问0---99）
   double turntableSpeed = 40.0; // 转盘速度（默认40）（区间为0--40）
-  double ballAngle = 90; // 发球角度（区间为90---225）
+  double ballAngle = 15; // 发球角度（区间为90---225）
 
   // 发球模式参数
   double ballInterval = 2.0; // 发球间隔(秒)
@@ -118,7 +119,7 @@ class _SmallRobotParamSettingControllerState extends State<SmallRobotParamSettin
     topWheelSpeed = CommStatusManager().topCommonWheelSpeed;
     bottomWheelSpeed = CommStatusManager().bottoCommonmWheelSpeed;
     print("角度${ballAngle}");
-    ballAngle = CommStatusManager().ballCommonAngle;
+    // ballAngle = CommStatusManager().ballCommonAngle;
 
 
     CommStatusManager().isDeviceDeail = true;
@@ -352,9 +353,9 @@ class _SmallRobotParamSettingControllerState extends State<SmallRobotParamSettin
                         Expanded(
                           child: Slider(
                             value: ballAngle,
-                            min: 90.0,
-                            max: 95.0,
-                            divisions: 5,
+                            min: 15.0,
+                            max: 40.0,
+                            divisions: 25,
                             label: ballAngle.round().toString(),
                             onChanged: (double value) {
                               setState(() {
@@ -496,7 +497,7 @@ class _SmallRobotParamSettingControllerState extends State<SmallRobotParamSettin
                         final params = TennisMachineParams.fromState(
                             xPosition, yPosition, zRotation,
                             0, 0, 0,
-                            ballAngle, ballInterval, 0
+                            ballAngle + 75.0, ballInterval, 0
                         );
                         // 发送控制命令
                         sendControlCommand(params);
@@ -507,7 +508,7 @@ class _SmallRobotParamSettingControllerState extends State<SmallRobotParamSettin
                     final params = TennisMachineParams.fromState(
                         xPosition, yPosition, zRotation,
                         topWheelSpeed, bottomWheelSpeed, turntableSpeed,
-                        ballAngle, ballInterval, ballCount
+                        ballAngle + 75.0, ballInterval, ballCount
                     );
                     // 发送控制命令
                     sendControlCommand(params);
@@ -558,6 +559,32 @@ class _SmallRobotParamSettingControllerState extends State<SmallRobotParamSettin
                     ),
                   ),
                 ),
+                // 课程训练
+                ElevatedButton.icon(
+                  onPressed: () {
+                    Navigator.push(
+                      context,
+                      MaterialPageRoute(
+                          builder: (context) => SmallRobotCourseController()), // 课程训练
+                    );
+
+                  },
+                  label: Text('课程训练',
+                    style: const TextStyle(
+                      fontWeight: FontWeight.bold, // 加粗
+                      fontSize: 16,                // 可选
+                    ),
+                  ),
+                  style: ElevatedButton.styleFrom(
+                    backgroundColor: Colors.green,
+                    foregroundColor: Colors.white, // ← 文字/图标颜色
+                    padding: const EdgeInsets.symmetric(horizontal: 24, vertical: 16),
+                    shape: RoundedRectangleBorder(
+                      borderRadius: BorderRadius.circular(8),
+                    ),
+                  ),
+                ),
+
               ],
             ),
 

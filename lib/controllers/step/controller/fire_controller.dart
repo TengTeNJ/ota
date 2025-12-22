@@ -81,6 +81,7 @@ class FireController {
     }
     final task = tasks[_currentTaskIndex];
     final params = task.params;
+    print("666${params}");
     // 发球命令
     CommStatusManager().writerData(stepControlData(params));
   }

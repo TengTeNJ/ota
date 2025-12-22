@@ -101,7 +101,7 @@ class CommStatusManager {
   /// 发球机参数适配和校对（上发球轮速度,下发球轮速度,发球角度）
   double topCommonWheelSpeed = 4.0; // 上发球轮速度
   double bottoCommonmWheelSpeed = 4.0; // 下发球轮速度
-  double ballCommonAngle = 90.0; // 发球角度（默认130）
+  double ballCommonAngle = 130.0; // 发球角度（默认130）
 
   bool ntrpTechnicalProficiencyResult = false;/// Ntrp 第一轮测评结果
   bool ntrpMultiDimensionalResult = false;/// Ntrp 第二轮测评结果
