@@ -57,7 +57,7 @@ const kCamera3 = "tennis_1";
 
 /// 2 号场设备名字
 const kBLEDeviceName = "Tennis_2";
-const kBLENewDeviceName = "Roboti10";
+const kBLENewDeviceName = "miRobot";
 const kBLEMySpeedzName = "Myspeedz_2";
 const kBLEMySpeedz1Name = "Myspeedz";
 

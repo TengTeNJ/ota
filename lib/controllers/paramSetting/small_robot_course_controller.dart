@@ -6,6 +6,8 @@ import 'package:ota/controllers/paramSetting/small_robot_task.dart';
 import '../../utils/comm_statu_manager.dart';
 import '../../utils/event_manager.dart';
 import '../step/controller/fire_controller.dart';
+import 'package:wakelock_plus/wakelock_plus.dart';
+
 
 /// 小型发球机课程训练
 class SmallRobotCourseController extends StatefulWidget {
@@ -76,9 +78,17 @@ class _SmallRobotCourseControllerState extends State<SmallRobotCourseController>
     controller.start();
   }
 
+  @override
+  void dispose() {
+    WakelockPlus.disable();
+    super.dispose();
+  }
+
   void initState() {
     // TODO: implement initState
     super.initState();
+    // 不息屏开启
+    WakelockPlus.enable();
 
     CommStatusManager().isStepControlling = false;
     CommStatusManager().isDeviceDeail = true;
@@ -107,9 +117,7 @@ class _SmallRobotCourseControllerState extends State<SmallRobotCourseController>
         child: Column(
           crossAxisAlignment: CrossAxisAlignment.start,
           children: [
-
             const SizedBox(height: 16),
-
             // 发球参数控制区
             Card(
               elevation: 3,
@@ -287,8 +295,6 @@ class _SmallRobotCourseControllerState extends State<SmallRobotCourseController>
                         Text('${netPlayBallAngle.round()} °'),
                       ],
                     ),
-
-
                     // 网前截击 上发球轮速度
                     Row(
                       children: [
@@ -372,13 +378,6 @@ class _SmallRobotCourseControllerState extends State<SmallRobotCourseController>
             ),
 
             const SizedBox(height: 16),
-
-            const SizedBox(height: 24),
-
-
-
-            const SizedBox(height: 24),
-
             // 发球
             Row(
               mainAxisAlignment: MainAxisAlignment.spaceEvenly,
@@ -405,7 +404,6 @@ class _SmallRobotCourseControllerState extends State<SmallRobotCourseController>
                 ),
               ],
             ),
-
             const SizedBox(height: 24),
 
           ],

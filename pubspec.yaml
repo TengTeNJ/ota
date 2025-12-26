@@ -50,17 +50,13 @@ dependencies:
   wheel_chooser: ^1.1.2
   any_loading: ^0.0.3
   flutter_easyloading: ^3.0.5
-
   audioplayers: ^6.1.0
-
   flutter_tts: ^4.2.3
-
   percent_indicator: ^4.2.5
-
   ttntrp: ^0.0.4
   get: ^4.7.2
   shared_preferences: ^2.0.20
-
+  wakelock_plus: ^1.1.4     # 替代原来的 wakelock
 
 
 dev_dependencies:
