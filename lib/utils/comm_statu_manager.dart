@@ -352,7 +352,7 @@ class CommStatusManager {
           this.logDatas.add(
               '${model.device!.name} disconnected');
           EventBusManager().eventBus.fire(DataUpdatedEvent(kBLElog));
-          if( model.device!.name.contains((kBLENewDeviceName)) || model.device!.name.contains(kBallMachine1) || model.device!.name.contains(kBallMachine2)){
+          if( model.device!.name.contains((kBLENewDeviceName)) || model.device!.name.contains(kBallMachine1) || model.device!.name.contains(kBallMachine2) ||model.device!.name.contains(kBLERoboti10)){
             CommStatusManager().currentConnectedDevice = null;
             EventBusManager().eventBus.fire(DataUpdatedEvent(kBLEDisconneted));
           }
