@@ -33,10 +33,16 @@ const kBLE_CHARACTERISTIC_WRITER_UUID = "fff2";
 // const kBLE_CHARACTERISTIC_WRITER_UUID = "ffe9";
 
 /*摄像头主机*/
-const kBLE_CAMERA_SERVICE_NOTIFY_UUID = "ffe0";
-const kBLE_CAMERA_CHARACTERISTIC_NOTIFY_UUID = "ffe4";
-const kBLE_CAMERA_SERVICE_WRITER_UUID = "ffe5";
-const kBLE_CAMERA_CHARACTERISTIC_WRITER_UUID = "ffe9";
+// const kBLE_CAMERA_SERVICE_NOTIFY_UUID = "ffe0";
+// const kBLE_CAMERA_CHARACTERISTIC_NOTIFY_UUID = "ffe4";
+// const kBLE_CAMERA_SERVICE_WRITER_UUID = "ffe5";
+// const kBLE_CAMERA_CHARACTERISTIC_WRITER_UUID = "ffe9";
+
+// 改成和发球机一样
+const kBLE_CAMERA_SERVICE_NOTIFY_UUID = "fff0";
+const kBLE_CAMERA_CHARACTERISTIC_NOTIFY_UUID = "fff1";
+const kBLE_CAMERA_SERVICE_WRITER_UUID = "fff0";
+const kBLE_CAMERA_CHARACTERISTIC_WRITER_UUID = "fff2";
 
 /*测速器*/
 const KBLE_MYSPEEDZ_SERVICE_UUID = 'ffe0';
@@ -54,12 +60,17 @@ const kCamera1 = "Stickhandling";
 const kCamera2 = "Tennis_2";
 // const kCamera3 = "ARtennis_3";
 const kCamera3 = "tennis_1";
+const kCamera_Pre = "tennis";
+const kCamera4_Pre = "Tennis";
+
+
 
 /// 2 号场设备名字
 const kBLEDeviceName = "Tennis_2";
 const kBLENewDeviceName = "miRobot";
 const kBLEMySpeedzName = "Myspeedz_2";
 const kBLEMySpeedz1Name = "Myspeedz";
+const kBLERoboti10 = 'Roboti10';
 
 const kBallMachine1 = "Roboti10_1";
 const kBallMachine2 = "Roboti10_2";

@@ -185,7 +185,9 @@ class CommStatusManager {
             event.name.contains(kBLENewDeviceName) ||
             event.name.contains(kCamera1) ||
             event.name.contains(kCamera2) ||
-            event.name.contains(kCamera3)) {
+            event.name.contains(kCamera3) ||
+             event.name.contains(kBLERoboti10)
+        ) {
           // 如果设备列表数组中无，则添加
           if (!hasDevice(event.id)) {
             print('添加新设备--${event.id}----${event.name}');
@@ -196,8 +198,9 @@ class CommStatusManager {
             // 发球机根据场地类型自动连接  event.name.contains(
             //                     CommStatusManager().siteType.toStringAsFixed(0))
             // 因为有时候发球机会被调到非对应场地，所以自动连接满足的机器人设备，但是如果有已经连接的就不要自动连接
-            if (event.name.contains(kBLENewDeviceName) && CommStatusManager().currentConnectedDevice == null) {
+            if ((event.name.contains(kBLENewDeviceName) || event.name.contains(kBLERoboti10)) && CommStatusManager().currentConnectedDevice == null) {
               robotIsPowerOff = false;
+              print('连接----');
               connectToDevice(BLEModel(deviceName: event.name, device: event));
             }
           }
@@ -259,7 +262,8 @@ class CommStatusManager {
             connectionTimeout: const Duration(seconds: 10))
         .listen((event) async {
       if (event.connectionState == DeviceConnectionState.connected) {
-        if (model.deviceName.toString().contains(kBLEDeviceName) ||
+        print("${model.deviceName}连接成功，并获取到特征");
+        if (model.deviceName.toString().contains(kBLEDeviceName) ||   model.deviceName.toString().contains(kCamera_Pre) || model.deviceName.toString().contains(kCamera4_Pre) ||
             model.deviceName.toString().contains(kCamera1) ||
             model.deviceName.toString().contains(kCamera2) || model.deviceName.toString().contains(kCamera3)) {
           // 摄像头主机
@@ -334,6 +338,7 @@ class CommStatusManager {
           // 解析270
         });
       } else if (event.connectionState == DeviceConnectionState.disconnected) {
+        print("${model.deviceName}断联---");
         // 移除元素
         try {
           BLEModel firstEven = this
@@ -347,7 +352,7 @@ class CommStatusManager {
           this.logDatas.add(
               '${model.device!.name} disconnected');
           EventBusManager().eventBus.fire(DataUpdatedEvent(kBLElog));
-          if(model.device!.name.contains(kBallMachine1) || model.device!.name.contains(kBallMachine2)){
+          if( model.device!.name.contains((kBLENewDeviceName)) || model.device!.name.contains(kBallMachine1) || model.device!.name.contains(kBallMachine2)){
             CommStatusManager().currentConnectedDevice = null;
             EventBusManager().eventBus.fire(DataUpdatedEvent(kBLEDisconneted));
           }
@@ -367,6 +372,8 @@ class CommStatusManager {
         }
 
 
+      }else{
+        print('+++++++');
       }
     });
   }
