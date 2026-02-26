@@ -60,12 +60,7 @@ class SoloFirePlan {
       // 移动到中线中间位置
       FireTask(
         count: 1,
-        params: TennisMachineParams.fromState(0, 250, 0, gameTopWheelSpeed, gameBottomWheelSpeed, 40, gameBallAngle, 125, 0),
-      ),
-      // 移动到中间
-      FireTask(
-        count: 1,
-        params: TennisMachineParams.fromState(0, 200, 0, gameTopWheelSpeed, gameBottomWheelSpeed, 40, gameBallAngle, 175, 0),
+        params: TennisMachineParams.fromState(0, 330, 0, gameTopWheelSpeed, gameBottomWheelSpeed, 40, gameBallAngle, 125, 0),
       ),
       // 5个球
       FireTask(

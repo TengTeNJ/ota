@@ -51,6 +51,11 @@ class FireController {
     _currentShot = 0;
     _fireNext();
   }
+  void end(){
+    if(_subscription != null){
+      _subscription.cancel();
+    }
+  }
 
   void _handleSuccess() {
     if(_currentTaskIndex >= tasks.length){

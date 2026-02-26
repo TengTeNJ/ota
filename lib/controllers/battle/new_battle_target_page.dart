@@ -134,6 +134,7 @@ class _NewBattleTargetPageState extends State<NewBattleTargetPage> {
          /// 50轮 一局结束  跳转到结算界面
         if (_currentIndex == 50) {
           Future.delayed(Duration(milliseconds: 3000), () {
+            CommStatusManager().writerData(positionCheckData());
             goToEndPage();
           });
         }

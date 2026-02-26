@@ -7,6 +7,7 @@ import 'package:ota/controllers/solo/power_page.dart';
 import 'package:ota/controllers/gamehome/stadium_mode_choose_view.dart';
 
 import '../../utils/comm_statu_manager.dart';
+import '../../utils/ota_data.dart';
 import '../battle/new_battle_target_page.dart';
 import '../ntrp/pressure/ntrp_pressure_test_controller.dart';
 
@@ -106,6 +107,7 @@ class _StadiumTwoMainPageState extends State<StadiumTwoMainPage> {
             // 重置计数器
             _clickCount = 0;
             // 退回到开发者的界面
+            CommStatusManager().writerData(positionCheckData());
             Navigator.pop(context);
           }
         });

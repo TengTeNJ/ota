@@ -95,63 +95,35 @@ class _AboutPageState extends State<AboutPage> {
               //   value: themeProvider.themeMode == ThemeMode.dark,
               //   onChanged: (value) => themeProvider.toggleTheme(value),
               // ),
-              SizedBox(height: 20),
-              Row(
-                mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                children: [
-                  Text(
-                    '${languageModel.getText(Constants.keyToString('最大移动速度', context))}: ${CommStatusManager().maxSpeed}',
-                    style: TextStyle(fontSize: 18, fontWeight: FontWeight.bold),
-                  ),
-                  SizedBox(height: 20),
-                  NumberPicker(
-                    decoration: BoxDecoration(
-                      border: Border(
-                        top: BorderSide(color: Colors.grey),
-                        bottom: BorderSide(color: Colors.grey),
-                      ),
-                    ),
-                    value: CommStatusManager().maxSpeed.toInt(),
-                    minValue: 1,
-                    maxValue: 10,
-                    step: 1,
-                    onChanged: (value) {
-                      setState(() {
-                        CommStatusManager().maxSpeed = value.toDouble();
-                        _currentValue = value;
-                      });
-                    },
-                  ),
-                ],
-              ),
-              SizedBox(height: 20),
-              Row(
-                mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                children: [
-                  Text(
-                    '${languageModel.getText(Constants.keyToString('标靶时间间隔', context))}: ${CommStatusManager().targetInteral}秒',
-                    style: TextStyle(fontSize: 18, fontWeight: FontWeight.bold),
-                  ),
-                  SizedBox(height: 20),
-                  NumberPicker(
-                    decoration: BoxDecoration(
-                      border: Border(
-                        top: BorderSide(color: Colors.grey),
-                        bottom: BorderSide(color: Colors.grey),
-                      ),
-                    ),
-                    value: CommStatusManager().targetInteral,
-                    minValue: 1,
-                    maxValue: 20,
-                    step: 1,
-                    onChanged: (value) {
-                      setState(() {
-                        CommStatusManager().targetInteral = value.toInt();
-                      });
-                    },
-                  ),
-                ],
-              ),
+              // SizedBox(height: 20),
+              // Row(
+              //   mainAxisAlignment: MainAxisAlignment.spaceBetween,
+              //   children: [
+              //     Text(
+              //       '${languageModel.getText(Constants.keyToString('最大移动速度', context))}: ${CommStatusManager().maxSpeed}',
+              //       style: TextStyle(fontSize: 18, fontWeight: FontWeight.bold),
+              //     ),
+              //     SizedBox(height: 20),
+              //     NumberPicker(
+              //       decoration: BoxDecoration(
+              //         border: Border(
+              //           top: BorderSide(color: Colors.grey),
+              //           bottom: BorderSide(color: Colors.grey),
+              //         ),
+              //       ),
+              //       value: CommStatusManager().maxSpeed.toInt(),
+              //       minValue: 1,
+              //       maxValue: 10,
+              //       step: 1,
+              //       onChanged: (value) {
+              //         setState(() {
+              //           CommStatusManager().maxSpeed = value.toDouble();
+              //           _currentValue = value;
+              //         });
+              //       },
+              //     ),
+              //   ],
+              // ),
               SizedBox(height: 20),
               Row(
                 mainAxisAlignment: MainAxisAlignment.spaceBetween,
@@ -298,38 +270,38 @@ class _AboutPageState extends State<AboutPage> {
                 ),
               ),
               SizedBox(height: 20),
-              GestureDetector(
-                behavior: HitTestBehavior.opaque,
-                onTap: () {
-                  SystemUtil.lockScreenHorizontalDirection();
-                  Future.delayed(Duration(milliseconds: 500), () {
-                    Navigator.push(
-                      context,
-                      MaterialPageRoute(
-                          builder: (context) => StadiumTwoMainPage()), // 目标页面
-                    );
-                  });
-                },
-                child: Row(
-                  mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                  children: [
-                    Row(
-                      children: [
-                        Text(
-                          '${languageModel.getText(Constants.keyToString('力量训练', context))}',
-                          style: TextStyle(
-                              fontSize: 18, fontWeight: FontWeight.bold),
-                        ),
-                        SizedBox(
-                          width: 2,
-                        ),
-                        Icon(Icons.track_changes)
-                      ],
-                    ),
-                    Icon(Icons.arrow_forward_ios, size: 16)
-                  ],
-                ),
-              ),
+              // GestureDetector(
+              //   behavior: HitTestBehavior.opaque,
+              //   onTap: () {
+              //     SystemUtil.lockScreenHorizontalDirection();
+              //     Future.delayed(Duration(milliseconds: 500), () {
+              //       Navigator.push(
+              //         context,
+              //         MaterialPageRoute(
+              //             builder: (context) => StadiumTwoMainPage()), // 目标页面
+              //       );
+              //     });
+              //   },
+              //   child: Row(
+              //     mainAxisAlignment: MainAxisAlignment.spaceBetween,
+              //     children: [
+              //       Row(
+              //         children: [
+              //           Text(
+              //             '${languageModel.getText(Constants.keyToString('力量训练', context))}',
+              //             style: TextStyle(
+              //                 fontSize: 18, fontWeight: FontWeight.bold),
+              //           ),
+              //           SizedBox(
+              //             width: 2,
+              //           ),
+              //           Icon(Icons.track_changes)
+              //         ],
+              //       ),
+              //       Icon(Icons.arrow_forward_ios, size: 16)
+              //     ],
+              //   ),
+              // ),
               ListView(
                 padding: EdgeInsets.zero,
                 shrinkWrap: true,
@@ -505,7 +477,7 @@ class _AboutPageState extends State<AboutPage> {
                     behavior: HitTestBehavior.opaque,
                     child:  ListTile(
                       contentPadding: EdgeInsets.zero,
-                      title: Text('小型发球机发球参数设置',
+                      title:  Text('${languageModel.getText(Constants.keyToString('小型发球机发球参数设置', context))}',
                           style: TextStyle(
                               fontSize: 18, fontWeight: FontWeight.bold)),
                       trailing: Icon(Icons.arrow_forward_ios),

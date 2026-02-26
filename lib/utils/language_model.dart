@@ -20,7 +20,7 @@ class LanguageModel extends ChangeNotifier {
       '标靶时间间隔': '标靶时间间隔',
       '标靶训练': '标靶训练',
       '力量训练': '力量训练',
-      '语言切换': '语言切换',
+      '语言切换': 'Switch language',
       '蓝牙1': '确保蓝牙已开启，并且设备处于可发现状态',
       '蓝牙2': '确保已开启定位服务（Android 6.0 及以上设备需要此权限才能搜索蓝牙设备）',
       '蓝牙2iOS': '确保已开启定位服务（iOS 13 及以上版本需要此权限才能使用蓝牙功能',
@@ -46,7 +46,21 @@ class LanguageModel extends ChangeNotifier {
       '网球发球机器人':'网球发球机器人',
       '更多功能':'更多功能',
       '设置':'设置',
-      '调节':'调节'
+      '调节':'调节',
+      '小型发球机发球参数设置':'小型发球机发球参数设置',
+      '小型网球发球机控制面板':'小型网球发球机控制面板',
+      '发球参数':'发球参数',
+      '上发球轮速度: ':'上发球轮速度: ',
+      '下发球轮速度: ':'下发球轮速度: ',
+      '发球角度: ':'发球角度: ',
+      '发球模式':'发球模式',
+      '发球间隔: ':'发球间隔',
+      '发球数量: ':'发球数量',
+      '保存设定':'保存设定',
+      '开始训练':'开始训练',
+      '停止训练':'停止训练',
+      '远近球训练':'远近球训练',
+      '课程训练':'课程训练',
       // 添加所有需要翻译的文本
     },
     'en': {
@@ -62,7 +76,7 @@ class LanguageModel extends ChangeNotifier {
       '标靶时间间隔': 'Target Time Interval',
       '标靶训练': 'Target Training',
       '力量训练': 'Strength Training',
-      '语言切换': 'Language Switch',
+      '语言切换': '语言切换',
       '蓝牙1': 'Make sure Bluetooth is turned on and the device is discoverable',
       '蓝牙2':
           'Make sure location services are turned on (Android 6.0 and above devices require this permission to search for Bluetooth devices)',
@@ -92,10 +106,23 @@ class LanguageModel extends ChangeNotifier {
       '网球发球机器人':'Roboti10',
       '更多功能':'More Features',
       '场地类型':'Site Type',
-
       '设置':'Setting',
-      '调节':'Adjust'
-// 添加所有需要翻译的文本
+      '调节':'Adjust',
+      '小型发球机发球参数设置':'miRobot Entry',
+  '小型网球发球机控制面板':'Mini tennis ball serving machine control panel',
+  '发球参数':'Serving parameters',
+  '上发球轮速度: ':'upper serve speed: ',
+  '下发球轮速度: ':'lower serve wheel speed: ',
+  '发球角度: ':'Serving angle: ',
+  '发球模式':'Serving mode',
+  '发球间隔: ':'Serve interval',
+  '发球数量: ':'Number of serves',
+  '保存设定':'Save settings',
+  '开始训练':'Start training',
+  '停止训练':'Stop training',
+  '远近球训练':'Near and far ball training',
+  '课程训练':'Course Training',
+  // 添加所有需要翻译的文本
     },
   };
 

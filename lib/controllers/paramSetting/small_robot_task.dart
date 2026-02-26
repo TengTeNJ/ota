@@ -2,15 +2,15 @@ import '../step/controller/fire_controller.dart';
 import '../step_control_page.dart';
 
 
-TennisMachineParams farData = TennisMachineParams.fromState(0, 0, 0, 34, 32, 40, 160, 200, 1);
-TennisMachineParams nearData = TennisMachineParams.fromState(0, 0, 0, 30, 26, 40, 166, 200, 1);
+TennisMachineParams farData = TennisMachineParams.fromState(0, 0, 0, 34, 32, 40, 115, 200, 1);
+TennisMachineParams nearData = TennisMachineParams.fromState(0, 0, 0, 30, 26, 40, 115, 200, 1);
 
 /// 底线球
-TennisMachineParams bottomLineData = TennisMachineParams.fromState(0, 0, 0, 34, 32, 40, 160, 200, 1);
+TennisMachineParams bottomLineData = TennisMachineParams.fromState(0, 0, 0, 34, 32, 40, 115, 200, 1);
 /// 近网球
-TennisMachineParams netPlayData = TennisMachineParams.fromState(0, 0, 0, 34, 32, 40, 160, 200, 1);
+TennisMachineParams netPlayData = TennisMachineParams.fromState(0, 0, 0, 34, 32, 40, 115, 200, 1);
 /// 截击球
-TennisMachineParams volleyData = TennisMachineParams.fromState(0, 0, 0, 34, 32, 40, 160, 200, 1);
+TennisMachineParams volleyData = TennisMachineParams.fromState(0, 0, 0, 34, 32, 40, 115, 200, 1);
 
 class SmallRobotTask {
   final List<FireTask> tasks;
