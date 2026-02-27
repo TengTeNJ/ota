@@ -100,8 +100,6 @@ class _NewBattleTargetPageState extends State<NewBattleTargetPage> {
         //   return;
         // }
         // _currentIndex++;
-
-
         // 显示速度
         SpeedPopup.show(context, speed: CommStatusManager().currentSpeed);
         if (CommStatusManager().currentSpeed > 70) {

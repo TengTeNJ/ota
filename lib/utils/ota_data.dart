@@ -249,11 +249,18 @@ List<int>systemFeedbackData(){
   return data;
 }
 
+// 统一回原点的都改为这个 会先停止 然后校准回原点
 List<int>positionCheckData(){
   print('位置校准');
-  List<int> data = [kBLEDataFrameHeader,6,0x08,0x01,0xff,0xaa];
+  List<int> data = [kBLEDataFrameHeader,6,0x06,0xff,0xff,0xaa];
   return data;
 }
+
+// List<int>positionCheckData(){
+//   print('位置校准');
+//   List<int> data = [kBLEDataFrameHeader,6,0x08,0x01,0xff,0xaa];
+//   return data;
+// }
 /**
  * 清除所有的故障码，清除所有故障码后 0x19的回复的数据的byte[8]会变成0，代表故障失能，
  * 有故障也不会更新，一般设备重启后此功能会再恢复

@@ -1,10 +1,12 @@
 import 'dart:async';
 
+import 'package:any_loading/any_loading.dart';
 import 'package:event_bus/event_bus.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_easyloading/flutter_easyloading.dart';
 import 'package:ota/constants.dart';
 import 'package:ota/utils/data_base.dart';
+import 'package:ota/utils/i18n_ext.dart';
 
 import '../../utils/audio_player_util.dart';
 import '../../utils/comm_statu_manager.dart';
@@ -395,7 +397,7 @@ class _ParamSettingControllerState extends State<ParamSettingController> {
                             value: ballCount.toDouble(),
                             min: 0.0,
                             max: 100.0,
-                            divisions: 99,
+                            divisions: 101,
                             label: ballCount.toString(),
                             onChanged: (double value) {
                               setState(() {
@@ -421,21 +423,34 @@ class _ParamSettingControllerState extends State<ParamSettingController> {
             Row(
               mainAxisAlignment: MainAxisAlignment.spaceEvenly,
               children: [
-                // 保存设定按钮
+                // 停止训练按钮
                 ElevatedButton.icon(
-                  onPressed: () {
-
-
+                  onPressed: () async{
+                    final params = TennisMachineParams.fromState(
+                      xPosition,
+                      yPosition,
+                      zRotation,
+                      0,
+                      0,
+                      0,
+                      ballAngle,
+                      ballInterval,
+                      0,
+                    );
+                    sendControlCommand(params);
+                    AnyLoading.showLoading(maskType: AnyLoadingMaskType.black);
+                    await Future.delayed(const Duration(seconds: 5));
+                    AnyLoading.dismiss();
                   },
                   // icon: Icon(isRunning ? Icons.stop : Icons.play_arrow),
-                  label: Text('保存设定',
+                  label: Text(context.i18n('停止训练'),
                     style: const TextStyle(
                       fontWeight: FontWeight.bold, // 加粗
                       fontSize: 16,                // 可选
                     ),
                   ),
                   style: ElevatedButton.styleFrom(
-                    backgroundColor: Colors.green,
+                    backgroundColor: Color.fromRGBO(236, 189, 88, 1.0),
                     foregroundColor: Colors.white, // ← 文字/图标颜色
                     padding: const EdgeInsets.symmetric(horizontal: 24, vertical: 16),
                     shape: RoundedRectangleBorder(
@@ -446,22 +461,10 @@ class _ParamSettingControllerState extends State<ParamSettingController> {
 
                 // 启动/停止按钮
                 ElevatedButton.icon(
-                  onPressed: () {
-                    setState(() {
+                  onPressed: () async{
+
                       isRunning = !isRunning;
                       print("状态${isRunning}");
-                      if (isRunning == false) {
-                        print("停止发球了");
-                        /// 停止发球
-                        final params = TennisMachineParams.fromState(
-                            xPosition, yPosition, zRotation,
-                            0, 0, 0,
-                            ballAngle, ballInterval, 0
-                        );
-                        // 发送控制命令
-                        sendControlCommand(params);
-                      }
-                    });
 
                     // 创建参数对象
                     final params = TennisMachineParams.fromState(
@@ -471,9 +474,12 @@ class _ParamSettingControllerState extends State<ParamSettingController> {
                     );
                     // 发送控制命令
                     sendControlCommand(params);
+                      AnyLoading.showLoading(maskType: AnyLoadingMaskType.black);
+                      await Future.delayed(const Duration(seconds: 5));
+                      AnyLoading.dismiss();
                   },
                   // icon: Icon(isRunning ? Icons.stop : Icons.play_arrow),
-                  label: Text(isRunning ? '停止训练' : '开始训练',
+                  label: Text(context.i18n('开始训练'),
                     style: const TextStyle(
                       fontWeight: FontWeight.bold, // 加粗
                       fontSize: 16,                // 可选
@@ -499,25 +505,25 @@ class _ParamSettingControllerState extends State<ParamSettingController> {
               mainAxisAlignment: MainAxisAlignment.spaceEvenly,
               children: [
                 // 交叉循环按钮
-                ElevatedButton.icon(
-                  onPressed: () {
-
-                    },
-                  label: Text('交叉循环',
-                    style: const TextStyle(
-                      fontWeight: FontWeight.bold, // 加粗
-                      fontSize: 16,                // 可选
-                    ),
-                  ),
-                  style: ElevatedButton.styleFrom(
-                    backgroundColor: Colors.green,
-                    foregroundColor: Colors.white, // ← 文字/图标颜色
-                    padding: const EdgeInsets.symmetric(horizontal: 24, vertical: 16),
-                    shape: RoundedRectangleBorder(
-                      borderRadius: BorderRadius.circular(8),
-                    ),
-                  ),
-                ),
+                // ElevatedButton.icon(
+                //   onPressed: () {
+                //
+                //     },
+                //   label: Text('交叉循环',
+                //     style: const TextStyle(
+                //       fontWeight: FontWeight.bold, // 加粗
+                //       fontSize: 16,                // 可选
+                //     ),
+                //   ),
+                //   style: ElevatedButton.styleFrom(
+                //     backgroundColor: Colors.green,
+                //     foregroundColor: Colors.white, // ← 文字/图标颜色
+                //     padding: const EdgeInsets.symmetric(horizontal: 24, vertical: 16),
+                //     shape: RoundedRectangleBorder(
+                //       borderRadius: BorderRadius.circular(8),
+                //     ),
+                //   ),
+                // ),
               ],
             ),
             const SizedBox(height: 24)

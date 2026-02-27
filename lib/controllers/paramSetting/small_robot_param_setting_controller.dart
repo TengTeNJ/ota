@@ -1,4 +1,6 @@
 import 'dart:async';
+import 'package:any_loading/any_loading.dart';
+
 import '../../utils/i18n_ext.dart';
 import 'package:event_bus/event_bus.dart';
 import 'package:flutter/material.dart';
@@ -291,7 +293,7 @@ class _SmallRobotParamSettingControllerState
                 borderRadius: BorderRadius.circular(12.0),
               ),
               child: Padding(
-                padding: const EdgeInsets.all(16.0),
+                padding: const EdgeInsets.all(6.0),
                 child: Column(
                   crossAxisAlignment: CrossAxisAlignment.start,
                   children: [
@@ -364,16 +366,16 @@ class _SmallRobotParamSettingControllerState
                     ),
 
                     // 发球角度
-                    Row(
+                    Container(child: Row(
                       children: [
                         Text(context.i18n('发球角度: ')),
-                        const SizedBox(width: 10),
+                        const SizedBox(width: 2),
                         Expanded(
                           child: Slider(
                             value: ballAngle,
                             min: 90.0,
-                            max: 115.0,
-                            divisions: 25,
+                            max: 225.0,
+                            divisions: 135,
                             label: ballAngle.round().toString(),
                             onChanged: (double value) {
                               setState(() {
@@ -388,10 +390,10 @@ class _SmallRobotParamSettingControllerState
                             activeColor: Colors.green,
                           ),
                         ),
-                        const SizedBox(width: 10),
+                        const SizedBox(width: 2),
                         Text('${ballAngle.round()} °'),
                       ],
-                    ),
+                    ))
                   ],
                 ),
               ),
@@ -406,7 +408,7 @@ class _SmallRobotParamSettingControllerState
                 borderRadius: BorderRadius.circular(12.0),
               ),
               child: Padding(
-                padding: const EdgeInsets.all(16.0),
+                padding: const EdgeInsets.all(6.0),
                 child: Column(
                   crossAxisAlignment: CrossAxisAlignment.start,
                   children: [
@@ -507,7 +509,7 @@ class _SmallRobotParamSettingControllerState
 
                 // 启动/停止按钮
                 ElevatedButton.icon(
-                  onPressed: () {
+                  onPressed: () async{
                 //    isRunning = !isRunning;
                     debugPrint("状态: $isRunning");
                     final params  = TennisMachineParams.fromState(
@@ -525,6 +527,9 @@ class _SmallRobotParamSettingControllerState
                       debugPrint("停止发球了");
                     }
                     sendControlCommand(params);
+                    AnyLoading.showLoading(maskType: AnyLoadingMaskType.black);
+                    await Future.delayed(const Duration(seconds: 5));
+                    AnyLoading.dismiss();
                   },
                   // icon: Icon(isRunning ? Icons.stop : Icons.play_arrow),
                   label: Text(
@@ -579,7 +584,7 @@ class _SmallRobotParamSettingControllerState
                 ),
                 // 课程训练
                 ElevatedButton.icon(
-                  onPressed: () {
+                  onPressed: () async{
                     controller.end();
                     final params = TennisMachineParams.fromState(
                       xPosition,
@@ -598,6 +603,9 @@ class _SmallRobotParamSettingControllerState
                     //   MaterialPageRoute(
                     //       builder: (context) => SmallRobotCourseController()), // 课程训练
                     // );
+                    AnyLoading.showLoading(maskType: AnyLoadingMaskType.black);
+                    await Future.delayed(const Duration(seconds: 5));
+                    AnyLoading.dismiss();
                   },
                   label: Text(
                     context.i18n('停止训练'),
