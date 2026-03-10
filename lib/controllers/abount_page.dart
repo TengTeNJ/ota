@@ -3,6 +3,7 @@ import 'package:flutter/material.dart';
 import 'package:ota/constants.dart';
 import 'package:ota/controllers/count_down_page.dart';
 import 'package:ota/controllers/battle/new_battle_target_page.dart';
+import 'package:ota/controllers/multiple_step_controller.dart';
 import 'package:ota/controllers/new_target_single_ppage.dart';
 import 'package:ota/controllers/paramSetting/param_setting_controller.dart';
 import 'package:ota/controllers/paramSetting/small_robot_param_setting_controller.dart';
@@ -40,6 +41,7 @@ class _AboutPageState extends State<AboutPage> {
       version: '1.0',
       buildNumber: '1');
   int _currentValue = 2;
+  bool _isNavigating = false;
 
   fetchApplicationInfo() async {
     PackageInfo _packageInfo = await PackageInfo.fromPlatform();
@@ -228,7 +230,7 @@ class _AboutPageState extends State<AboutPage> {
               ),
               GestureDetector(
                 behavior: HitTestBehavior.opaque,
-                onTap: () {
+                onTap: () async{
                   // CommStatusManager().isDeviceDeail = true;
                   // AnyLoading.showLoading();
                   // CommStatusManager().writerData(positionCheckData());
@@ -243,11 +245,14 @@ class _AboutPageState extends State<AboutPage> {
                   //       '位置未校准完毕：${CommStatusManager().pcr.index},请稍后重试！');
                   //   return;
                   // }
-                  Navigator.push(
+                  if (_isNavigating) return;
+                  _isNavigating = true;
+                  await Navigator.push(
                     context,
                     MaterialPageRoute(
                         builder: (context) => StadiumTwoMainPage()), // 目标页面
                   );
+                  _isNavigating = false;
                 },
                 child: Row(
                   mainAxisAlignment: MainAxisAlignment.spaceBetween,
@@ -364,7 +369,7 @@ class _AboutPageState extends State<AboutPage> {
                     behavior: HitTestBehavior.opaque,
                     child:  ListTile(
                       contentPadding: EdgeInsets.zero,
-                      title: Text('正反手',
+                      title: Text('正反手-步伐训练',
                           style: TextStyle(
                               fontSize: 18, fontWeight: FontWeight.bold)),
                       trailing: Icon(Icons.arrow_forward_ios),
@@ -372,7 +377,7 @@ class _AboutPageState extends State<AboutPage> {
                     Navigator.push(
                       context,
                       MaterialPageRoute(
-                          builder: (context) => ForeAndBackPage()), // 目标页面
+                          builder: (context) => OverheadVolleySelectionPage()), // 目标页面
                     );
                   },)
                 ],

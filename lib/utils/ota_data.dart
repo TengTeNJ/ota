@@ -1,4 +1,5 @@
 import 'dart:async';
+import 'dart:math';
 import 'dart:typed_data';
 import 'package:flutter/material.dart';
 import 'package:ota/controllers/step_control_page.dart';
@@ -198,6 +199,14 @@ List<int> setSpeedData(double x,double y){
 * 步伐控制
 * */
 List<int> stepControlData(TennisMachineParams params){
+  // 生成与上一次不同的随机数并加到ballInterval上
+  int randomAdd;
+  do {
+    randomAdd = Random().nextInt(5) + 1; // 生成1-5的随机数
+  } while (randomAdd == CommStatusManager().randomNumber );
+  CommStatusManager().randomNumber = randomAdd; // 更新上一次的值
+  params.ballInterval += randomAdd; // 将随机数加到ballInterval上
+
   List<int> data = [kBLEDataFrameHeader,19,0x04];
  // x轴
   data.addAll( intToBytes(params.xPosition));
@@ -232,7 +241,7 @@ List<int> stepControlData(TennisMachineParams params){
     CommStatusManager().stepTimeOutTimer = Timer(const Duration(milliseconds: 500), () {
       print('500毫秒后执行一次，超时重发');
       CommStatusManager().stepTimeOutCount ++;
-      if(CommStatusManager().stepTimeOutCount >= 10){
+      if(CommStatusManager().stepTimeOutCount >= 2){
         CommStatusManager().stepTimeOutCount = 0;
         Get.snackbar("提示", "蓝牙通讯异常，请重启机器人设备重试"); // 不需要 context
         return;

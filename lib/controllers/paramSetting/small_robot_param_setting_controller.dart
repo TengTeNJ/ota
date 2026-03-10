@@ -135,8 +135,6 @@ class _SmallRobotParamSettingControllerState
 
     CommStatusManager().isStepControlling = false;
     CommStatusManager().isDeviceDeail = true;
-    topWheelSpeed = CommStatusManager().topCommonWheelSpeed;
-    bottomWheelSpeed = CommStatusManager().bottoCommonmWheelSpeed;
     print("角度${ballAngle}");
     // ballAngle = CommStatusManager().ballCommonAngle;
 
@@ -322,8 +320,8 @@ class _SmallRobotParamSettingControllerState
                             onChanged: (double value) {
                               setState(() {
                                 topWheelSpeed = value;
-                                CommStatusManager().topCommonWheelSpeed =
-                                    topWheelSpeed;
+                               // CommStatusManager().topCommonWheelSpeed =
+                               //      topWheelSpeed;
                                 topWheelController.text =
                                     value.round().toString();
                               });
@@ -351,8 +349,8 @@ class _SmallRobotParamSettingControllerState
                             onChanged: (double value) {
                               setState(() {
                                 bottomWheelSpeed = value;
-                                CommStatusManager().bottoCommonmWheelSpeed =
-                                    bottomWheelSpeed;
+                                // CommStatusManager().bottoCommonmWheelSpeed =
+                                //     bottomWheelSpeed;
                                 bottomWheelController.text =
                                     value.round().toString();
                               });
@@ -380,7 +378,7 @@ class _SmallRobotParamSettingControllerState
                             onChanged: (double value) {
                               setState(() {
                                 ballAngle = value;
-                                CommStatusManager().ballCommonAngle = ballAngle;
+                                // CommStatusManager().ballCommonAngle = ballAngle;
                                 print(
                                     "mengheng${CommStatusManager().ballCommonAngle}");
                                 ballAngleController.text =

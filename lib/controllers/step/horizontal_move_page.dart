@@ -74,7 +74,8 @@ class _HorizontalMovePageState extends State<HorizontalMovePage> {
 
   // 发球控制
   void fireControll() {
-    final plan = FirePlan.leftCenterRight(count: 10);
+    // final plan = FirePlan.leftCenterRight(count: 10);
+    final plan = FirePlan.pauloStep();
     final controller = FireController(plan.tasks);
     controller.onProgress = (taskIndex, shotIndex) {
       print("第 $taskIndex 个点位，第 $shotIndex 球完成");
@@ -84,7 +85,7 @@ class _HorizontalMovePageState extends State<HorizontalMovePage> {
     };
     controller.onFinished = () {
       print("任务计划完成！");
-      CommStatusManager().writerData(changeModeData(0xff));
+      //CommStatusManager().writerData(changeModeData(0xff));
     };
     controller.start();
   }

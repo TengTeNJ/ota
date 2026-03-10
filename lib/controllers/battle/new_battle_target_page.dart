@@ -281,7 +281,7 @@ class _NewBattleTargetPageState extends State<NewBattleTargetPage> {
       return;
     }
     TennisMachineParams params =
-    TennisMachineParams.fromState(0,CommStatusManager().siteType.toInt() == 1 ? 450 : 310,
+    TennisMachineParams.fromState(0,CommStatusManager().siteType.toInt() == 1 ? 450 : 330,
         0, 7, 8, 40, 120, 125, 0);
     CommStatusManager().writerData(stepControlData(params));
     _currentIndex --;

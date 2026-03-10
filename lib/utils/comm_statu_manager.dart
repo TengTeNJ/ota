@@ -131,6 +131,7 @@ class CommStatusManager {
   Timer? stepTimeOutTimer; // 步伐超时定时器
   bool hasSended = false; // 已经发送步伐
   int stepTimeOutCount = 0; // 超时次数
+  int randomNumber = 0; // 随机数
 
   bool robotIsPowerOff = false; // 发球机是否关机了（长时间重连不上）
 

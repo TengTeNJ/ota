@@ -46,6 +46,110 @@ class FirePlan {
     ]);
   }
 
+  static const double paulo_top = 12;
+  static const double paulo_bottom = 12;
+  /// 常见模式工厂方法
+  factory FirePlan.pauloStep() {
+    return FirePlan([
+      FireTask(
+        count: 1,
+        params: TennisMachineParams.fromState(0, 150, -12, paulo_top, paulo_bottom, 40, 140, 125, 1),
+      ),
+      FireTask(
+        count: 1,
+        params: TennisMachineParams.fromState(0, -150, 0, paulo_top, paulo_bottom, 40, 140, 125, 1),
+      ),
+      FireTask(
+        count: 1,
+        params: TennisMachineParams.fromState(0, -150, 12, paulo_top, paulo_bottom, 40, 140, 125, 3),
+      ),
+      FireTask(
+        count: 1,
+        params: TennisMachineParams.fromState(0, 150, -8, paulo_top, paulo_bottom, 40, 140, 125, 1),
+      ),
+      FireTask(
+        count: 1,
+        params: TennisMachineParams.fromState(0, 0, 12, paulo_top, paulo_bottom, 40, 140, 125, 1),
+      ),
+      FireTask(
+        count: 1,
+        params: TennisMachineParams.fromState(0, 0, 8, paulo_top, paulo_bottom, 40, 140, 125, 2),
+      ),
+      FireTask(
+        count: 1,
+        params: TennisMachineParams.fromState(0, 150, -8, paulo_top, paulo_bottom, 40, 140, 125, 3),
+      ),
+      FireTask(
+        count: 1,
+        params: TennisMachineParams.fromState(200, -150, 8, paulo_top, paulo_bottom, 40, 140, 125, 1),
+      ),
+      FireTask(
+        count: 1,
+        params: TennisMachineParams.fromState(0, 0, -8, paulo_top, paulo_bottom, 40, 140, 125, 1),
+      ),
+      FireTask(
+        count: 1,
+        params: TennisMachineParams.fromState(-200, -150, 8, paulo_top, paulo_bottom, 40, 140, 125, 1),
+      ),
+      FireTask(
+        count: 1,
+        params: TennisMachineParams.fromState(0, 150, 8, paulo_top, paulo_bottom, 40, 140, 125, 1),
+      ),
+      FireTask(
+        count: 1,
+        params: TennisMachineParams.fromState(0, -150, 10, paulo_top-2, paulo_bottom-2, 40, 130, 125, 1),
+      ),
+      FireTask(
+        count: 1,
+        params: TennisMachineParams.fromState(0, 0, 8, paulo_top, paulo_bottom, 40, 140, 125, 2),
+      ),
+      FireTask(
+        count: 1,
+        params: TennisMachineParams.fromState(0, 150, -8, paulo_top-1, paulo_bottom-1, 40, 140, 125, 1),
+      ),
+      FireTask(
+        count: 1,
+        params: TennisMachineParams.fromState(0, 150, -8, paulo_top-1, paulo_bottom-1, 40, 140, 125, 1),
+      ),
+      FireTask(
+        count: 1,
+        params: TennisMachineParams.fromState(0, 0, 12, paulo_top, paulo_bottom, 40, 140, 125, 1),
+      ),
+      FireTask(
+        count: 1,
+        params: TennisMachineParams.fromState(200, 0, 0, paulo_top-2, paulo_bottom-2, 40, 135, 125, 1),
+      ),
+      FireTask(
+        count: 1,
+        params: TennisMachineParams.fromState(200, 0, 0, paulo_top-3, paulo_bottom-3, 40, 120, 125, 1),
+      ),
+      FireTask(
+        count: 1,
+        params: TennisMachineParams.fromState(0, 0, 10, paulo_top-3, paulo_bottom-3, 40, 100, 125, 1),
+      ),
+      FireTask(
+        count: 1,
+        params: TennisMachineParams.fromState(0, 0, -10, paulo_top-3, paulo_bottom-3, 40, 100, 125, 1),
+      ),
+      FireTask(
+        count: 1,
+        params: TennisMachineParams.fromState(0, -150, 32, paulo_top-3, paulo_bottom-3, 40, 100, 125, 1),
+      ),
+      FireTask(
+        count: 1,
+        params: TennisMachineParams.fromState(-400, 0, -12, paulo_top, paulo_bottom, 40, 120, 125, 1),
+      ),
+      FireTask(
+        count: 1,
+        params: TennisMachineParams.fromState(0, 0, 12, paulo_top, paulo_bottom, 40, 120, 125, 1),
+      ),
+      FireTask(
+        count: 1,
+        params: TennisMachineParams.fromState(0, 0, 0, 0, 0, 40, 110, 325, 0),
+      ),
+    ]);
+  }
+
   factory FirePlan.leftCenterRightCenterLeft({int count = 10}) {
     return FirePlan([
       FireTask(count: count, params: TennisMachineParams.fromState(0, 150, 0, 14, 14, 40, 110, 125, 0)),
@@ -53,6 +157,41 @@ class FirePlan {
       FireTask(count: count, params: TennisMachineParams.fromState(2, 150, 0, 14, 14, 40, 110, 125, 0)),
       FireTask(count: count, params: TennisMachineParams.fromState(1, 150, 0, 14, 14, 40, 110, 125, 0)),
       FireTask(count: count, params: TennisMachineParams.fromState(0, 150, 0, 14, 14, 40, 110, 125, 0)),
+    ]);
+  }
+
+  /**
+   * 横向喂球
+   */
+  static double _speed = 9.0;
+  factory FirePlan.lateralBallFeeding({int count = 1}) {
+    return FirePlan([
+      FireTask(count: 5, params: TennisMachineParams.fromState(1, 0, 0, _speed, _speed, 40, 110, 125, 1)),
+
+      FireTask(count: count, params: TennisMachineParams.fromState(0, -206, 0, _speed, _speed, 40, 110, 125, 1)),
+      FireTask(count: 4, params: TennisMachineParams.fromState(1, 0, 0, _speed, _speed, 40, 110, 125, 1)),
+
+      FireTask(count: count, params: TennisMachineParams.fromState(1, -206, 0, _speed, _speed, 40, 110, 125, 1)),
+      FireTask(count: 4, params: TennisMachineParams.fromState(1, 0, 0, _speed, _speed, 40, 110, 125, 1)),
+
+      FireTask(count: count, params: TennisMachineParams.fromState(2, -206, 0, _speed, _speed, 40, 110, 125, 1)),
+      FireTask(count: 4, params: TennisMachineParams.fromState(1, 0, 0, _speed, _speed, 40, 110, 125, 1)),
+
+      FireTask(count: count, params: TennisMachineParams.fromState(1, -206, 0, _speed, _speed, 40, 110, 125, 1)),
+      FireTask(count: 4, params: TennisMachineParams.fromState(1, 0, 0, _speed, _speed, 40, 110, 125, 1)),
+
+      FireTask(count: count, params: TennisMachineParams.fromState(0, 206, 0, _speed, _speed, 40, 110, 125, 1)),
+      FireTask(count: 4, params: TennisMachineParams.fromState(1, 0, 0, _speed, _speed, 40, 110, 125, 1)),
+
+      FireTask(count: count, params: TennisMachineParams.fromState(0, 206, 0, _speed, _speed, 40, 110, 125, 1)),
+      FireTask(count: 4, params: TennisMachineParams.fromState(1, 0, 0, _speed, _speed, 40, 110, 125, 1)),
+
+      FireTask(count: count, params: TennisMachineParams.fromState(0, 206, 0, _speed, _speed, 40, 110, 125, 1)),
+      FireTask(count: 4, params: TennisMachineParams.fromState(1, 0, 0, _speed, _speed, 40, 110, 125, 1)),
+
+      FireTask(count: count, params: TennisMachineParams.fromState(0, 206, 0, _speed, _speed, 40, 110, 125, 1)),
+      FireTask(count: 4, params: TennisMachineParams.fromState(1, 0, 0, _speed, _speed, 40, 110, 125, 1)),
+
     ]);
   }
 

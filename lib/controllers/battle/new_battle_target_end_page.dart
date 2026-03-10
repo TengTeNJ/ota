@@ -109,8 +109,7 @@ class _NewBattleTargetEndPageState extends State<NewBattleTargetEndPage> {
                     height: 55,
                     color: Color.fromRGBO(100, 100, 100, 0.7),
                     child: GestureDetector(onTap: (){
-                      Navigator.pop(context);
-                      Navigator.pop(context);
+                      Navigator.of(context)..pop()..pop();
                     },
                       child: Row(
                         mainAxisAlignment: MainAxisAlignment.center,
